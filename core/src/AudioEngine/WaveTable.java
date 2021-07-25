@@ -27,5 +27,4 @@ public enum WaveTable {
     public float getAt(int pos) {
         return wave[pos];
     }
-
 }
