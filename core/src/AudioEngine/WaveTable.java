@@ -3,7 +3,27 @@ package AudioEngine;
 import java.util.Random;
 
 public enum WaveTable {
-    Sine, Square, Saw, Triangle, Noise;
+    /**
+     * Wave with a sine shape
+     */
+    Sine,
+    /**
+     * Wave with a square shape, its values are comparable to binary digits
+     */
+    Square,
+    /**
+     * Wave with a Saw Tooth form
+     */
+    Saw,
+    /**
+     * Wave with a triangular shape
+     */
+    Triangle,
+    /**
+     * Wave without a shape, its values are generated randomly to simulate white noise
+     */
+    Noise;
+
     private final float [] wave = new float [(int) Settings.WAVETABLE_SIZE];
 
     static {
@@ -20,10 +40,17 @@ public enum WaveTable {
         }
     }
 
+    /**
+     * get the wave buffer of a specific wave
+     * @return the sample buffer of the desired wave
+     */
     public float[] getWave() {
         return wave;
     }
-
+    /**
+     * get the sample of a specific wave at a specific position
+     * @return the sample
+     */
     public float getAt(int pos) {
         return wave[pos];
     }

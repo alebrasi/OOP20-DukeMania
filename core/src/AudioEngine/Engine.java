@@ -18,6 +18,9 @@ public class Engine {
     float freq = 440;
     float step = Settings.WAVETABLE_SIZE * (freq) / Settings.SAMPLE_RATE;
 
+    /**
+     * Calculates and plays a bufffer to the LibGDX audio device
+     */
     public void playBuffer(){
         for(int i=0;i<buffer.length;i++){
             this.buffer[i] = env.hasNext() ? WaveTable.Sine.getAt((int) (pos % Settings.WAVETABLE_SIZE)) * env.next() : 0;

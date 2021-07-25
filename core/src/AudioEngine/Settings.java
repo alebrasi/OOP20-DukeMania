@@ -1,13 +1,28 @@
 package AudioEngine;
 
 public class Settings {
-    // audio device settings
+    /**
+     * How many samples are played every seconds
+     */
     public static final float SAMPLE_RATE = 44100;
+    /**
+     * The size of each sample
+     */
     public static final float SAMPLE_SIZE = Float.SIZE;
+    /**
+     * The maxium default volume
+     */
     public static final double MAX_VOLUME = 1;
+    /**
+     * How many samples copmpose a buffer
+     */
     public static final int BUFFER_LENGHT = 512;
-    public static final float SAMPLESPERSEC = Settings.SAMPLE_RATE / 1000f;
-
-    // wavetable
+    /**
+     * How many samples are played every millisecond
+     */
+    public static final float SAMPLESPERMILLI = Settings.SAMPLE_RATE / 1000f;
+    /**
+     * The number of samples that compose a wavetable
+     */
     public static final float WAVETABLE_SIZE = 8192;
 }
