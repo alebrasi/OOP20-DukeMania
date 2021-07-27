@@ -54,14 +54,21 @@ public class SynthBuilderImpl implements SynthBuilder{
      * @return the Synthesizer
      * @throws Exception Some of the Builder fields were not set properly
      */
-    public KeyboardSynth build(List<Float> freqs) throws Exception{
+    public KeyboardSynth build(List<Pair<Float, Long>> freqs) throws Exception{
         if(env == null || waves == null){
             throw new Exception("enveloper or wavetables are null");
         }
         if(!(this.offsets.get() == null) && waves.length != offsets.get().length){
             throw new Exception("wavetables and offsets do not match");
         }
-        return new KeyboardSynth(freqs);
+        return new KeyboardSynth(
+                this.env,
+                this.waves,
+                this.noteLFO.orElse(x->1f),
+                this.volumeLFO.orElse(x->1f),
+                this.offsets.orElse(Arrays.stream(new double[waves.length]).map(x->1d).toArray()),
+                freqs
+        );
     }
 
 }

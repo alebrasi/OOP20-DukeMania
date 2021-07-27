@@ -1,6 +1,9 @@
 package it.dukemania;
 
 import AudioEngine.Engine;
+import AudioEngine.Enveloper;
+import AudioEngine.SynthBuilderImpl;
+import AudioEngine.WaveTable;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,6 +20,8 @@ public class DukeMania extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
 		audioEngine = new Engine();
+
+
 	}
 
 	@Override

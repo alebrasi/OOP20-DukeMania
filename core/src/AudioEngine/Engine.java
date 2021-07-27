@@ -4,27 +4,37 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.AudioDevice;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Engine {
+
     private List<Synth> synthetizers = new ArrayList<>();
     private final AudioDevice ad = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
     private final float [] buffer = new float[Settings.BUFFER_LENGHT];
-    private final Enveloper envTemplate = new Enveloper(100l, 1f, 5000l);
-    private final Iterator<Float> env = envTemplate.createEnveloper(100l);
 
-    long pos = 0;
-    float freq = 440;
-    float step = Settings.WAVETABLE_SIZE * (freq) / Settings.SAMPLE_RATE;
+    public Engine(){
+        SynthBuilderImpl b = new SynthBuilderImpl();
+        b.setEnveloper(new Enveloper(10l, 1f, 100l));
+        b.setWavetables(new WaveTable[]{WaveTable.Sine});
+        b.setOffsets(new double[]{1d});
+
+        List<Pair<Float, Long>> notes = new ArrayList<>();
+        notes.add(new Pair(440f, 1000l));
+
+        try {
+            synthetizers.add(b.build(notes));
+        } catch (Exception e) { e.printStackTrace(); }
+
+        synthetizers.get(0).playTimedNote(440, 1000000l);
+    }
 
     /**
      * Calculates and plays a bufffer to the LibGDX audio device
      */
     public void playBuffer(){
+        int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
         for(int i=0;i<buffer.length;i++){
-            this.buffer[i] = env.hasNext() ? WaveTable.Sine.getAt((int) (pos % Settings.WAVETABLE_SIZE)) * env.next() : 0;
-            pos += step;
+            buffer[i] = (float) (synthetizers.stream().mapToDouble(Synth::getSample).sum() * 1);
         }
         ad.writeSamples(this.buffer, 0, buffer.length);
     }

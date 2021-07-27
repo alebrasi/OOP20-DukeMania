@@ -6,6 +6,8 @@ public class Enveloper {
     private final float atkVol;
     private final float step1;
     private final float step2;
+    private final long atk;
+    private final long rel;
 
     /**
      * Create an Enveloper template which can later be used to create envelopers,
@@ -15,9 +17,19 @@ public class Enveloper {
      * @param rel ms that will take the volume to drop from the release volume to 0
      */
     public Enveloper(long atk, float atk_vol, long rel){
+        this.atk = atk;
+        this.rel = rel;
         this.atkVol = atk_vol;
         this.step1 = (atk_vol / atk) / Settings.SAMPLESPERMILLI;
         this.step2 = (1f / rel) / (Settings.SAMPLESPERMILLI * -1);
+    }
+
+    /**
+     * Get the total time that the enveloper passes during attack and release
+     * @return The total samples
+     */
+    public long getTime(){
+        return (long) ((this.atk + this.rel) * Settings.SAMPLESPERMILLI);
     }
 
     /**
