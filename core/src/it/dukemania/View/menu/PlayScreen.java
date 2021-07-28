@@ -98,17 +98,7 @@ public class PlayScreen extends ApplicationAdapter {
         Table tblConfigSong = new Table(skin);
         Table tblTracks = new Table();
 
-        tracks.forEach(s -> {
-            System.out.println(s.trackName);
-            tblTracks.add(new Label(s.trackName, skin)).padRight(100);
-            tblTracks.add(new TextButton(s.instrumentName, skin)).padRight(100);
-            tblTracks.add(new Label("fffasdad", skin));
-            tblTracks.row();
-        });
 
-
-        ScrollPane scrl = new ScrollPane(tblTracks , skin);
-        //table.debug();
 
         tblConfigSong.right().top();
 
@@ -123,6 +113,20 @@ public class PlayScreen extends ApplicationAdapter {
         Label lblPlayTrack = new Label("Play Track", skin);
         Label lblInstruments = new Label("Instrument", skin);
 
+        txtSongSelect.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                tblTracks.clearChildren();
+                tracks.forEach(s -> {
+                    tblTracks.add(new Label(s.trackName, skin)).padRight(100);
+                    tblTracks.add(new TextButton(s.instrumentName, skin)).padRight(100);
+                    tblTracks.add(new Label("fffasdad", skin));
+                    tblTracks.row();
+                });
+            }
+        });
+
+        ScrollPane scrl = new ScrollPane(tblTracks , skin);
 
         tblConfigSong.add(txtSongSelect);
         tblConfigSong.add(lblSongName).padLeft(100).colspan(2);
