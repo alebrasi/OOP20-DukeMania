@@ -15,17 +15,18 @@ public class Engine {
     public Engine(){
         SynthBuilderImpl b = new SynthBuilderImpl();
         b.setEnveloper(new Enveloper(10l, 1f, 100l));
-        b.setWavetables(new WaveTable[]{WaveTable.Sine});
+        b.setWavetables(new WaveTable[]{WaveTable.Square});
+        b.setNoteLFO(LFOFactory.squareLFO(2,1,100));
         b.setOffsets(new double[]{1d});
 
         List<Pair<Float, Long>> notes = new ArrayList<>();
-        notes.add(new Pair(440f, 1000l));
+        notes.add(new Pair(440f, 1000l)); // ricordarsi il / 1000 dai micros
 
         try {
             synthetizers.add(b.build(notes));
         } catch (Exception e) { e.printStackTrace(); }
 
-        synthetizers.get(0).playTimedNote(440, 1000000l);
+        synthetizers.get(0).playTimedNote(440f, 1000000l);
     }
 
     /**
