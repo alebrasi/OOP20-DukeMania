@@ -11,7 +11,7 @@ public class KeyboardSynth implements Synth{
         public Note(float freq, long time, WaveTable[]waves, Function<Long, Float> noteLFO, Function<Long, Float> volumeLFO, double [] offsets) {
             double[] steps = Arrays.stream(offsets).map(x->((Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE)).toArray();
             final double[] positions = new double[steps.length];
-            long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime());
+            long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 100);
             this.buff = LongStream.range(0, total).mapToDouble(
                 k-> {
                     float noteLfoVal = noteLFO.apply(k);
@@ -23,7 +23,7 @@ public class KeyboardSynth implements Synth{
         }
 
         private Long processedSamples = 0L;
-        private Iterator<Float> envIterator;
+        private EnveloperIterator<Float> envIterator = env.createEnveloper();
         private final double[] buff;
 
         public float nextSample() {
@@ -32,7 +32,7 @@ public class KeyboardSynth implements Synth{
 
         public void playMillis(long ttl){
             this.processedSamples = 0l;
-            this.envIterator = env.createEnveloper(ttl);
+            this.envIterator.refresh(ttl);
         }
     }
 

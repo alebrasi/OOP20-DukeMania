@@ -1,7 +1,5 @@
 package AudioEngine;
 
-import java.util.Iterator;
-
 public class Enveloper {
     private final float atkVol;
     private final float step1;
@@ -34,14 +32,23 @@ public class Enveloper {
 
     /**
      * Create the actual volume enveloper, using the class parameters
-     * @param ttl time to live (the note sustain in ms)
      * @return the volume enveloper as an Iterator
      */
-    public Iterator<Float> createEnveloper(Long ttl){
-        return new Iterator<Float>() {
+    public EnveloperIterator<Float> createEnveloper(){
+        return new EnveloperIterator<Float>() {
             private float actual = 0.01f;
-            private final float totalTime = (float) ttl * Settings.SAMPLESPERMILLI;
-            private long processedSamples = 0L;
+            private float totalSamples = 0l;
+            private long processedSamples = 0l;
+            private float resetStep = 0;
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void refresh(long ttl) {
+                totalSamples = (float)ttl * Settings.SAMPLESPERMILLI;
+                resetStep = actual / totalSamples;
+                processedSamples = -10l;
+            }
             /**
              * {@inheritDoc}
              */
@@ -54,7 +61,7 @@ public class Enveloper {
              */
             @Override
             public Float next() {
-                return this.processedSamples++ >= this.totalTime ?
+                return  this.processedSamples++ < 0 ? actual -= resetStep : this.processedSamples++ >= this.totalSamples ?
                         this.actual <= 0 ? 0 : (this.actual += step2) :
                         this.actual >= atkVol ? atkVol : (this.actual += step1);
             }
