@@ -37,7 +37,7 @@ public class KeyboardSynth implements Synth{
     }
 
 
-
+    // TODO CAVARE ACTIVE USARE HASNEXT
     private final Map<Float, Note> keys = new HashMap<>();
     private final Set<Float> active = new HashSet<>();
     private final Enveloper env;

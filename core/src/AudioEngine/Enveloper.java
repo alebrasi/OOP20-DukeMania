@@ -36,7 +36,7 @@ public class Enveloper {
      */
     public EnveloperIterator<Float> createEnveloper(){
         return new EnveloperIterator<Float>() {
-            private float actual = 0.01f;
+            private float actual = 0f;
             private float totalSamples = 0l;
             private long processedSamples = 0l;
             private float resetStep = 0;
@@ -45,8 +45,8 @@ public class Enveloper {
              */
             @Override
             public void refresh(long ttl) {
-                totalSamples = (float)ttl * Settings.SAMPLESPERMILLI;
-                resetStep = actual / totalSamples;
+                totalSamples = (ttl * Settings.SAMPLESPERMILLI) + 10;
+                resetStep = actual / (10);
                 processedSamples = -10l;
             }
             /**
@@ -54,16 +54,35 @@ public class Enveloper {
              */
             @Override
             public boolean hasNext() {
-                return this.actual > 0;
+                return actual > 0 || processedSamples < totalSamples;
             }
             /**
              * {@inheritDoc}
              */
             @Override
             public Float next() {
-                return  this.processedSamples++ < 0 ? actual -= resetStep : this.processedSamples++ >= this.totalSamples ?
-                        this.actual <= 0 ? 0 : (this.actual += step2) :
-                        this.actual >= atkVol ? atkVol : (this.actual += step1);
+
+                if(this.processedSamples < 0){
+                    actual -= resetStep;
+                }else{
+                    if(this.processedSamples >= this.totalSamples){
+                        if(actual <= 0){
+                            this.processedSamples++;
+                            return 0f;
+                        }else{
+                            actual += step2;
+                        }
+                    }else{
+                        if(actual >= atkVol){
+                            this.processedSamples++;
+                            return atkVol;
+                        }else{
+                            actual += step1;
+                        }
+                    }
+                }
+                this.processedSamples++;
+                return actual;
             }
         };
     }

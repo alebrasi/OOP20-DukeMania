@@ -3,8 +3,8 @@ package AudioEngine;
 public class Filters {
     // TODO RENAME, ITS NOT AN ACTUAL FACTORY
 
-    public static void sampleNHold(double [] buff, long sampToHold){
-        double actualSample = 0;
+    public static void sampleNHold(float [] buff, long sampToHold){
+        float actualSample = 0;
         for(int i=0;i<buff.length;i++){
             if(i % sampToHold == 0){
                 actualSample = buff[i];
