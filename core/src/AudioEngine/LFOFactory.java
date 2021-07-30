@@ -11,6 +11,10 @@ public class LFOFactory {
         intervals, straigh, sine, square;
     }
 
+    public static Function<Long, Float> composedLFO(Function<Long, Float> valueFunction, Function<Long, Float> activateFunction){
+        return x -> (valueFunction.apply(x)) * (activateFunction.apply(x));
+    }
+
     /**
      * Generic function to create an lfo, easily callable
      * @param type the type of the lfo

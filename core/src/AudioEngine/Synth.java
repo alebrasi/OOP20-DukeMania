@@ -12,11 +12,4 @@ public interface Synth {
      * @return the sample
      */
     float getSample();
-
-    /**
-     * Given a certain frequency, play that note for a certain amount of time
-     * @param freq the frequency of the note that wants to be played
-     * @param micros how many microseconds we want the note to be played
-     */
-    void playTimedNote(float freq, Long micros);
 }

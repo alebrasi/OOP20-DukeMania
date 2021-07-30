@@ -8,25 +8,24 @@ import java.util.List;
 
 public class Engine {
 
-    private List<Synth> synthetizers = new ArrayList<>();
+    private List<KeyboardSynth> synthetizers = new ArrayList<>();
     private final AudioDevice ad = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
     private final float [] buffer = new float[Settings.BUFFER_LENGHT];
 
     public Engine(){
         SynthBuilderImpl b = new SynthBuilderImpl();
         b.setEnveloper(new Enveloper(10l, 1f, 100l));
-        b.setWavetables(new WaveTable[]{WaveTable.Square});
-        b.setNoteLFO(LFOFactory.sineLFO(2f,1f,200));
+        b.setWavetables(new WaveTable[]{WaveTable.Sine});
         b.setOffsets(new double[]{1d});
 
         List<Pair<Float, Long>> notes = new ArrayList<>();
-        notes.add(new Pair(440f, 1000l)); // ricordarsi il / 1000 dai micros
+        notes.add(new Pair(100f, 10000l)); // ricordarsi il / 1000 dai micros
 
         try {
             synthetizers.add(b.build(notes));
         } catch (Exception e) { e.printStackTrace(); }
 
-        synthetizers.get(0).playTimedNote(440f, 1000000l);
+        synthetizers.get(0).playTimedNote(100f, 1000000l);
     }
 
     /**

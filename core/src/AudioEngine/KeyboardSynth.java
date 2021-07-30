@@ -66,9 +66,10 @@ public class KeyboardSynth implements Synth{
         return (float) active.stream().mapToDouble(x->keys.get(x).nextSample()).sum();
     }
     /**
-     * {@inheritDoc}
+     * Given a certain frequency, play that note for a certain amount of time
+     * @param freq the frequency of the note that wants to be played
+     * @param micros how many microseconds we want the note to be played
      */
-    @Override
     public void playTimedNote(float freq, Long micros) {
         active.add(freq);
         keys.get(freq).playMillis(micros / 1000);

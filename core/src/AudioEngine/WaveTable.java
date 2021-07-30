@@ -26,6 +26,8 @@ public enum WaveTable {
 
     private final float [] wave = new float [(int) Settings.WAVETABLE_SIZE];
 
+    //Sine.wave[(int) i] =        (float) (1*(Math.sin(2.0 * Math.PI * Sine.wave[(int) i] * period + 1 * Math.sin(2*Math.PI*rnd.nextFloat()*period)) * Settings.MAX_VOLUME));
+
     static {
         float initFreq = (float) (1d / (Settings.WAVETABLE_SIZE / Settings.SAMPLE_RATE));
         float period = Settings.SAMPLE_RATE / initFreq;
