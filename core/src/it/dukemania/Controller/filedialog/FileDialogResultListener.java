@@ -4,6 +4,6 @@ enum DialogResult {
     OK, CANCEL
 }
 
-public interface FileDialogResult {
+public interface FileDialogResultListener {
     void result(DialogResult res, String fileName, String filePath);
 }
