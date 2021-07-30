@@ -16,7 +16,7 @@ public class Engine {
         SynthBuilderImpl b = new SynthBuilderImpl();
         b.setEnveloper(new Enveloper(10l, 1f, 100l));
         b.setWavetables(new WaveTable[]{WaveTable.Square});
-        b.setNoteLFO(LFOFactory.squareLFO(2,1,100));
+        b.setNoteLFO(LFOFactory.sineLFO(2f,1f,200));
         b.setOffsets(new double[]{1d});
 
         List<Pair<Float, Long>> notes = new ArrayList<>();
