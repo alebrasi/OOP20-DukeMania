@@ -4,51 +4,27 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import it.dukemania.Controller.filedialog.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
+import java.nio.file.NotDirectoryException;
 
 
 public class FileDialog extends Dialog {
-
-    enum DialogResult {
-        OK, CANCEL
-    }
-
-    public interface ResultListener {
-        void result(DialogResult dialogResult, String filePath, String fileName);
-    }
-
-    private Pattern pattern;
     private final Skin skin;
     private final String title;
-    private String selectedFile;
-    private TextButton btnOK;
-    private TextButton btnCancel;
-    private String separator;
-    private String currentDir;
-    private String homeDir;
     private Table tblFiles;
     private TextField txtSelectedSong;
+    private final FileDialogController controller;
+    private String selectedFileName;
+    private String selectedFilePath;
 
-    private ResultListener result;
+    private FileDialogResultListener result;
 
     public FileDialog(final String title, final Skin skin) {
         super("", skin);
         this.skin = skin;
         this.title = title;
-        this.selectedFile = "";
-        this.separator = File.separator;
-        this.homeDir = System.getProperty("user.home") + separator;
-        this.currentDir = this.homeDir;
-        String regex = String.format("^.+%s\\w+%s", separator, separator);
-        pattern = Pattern.compile(regex);
+        controller = new FileDialogControllerImpl();
         populateDialog();
     }
 
@@ -61,8 +37,8 @@ public class FileDialog extends Dialog {
         Table tblTitleDialog = this.getTitleTable();
         Table tblContent = this.getContentTable();
         ScrollPane tableFilesScroller = new ScrollPane(tblFiles);
-        this.btnOK = new TextButton("OK", this.skin);
-        this.btnCancel = new TextButton("Cancel", this.skin);
+        TextButton btnOK = new TextButton("OK", this.skin);
+        TextButton btnCancel = new TextButton("Cancel", this.skin);
 
         tblTitleDialog.clearChildren();
         tblTitleDialog.add(new Label(this.title, this.skin)).padTop(200).row();
@@ -71,18 +47,23 @@ public class FileDialog extends Dialog {
 
         btnBack.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                Matcher matcher = pattern.matcher(currentDir.substring(0, currentDir.length() - 1));
-                if (matcher.find()) {
-                    currentDir = matcher.group();
-                    update(currentDir);
-                }
+                controller.stepBackFromCurrentDirectory();
+                updateFilesTable();
             }
+        });
+
+        controller.setSelectedFileListener((fileName, filePath) -> {
+            this.selectedFileName = fileName;
+            this.selectedFilePath = filePath;
+            txtSelectedSong.setText(fileName);
         });
 
         btnCancel.addListener(new ClickListener() {
            @Override
            public void clicked(final InputEvent event, final float x, final float y) {
-               result.result(DialogResult.CANCEL, "", "");
+               if (result != null) {
+                   result.result(DialogResult.CANCEL, "", "");
+               }
                thisDialog.hide();
            }
         });
@@ -90,7 +71,9 @@ public class FileDialog extends Dialog {
         btnOK.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                result.result(DialogResult.OK, currentDir, selectedFile);
+                if (result != null) {
+                    result.result(DialogResult.OK, selectedFileName, selectedFilePath);
+                }
                 thisDialog.hide();
             }
         });
@@ -98,15 +81,10 @@ public class FileDialog extends Dialog {
         tblFiles.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                Label a = (Label) event.getTarget();
-                if (Files.isDirectory(Paths.get(currentDir + a.getText().toString()))) {
-                    currentDir += a.getText().toString();
-                    update(currentDir);
-                } else {
-                    selectedFile = a.getText().toString();
-                    txtSelectedSong.setText(selectedFile);
+                Label lblFile = (Label) event.getTarget();
+                if (controller.advanceInDirectory(lblFile.getText().toString())) {
+                    updateFilesTable();
                 }
-                System.out.println(currentDir);
             }
         });
 
@@ -118,37 +96,33 @@ public class FileDialog extends Dialog {
         tblContent.add(tableFilesScroller).expand().fillX().left().padTop(140).padBottom(20);
     }
 
-    private void update(String path) {
+    private void updateFilesTable() {
         tblFiles.clearChildren();
-        try (Stream<Path> paths = Files.walk(Paths.get(path), 1)) {
-            paths
-                    .skip(1)
-                    .filter(s -> {
-                        try {
-                            return !Files.isHidden(s);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return true;
-                    })
-                    .forEach(f -> {
-                        Label lblFIle = new Label(f.getFileName().toString() + (Files.isDirectory(f) ? separator : ""), skin);
-                        tblFiles.add(lblFIle).expand().fillX().left().row();
-                    });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        controller.getFilesInCurrentDirectory()
+                .forEach(file -> {
+                    String pathSeparator = this.controller.getDirectorySeparator();
+                    String formattedFileStr = file.getFileName() + ((file.getType() == FileType.DIRECTORY) ? pathSeparator : "");
+                    Label lblFile = new Label(formattedFileStr, skin);
+                    tblFiles.add(lblFile).expand().fillX().left().row();
+                });
     }
 
     @Override
     public Dialog show(final Stage stage) {
-        this.currentDir = homeDir;
-        System.out.println(currentDir);
-        update(this.currentDir);
+        controller.returnToRootDirectory();
+        updateFilesTable();
         return super.show(stage);
     }
 
-    public void setResultListener(final ResultListener result) {
+    public void setResultListener(final FileDialogResultListener result) {
         this.result = result;
+    }
+
+    public void setFilter(final String regex) {
+        controller.setFilter(regex);
+    }
+
+    public void setRootDirectory(final String directory) throws NotDirectoryException {
+        controller.setRootDirectory(directory);
     }
 }
