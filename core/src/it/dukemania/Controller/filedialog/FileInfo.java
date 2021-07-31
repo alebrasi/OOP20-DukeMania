@@ -1,9 +1,5 @@
 package it.dukemania.Controller.filedialog;
 
-enum FileType {
-    REGULAR_FILE, DIRECTORY
-}
-
 public class FileInfo {
 
     private final String fileName;
