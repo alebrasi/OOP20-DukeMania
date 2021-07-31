@@ -40,14 +40,17 @@ public class Enveloper {
             private float totalSamples = 0l;
             private long processedSamples = 0l;
             private float resetStep = 0;
+            private float step2 = 0;
+            private final int ATTENUATION = 300;
             /**
              * {@inheritDoc}
              */
             @Override
             public void refresh(long ttl) {
-                totalSamples = (ttl * Settings.SAMPLESPERMILLI) + 10;
-                resetStep = actual / (10);
-                processedSamples = -10l;
+                totalSamples = (ttl * Settings.SAMPLESPERMILLI) + ATTENUATION;
+                resetStep = actual / (ATTENUATION);
+                processedSamples = ATTENUATION * -1;
+                step2 = 0;
             }
             /**
              * {@inheritDoc}
@@ -64,10 +67,14 @@ public class Enveloper {
 
                 if(this.processedSamples < 0){
                     actual -= resetStep;
+
                 }else{
                     if(this.processedSamples >= this.totalSamples){
+                        if (step2 == 0) {
+                            step2 = (actual / (rel * Settings.SAMPLESPERMILLI)) * -1;
+                        }
                         if(actual <= 0){
-                            this.processedSamples++;
+                            this.processedSamples++; // TODO procsamples++ poterbbne non servire
                             return 0f;
                         }else{
                             actual += step2;

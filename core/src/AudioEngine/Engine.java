@@ -21,13 +21,13 @@ public class Engine {
         b.setOffsets(new double[]{1d});
 
         List<Pair<Float, Long>> notes = new ArrayList<>();
-        notes.add(new Pair(100f, 10000l)); // ricordarsi il / 1000 dai micros
+        notes.add(new Pair(100f, 50000l)); // ricordarsi il / 1000 dai micros
 
         try {
             synthetizers.add(b.build(notes));
         } catch (Exception e) { e.printStackTrace(); }
 
-        synthetizers.get(0).playTimedNote(100f, 1000000l);
+
 
 
     }
@@ -45,17 +45,17 @@ public class Engine {
         }
 
 
-        /*
-        if(pos++ % 100 == 0){
-            ds.test();
-        }
 
+        if(pos++ % 50 == 0){
+            synthetizers.get(0).playTimedNote(100f, 500000l);
+        }
+/*
         int num = ds.checkKeys();
         for(int i=0;i<buffer.length;i++){
             buffer[i] = ds.getSample();
         }
-        */
 
+*/
 
         ad.writeSamples(this.buffer, 0, buffer.length);
     }

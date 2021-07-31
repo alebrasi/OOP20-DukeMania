@@ -22,16 +22,16 @@ public class KeyboardSynth implements Synth{
             ).toArray();
         }
 
-        private Long processedSamples = 0L;
+        private int processedSamples = 0;
         private EnveloperIterator<Float> envIterator = env.createEnveloper();
         private final double[] buff;
 
         public float nextSample() {
-            return (float) this.buff[Math.toIntExact(this.processedSamples++)] * envIterator.next();
+            this.processedSamples = (this.processedSamples + 1) % this.buff.length;
+            return (float) this.buff[this.processedSamples] * envIterator.next();
         }
 
         public void playMillis(long ttl){
-            this.processedSamples = 0l;
             this.envIterator.refresh(ttl);
         }
     }
