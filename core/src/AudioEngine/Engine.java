@@ -50,13 +50,13 @@ public class Engine {
         */
 
         if(pos == 0 || pos == 75 ){
-            ds.test(0);
+            ds.playPercussion(DrumSamples.Kick);
         }
         if(pos == 15 || pos == 45 || pos == 60 || pos == 52 || pos == 67 || pos == 105){
-            ds.test(2);
+            ds.playPercussion(DrumSamples.Hat);
         }
         if(pos == 30 || pos == 90){
-            ds.test(1);
+            ds.playPercussion(DrumSamples.Snare);
         }
 
 

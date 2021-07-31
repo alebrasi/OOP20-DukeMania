@@ -37,9 +37,7 @@ public class KeyboardSynth implements Synth{
     }
 
 
-    // TODO CAVARE ACTIVE USARE HASNEXT
     private final Map<Float, Note> keys = new HashMap<>();
-    private final Set<Float> active = new HashSet<>();
     private final Enveloper env;
 
     /**
@@ -55,15 +53,14 @@ public class KeyboardSynth implements Synth{
      */
     @Override
     public int checkKeys() {
-        this.active.removeIf(x->!keys.get(x).envIterator.hasNext());
-        return this.active.size();
+        return (int) keys.values().stream().filter(x->x.envIterator.hasNext()).count();
     }
     /**
      * {@inheritDoc}
      */
     @Override
     public float getSample() {
-        return (float) active.stream().mapToDouble(x->keys.get(x).nextSample()).sum();
+        return (float) keys.values().stream().filter(x->x.envIterator.hasNext()).mapToDouble(x->keys.get(x).nextSample()).sum();
     }
     /**
      * Given a certain frequency, play that note for a certain amount of time
@@ -71,7 +68,6 @@ public class KeyboardSynth implements Synth{
      * @param micros how many microseconds we want the note to be played
      */
     public void playTimedNote(float freq, Long micros) {
-        active.add(freq);
         keys.get(freq).playMillis(micros / 1000);
     }
 }
