@@ -2,13 +2,13 @@ package AudioEngine;
 
 public interface Synth {
     /**
-     * Checks and stops playing the keys which enveloper has ended
-     * @return the number of the notes that are still playing
+     * Checks how many simulated simulated instrument items are currently playing
+     * @return the number of items
      */
     int checkKeys();
 
     /**
-     * Returns a single sample with the values of the combined notes in the Synthesizer
+     * Returns a single sample with the values of the combined sample in the Synthesizer
      * @return the sample
      */
     float getSample();

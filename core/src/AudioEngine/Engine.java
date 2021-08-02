@@ -39,34 +39,41 @@ public class Engine {
      */
     public void playBuffer(){
 
-        /*
-        int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
-        for(int i=0;i<buffer.length;i++){
-            buffer[i] = (float) (synthetizers.stream().mapToDouble(Synth::getSample).sum() * 1);
-        }
-        if(pos++ % 10 == 0){
+
+
+        if(pos++ % 1000 == 0){
             synthetizers.get(0).playTimedNote(100f, 5l);
         }
-        */
 
-        if(pos == 0 || pos == 75 ){
+        if(pos == 0 || pos == 30  || pos == 60||  pos == 90 || pos == 180 || pos == 195+15){
             ds.playPercussion(DrumSamples.Kick);
         }
+        if(pos == 15|| pos == 15+7  || pos == 60 || pos == 75 || pos == 82 || pos == 120 || pos == 150 || pos == 195 || pos == 195 + 7){
+            ds.playPercussion(DrumSamples.Hat);
+        }
+        if (pos == 45 || pos == 165 || pos == 225){
+            ds.playPercussion(DrumSamples.Snare);
+        }
+        if( pos == 105  || pos == 135 ){
+            ds.playPercussion(DrumSamples.Tom);
+        }
+
+        /*
         if(pos == 15 || pos == 45 || pos == 60 || pos == 52 || pos == 67 || pos == 105){
             ds.playPercussion(DrumSamples.Hat);
         }
         if(pos == 30 || pos == 90){
             ds.playPercussion(DrumSamples.Snare);
         }
+         */
 
-
-        pos = (pos +1) % 120;
+        pos = (pos +1) % 240;
 
         //int num = ds.checkKeys();
+        int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
         for(int i=0;i<buffer.length;i++){
-            buffer[i] = ds.getSample();
+            buffer[i] = (float) (synthetizers.stream().mapToDouble(Synth::getSample).sum() * 1);
         }
-
 
 
         ad.writeSamples(this.buffer, 0, buffer.length);

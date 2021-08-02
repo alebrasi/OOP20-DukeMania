@@ -8,7 +8,8 @@ import java.util.stream.LongStream;
 public class KeyboardSynth implements Synth{
 
     private class Note {
-        public Note(float freq, long time, WaveTable[]waves, Function<Long, Float> noteLFO, Function<Long, Float> volumeLFO, double [] offsets) {
+        public Note(Enveloper env, float freq, long time, WaveTable[]waves, Function<Long, Float> noteLFO, Function<Long, Float> volumeLFO, double [] offsets) {
+            envIterator = env.createEnveloper();
             double[] steps = Arrays.stream(offsets).map(x->((Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE)).toArray();
             final double[] positions = new double[steps.length];
             long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 100);
@@ -23,7 +24,7 @@ public class KeyboardSynth implements Synth{
         }
 
         private int processedSamples = 0;
-        private EnveloperIterator<Float> envIterator = env.createEnveloper();
+        private EnveloperIterator<Float> envIterator;
         private final double[] buff;
 
         public float nextSample() {
@@ -38,15 +39,13 @@ public class KeyboardSynth implements Synth{
 
 
     private final Map<Float, Note> keys = new HashMap<>();
-    private final Enveloper env;
 
     /**
      * costructor of KeyboardSynth, usually called by a builder
      * @param freqs the frequencies of the notes we want to load
      */
     public KeyboardSynth(Enveloper env, WaveTable[]waves, Function<Long, Float> nlfo, Function<Long, Float> vlfo, double [] offsets, List<Pair<Float, Long>> freqs){
-        this.env = env;
-        freqs.forEach(x->keys.put(x.getX(), new Note(x.getX(), x.getY(), waves, nlfo, vlfo, offsets)));
+        freqs.forEach(x->keys.put(x.getX(), new Note(env, x.getX(), x.getY(), waves, nlfo, vlfo, offsets)));
     }
     /**
      * {@inheritDoc}
@@ -58,9 +57,13 @@ public class KeyboardSynth implements Synth{
     /**
      * {@inheritDoc}
      */
+    float samp =0;
     @Override
     public float getSample() {
-        return (float) keys.values().stream().filter(x->x.envIterator.hasNext()).mapToDouble(x->keys.get(x).nextSample()).sum();
+        try {
+            samp = (float) keys.values().stream().filter(x->x.envIterator.hasNext()).mapToDouble(Note::nextSample).sum();
+        }catch (Exception e ){ e.printStackTrace();};
+        return samp;
     }
     /**
      * Given a certain frequency, play that note for a certain amount of time

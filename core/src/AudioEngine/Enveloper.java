@@ -3,7 +3,6 @@ package AudioEngine;
 public class Enveloper {
     private final float atkVol;
     private final float step1;
-    private final float step2;
     private final long atk;
     private final long rel;
 
@@ -19,7 +18,6 @@ public class Enveloper {
         this.rel = rel;
         this.atkVol = atk_vol;
         this.step1 = (atk_vol / atk) / Settings.SAMPLESPERMILLI;
-        this.step2 = (1f / rel) / (Settings.SAMPLESPERMILLI * -1);
     }
 
     /**
@@ -67,7 +65,6 @@ public class Enveloper {
 
                 if(this.processedSamples < 0){
                     actual -= resetStep;
-
                 }else{
                     if(this.processedSamples >= this.totalSamples){
                         if (step2 == 0) {
