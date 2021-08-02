@@ -3,6 +3,7 @@ package it.dukemania.View.notesGraphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
 public class NoteImpl implements Note {
@@ -23,9 +24,10 @@ public class NoteImpl implements Note {
 	private int xSparks;
 	private int ySparks;
 	private long startNote;
+	private long duration;
 	
 	
-	public NoteImpl(int heightpos, int width, Columns letter, SpriteBatch batch, int posyBlue, int posySparks, int height, long startNote) {
+	public NoteImpl(int heightpos, int width, Columns letter, SpriteBatch batch, int posyBlue, int posySparks, int height, long startNote, long duration) {
 		this.batchNote = batch;
 		this.textureNote = new Texture(Gdx.files.internal("nota azzurra.png"));
 		this.textureSparks = new Texture(Gdx.files.internal("blue spark.png"));
@@ -49,15 +51,14 @@ public class NoteImpl implements Note {
 		this.xSparks = 100;
 		this.ySparks = 70;
 		this.startNote = startNote;
+		this.duration = duration;
 	}
 
 	@Override
 	public void drawNote() {
 		if (this.posyNote  > 0) {
-			this.batchNote.begin();
 			this.posyNote -= (this.speedNote * Gdx.graphics.getDeltaTime());
 			this.batchNote.draw(this.textureNote, this.posxNote, this.posyNote, this.xNote, this.yNote, 0, 1, 1, 0);
-			this.batchNote.end();
 			
 		}
 
@@ -66,18 +67,22 @@ public class NoteImpl implements Note {
 	@Override
 	public void isSparked(Columns type, SpriteBatch sparks) {
 		if (this.posyNote <= this.posyBlue && this.posyNote >= this.posyBlue - 40){
-			sparks.begin();
 			sparks.draw(this.textureSparks, this.posxSparks, this.posySparks, this.xSparks, this.ySparks, 0, 1, 1, 0);
-			sparks.end();
 		}
 		
 	}
 
 	@Override
-	public long getTime() {
+	public long getStartTime() {
 		return this.startNote;
 		
 	}
+	
+	@Override
+	public long getDuration() {
+	    return this.duration;
+	}
+
 
 	@Override
 	public Columns getColumn() {
@@ -89,6 +94,7 @@ public class NoteImpl implements Note {
 		return this.posyNote;
 	}
 
+    
 	
 
 

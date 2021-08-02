@@ -1,6 +1,7 @@
 package it.dukemania.View.notesGraphics;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
 public interface Note {
@@ -9,7 +10,9 @@ public interface Note {
 	
 	void isSparked(Columns type, SpriteBatch batch);
 	
-	long getTime();
+	long getStartTime();
+	
+	long getDuration();
 	
 	Columns getColumn();
 	
