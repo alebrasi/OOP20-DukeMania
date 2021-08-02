@@ -39,15 +39,14 @@ public class Enveloper {
             private long processedSamples = 0l;
             private float resetStep = 0;
             private float step2 = 0;
-            private final int ATTENUATION = 300;
             /**
              * {@inheritDoc}
              */
             @Override
             public void refresh(long ttl) {
-                totalSamples = (ttl * Settings.SAMPLESPERMILLI) + ATTENUATION;
-                resetStep = actual / (ATTENUATION);
-                processedSamples = ATTENUATION * -1;
+                totalSamples = (ttl * Settings.SAMPLESPERMILLI) + Settings.ATTENUATION;
+                resetStep = actual / (Settings.ATTENUATION);
+                processedSamples = Settings.ATTENUATION * -1;
                 step2 = 0;
             }
             /**

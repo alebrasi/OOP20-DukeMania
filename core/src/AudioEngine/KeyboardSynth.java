@@ -24,15 +24,22 @@ public class KeyboardSynth implements Synth{
         }
 
         private int processedSamples = 0;
-        private EnveloperIterator<Float> envIterator;
+        private int restartPos = 0;
+        private final EnveloperIterator<Float> envIterator;
         private final double[] buff;
 
         public float nextSample() {
-            this.processedSamples = (this.processedSamples + 1) % this.buff.length;
-            return (float) this.buff[this.processedSamples] * envIterator.next();
+            if (restartPos != 0) {
+                if (processedSamples == restartPos) {
+                    processedSamples = 0;
+                    restartPos = 0;
+                }
+            }
+            return (float) this.buff[this.processedSamples++] * envIterator.next();
         }
 
-        public void playMillis(long ttl){
+        public void playMillis(long ttl) {
+            restartPos = processedSamples + Settings.ATTENUATION;
             this.envIterator.refresh(ttl);
         }
     }
@@ -57,13 +64,9 @@ public class KeyboardSynth implements Synth{
     /**
      * {@inheritDoc}
      */
-    float samp =0;
     @Override
     public float getSample() {
-        try {
-            samp = (float) keys.values().stream().filter(x->x.envIterator.hasNext()).mapToDouble(Note::nextSample).sum();
-        }catch (Exception e ){ e.printStackTrace();};
-        return samp;
+        return (float) keys.values().stream().filter(x->x.envIterator.hasNext()).mapToDouble(Note::nextSample).sum();
     }
     /**
      * Given a certain frequency, play that note for a certain amount of time

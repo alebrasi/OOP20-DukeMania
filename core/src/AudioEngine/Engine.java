@@ -17,11 +17,11 @@ public class Engine {
 
         SynthBuilderImpl b = new SynthBuilderImpl();
         b.setEnveloper(new Enveloper(10l, 1f, 100l));
-        b.setWavetables(new WaveTable[]{WaveTable.Sine});
-        b.setOffsets(new double[]{1d});
+        b.setWavetables(new WaveTable[]{WaveTable.Sine,WaveTable.Sine,WaveTable.Sine});
+        b.setOffsets(new double[]{1d,1.02f, 0.999f});
 
         List<Pair<Float, Long>> notes = new ArrayList<>();
-        notes.add(new Pair(100f, 50000l)); // ricordarsi il / 1000 dai micros
+        notes.add(new Pair(100f, 10000l)); // ricordarsi il / 1000 dai micros
 
         try {
             synthetizers.add(b.build(notes));
@@ -41,8 +41,8 @@ public class Engine {
 
 
 
-        if(pos++ % 1000 == 0){
-            synthetizers.get(0).playTimedNote(100f, 5l);
+        if(pos++ % 10 == 0){
+            synthetizers.get(0).playTimedNote(100f, 100000l);
         }
 
         if(pos == 0 || pos == 30  || pos == 60||  pos == 90 || pos == 180 || pos == 195+15){
@@ -66,8 +66,6 @@ public class Engine {
             ds.playPercussion(DrumSamples.Snare);
         }
          */
-
-        pos = (pos +1) % 240;
 
         //int num = ds.checkKeys();
         int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();

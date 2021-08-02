@@ -25,4 +25,8 @@ public class Settings {
      * The number of samples that compose a wavetable
      */
     public static final float WAVETABLE_SIZE = 8192;
+    /**
+     * The number of attenuations samples, to restart the note
+     */
+    public static final int ATTENUATION = 300;
 }
