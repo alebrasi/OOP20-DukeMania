@@ -4,19 +4,20 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import sun.jvm.hotspot.debugger.cdbg.basic.LazyBlockSym;
+import it.dukemania.Controller.filedialog.DialogResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 public class PlayScreen extends ApplicationAdapter {
     private FreeTypeFontGenerator generator;
@@ -28,14 +29,20 @@ public class PlayScreen extends ApplicationAdapter {
     private Skin skin;
     private Camera camera;
 
+    private final boolean userCanSelectInstrument = false;
+
     @Override
-    public void create () {
+    public void create() {
 
         List<Track> tracks = new ArrayList<>();
         tracks.add(new Track("asd", "lol"));
-        tracks.add(new Track("sasas", "sdfsdf"));
+        tracks.add(new Track("sasas", "sdfsdfasdasdasdasdad"));
         tracks.add(new Track("sahghs", "sdujg"));
         tracks.add(new Track("sdfgdf", "sdfghd"));
+        tracks.add(new Track("sdfasfg", "ssrfsadf"));
+        tracks.add(new Track("sdfasfg", "ssrfsadf"));
+        tracks.add(new Track("sdffhsjdfhasdag", "ssrfsadfsdsfdsdf"));
+        tracks.add(new Track("sdfasfg", "ssrfsadf"));
         tracks.add(new Track("sdfasfg", "ssrfsadf"));
 
         //---------------------------------------------------------------------------------------------
@@ -45,10 +52,9 @@ public class PlayScreen extends ApplicationAdapter {
 
         //Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 
-        int fontSize = 50;
+        final int fontSize = 50;
         float fontBorderWidth = 0.5f;
         Color fontColor = Color.BLACK;
-        float buttonPadding = 20f;
 
         Texture img = new Texture(MENU_BACKGROUND_IMAGE_PATH);
         backgroundImage = new Image(img);
@@ -76,70 +82,77 @@ public class PlayScreen extends ApplicationAdapter {
         skin.addRegions(new TextureAtlas(Gdx.files.internal("textures/quantum-horizon/quantum-horizon-ui.atlas")));
         skin.load(Gdx.files.internal(TEXTURE_PATH));
 
-		/*
-		txtBtnStyle = new TextButton.TextButtonStyle();
-		lblStyle = new Label.LabelStyle();
-		*/
-
         //--------------------------------------------------------------------------------------------------------------
 
-		/*
-		lblStyle.font = skin.getFont("title");
-		lblStyle.fontColor = Color.BLACK;
-
-		Label nameLabel = new Label("", lblStyle);
-		TextField nameText = new TextField("", skin);
-		Label addressLabel = new Label("Address:", skin);
-		TextField addressText = new TextField("", skin);
-		*/
-
         Container<Table> mainMenuContainer = new Container<>();
-        //mainMenuContainer.setDebug(true);
         Table tblConfigSong = new Table(skin);
         Table tblTracks = new Table();
 
-
-
-        tblConfigSong.right().top();
-
-        SelectBox<String> instruments = new SelectBox<>(skin);
-
-        instruments.setItems("Bass", "Drum", "Synth", "Amoung", "Amoung Pequeno");
-
-        TextButton txtSongSelect = new TextButton("Select song", skin);
+        TextButton btnSongSelect = new TextButton("Select song", skin);
         Label lblSongName = new Label("Darude sandstorm.mid", skin);
         Label lblConfig = new Label("Configure Song", skin);
         Label lblTrackName = new Label("Track", skin);
-        Label lblPlayTrack = new Label("Play Track", skin);
         Label lblInstruments = new Label("Instrument", skin);
 
-        txtSongSelect.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
+
+        //TODO Fix ScrollPane vertical scroll (overflowing from screen)
+        ScrollPane scrollTableTracks = new ScrollPane(tblTracks, skin);
+        scrollTableTracks.setScrollingDisabled(true, false);
+
+        FileDialog fd = new FileDialog("Select song", skin);
+        fd.setResultListener((res, fileName, filePath) -> {
+            if (res.equals(DialogResult.OK)) {
+                lblSongName.setText(fileName);
+
+                ButtonGroup<CheckBox> playableTracks = new ButtonGroup<>();
+                playableTracks.setMinCheckCount(1);
+                playableTracks.setMaxCheckCount(1);
+                String[] ins = {"Bass", "Drum", "Synth", "", "Guitar"};
+
                 tblTracks.clearChildren();
                 tracks.forEach(s -> {
-                    tblTracks.add(new Label(s.trackName, skin)).padRight(100);
-                    tblTracks.add(new TextButton(s.instrumentName, skin)).padRight(100);
-                    tblTracks.add(new Label("fffasdad", skin));
+                    //TODO Fix height of SelectBox
+                    SelectBox<String> instruments = new SelectBox<>(skin);
+                    instruments.setItems(ins);
+                    instruments.setMaxListCount(3);
+                    CheckBox ck = new CheckBox(s.trackName, skin);
+                    playableTracks.add(ck);
+                    tblTracks.add(ck).expand().align(Align.left).padRight(30);
+                    tblTracks.add(instruments).expand().align(Align.right).padRight(30);
                     tblTracks.row();
                 });
+                tblConfigSong.getCell(scrollTableTracks).width(tblTracks.getWidth() + 100);
             }
         });
 
-        ScrollPane scrl = new ScrollPane(tblTracks , skin);
+        btnSongSelect.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                fd.show(stage);
+                fd.setBounds(screenWidth / 2 - 300, screenHeight / 2 - 100, 800, 800);
+                fd.setSize(800, 800);
+            }
+        });
 
-        tblConfigSong.add(txtSongSelect);
-        tblConfigSong.add(lblSongName).padLeft(100).colspan(2);
+        scrollTableTracks.setFadeScrollBars(false);
+        scrollTableTracks.setScrollingDisabled(true, false);
+
+        tblConfigSong.add(btnSongSelect);
+        tblConfigSong.add(lblSongName).padLeft(100).padRight(30).colspan(2);
         tblConfigSong.row();
         tblConfigSong.add(lblConfig).padTop(25).padBottom(10).colspan(3);
         tblConfigSong.row();
-        tblConfigSong.add(lblTrackName);
-        tblConfigSong.add(lblPlayTrack);
-        tblConfigSong.add(lblInstruments);
+        tblConfigSong.add(lblTrackName).expand().align(Align.left).padLeft(20);
+        tblConfigSong.add(lblInstruments).expand().align(Align.right).padRight(20);
         tblConfigSong.row();
-        tblConfigSong.add(scrl).height(200).fill().expand().colspan(3).padTop(20);
+        tblConfigSong.add(scrollTableTracks).expand().fillX().colspan(2).padTop(20).padBottom(20).height(200);
 
-        mainMenuContainer.fill();
+
+        NinePatch patch = new NinePatch(new Texture(Gdx.files.internal("background.png")), 0, 0, 0, 0);
+        NinePatchDrawable sas = new NinePatchDrawable(patch);
+        patch.setColor(new Color(1, 1, 1, 0.2f));
+        tblConfigSong.background(sas);
+
         mainMenuContainer.setActor(tblConfigSong);
         mainMenuContainer.setPosition(screenWidth / 2, (screenHeight / 2) - byPercent(screenHeight, 0.12f));
 
@@ -148,28 +161,12 @@ public class PlayScreen extends ApplicationAdapter {
         Gdx.input.setInputProcessor(stage);
     }
 
-    private Table createTrackTable(List<Track> tracks, Skin skin) {
-        Table t = new Table();
-        ButtonGroup btgTrackName = new ButtonGroup();
-        ButtonGroup btgSelectTrack = new ButtonGroup();
-        btgTrackName.setMaxCheckCount(1);
-        btgTrackName.setMinCheckCount(1);
-
-        tracks.forEach(s -> {
-            t.add(new Label(s.trackName, skin));
-            t.add(new Button());
-            t.add(new Label("dfdfssdf", skin));
-            t.row();
-        });
-        return t;
-    }
-
-    private float byPercent(float size, float percent) {
+    private float byPercent(final float size, final float percent) {
         return size * percent;
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
         System.out.println("Resize called " + width + " " + height);
         stage.getViewport().update(width, height);
         //skin.getFont("title").getData().setScale(width * 0.002f, height * 0.002f);
@@ -179,8 +176,7 @@ public class PlayScreen extends ApplicationAdapter {
     }
 
     @Override
-    public void render () {
-        //Gdx.gl.glClearColor(1, 1, 1, 1);
+    public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         backStage.act();
         stage.act();
@@ -191,7 +187,7 @@ public class PlayScreen extends ApplicationAdapter {
     }
 
     @Override
-    public void dispose () {
+    public void dispose() {
         stage.dispose();
         generator.dispose();
         System.out.println("Disposed");
