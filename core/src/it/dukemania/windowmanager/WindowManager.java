@@ -2,7 +2,7 @@ package it.dukemania.windowmanager;
 
 import java.util.HashMap;
 
-public class WindowManager implements SwitchWindowListener {
+public class WindowManager implements SwitchWindowNotifier {
     private final HashMap<Integer, Window> windows = new HashMap<>();
     private Window currentWindow;
 
@@ -19,15 +19,15 @@ public class WindowManager implements SwitchWindowListener {
     }
 
     public void switchWindow(final WindowState state) {
+        /*
         if (currentWindow != null) {
             currentWindow.dispose();
-        }
-        System.out.println("Switchy");
+        }*/
         currentWindow = windows.get(state.getStateValue());
         currentWindow.create();
     }
 
     public void dispose() {
-        currentWindow.dispose();
+        windows.forEach((i, w) -> w.dispose());
     }
 }
