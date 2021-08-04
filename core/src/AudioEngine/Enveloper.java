@@ -8,12 +8,12 @@ public class Enveloper {
 
     /**
      * Create an Enveloper template which can later be used to create envelopers,
-     * since the sustain time of a note may vary
+     * since the sustain time of a note may vary.
      * @param atk ms that will take the volume to raise from 0 to atk_vol
      * @param atk_vol the maximum volume reachable by the enveloper
      * @param rel ms that will take the volume to drop from the release volume to 0
      */
-    public Enveloper(long atk, float atk_vol, long rel){
+    public Enveloper(long atk, float atk_vol, long rel) {
         this.atk = atk;
         this.rel = rel;
         this.atkVol = atk_vol;
@@ -21,24 +21,25 @@ public class Enveloper {
     }
 
     /**
-     * Get the total time that the enveloper passes during attack and release
+     * Get the total time that the enveloper passes during attack and release.
      * @return The total samples
      */
-    public long getTime(){
+    public long getTime() {
         return (long) ((this.atk + this.rel) * Settings.SAMPLESPERMILLI);
     }
 
     /**
-     * Create the actual volume enveloper, using the class parameters
+     * Create the actual volume enveloper, using the class parameters.
      * @return the volume enveloper as an Iterator
      */
-    public EnveloperIterator<Float> createEnveloper(){
-        return new EnveloperIterator<Float>() {
+    public BufferManager<Float> createEnveloper(final double [] buff) {
+        return new BufferManager<Float>() {
             private float actual = 0f;
             private float totalSamples = 0l;
-            private long processedSamples = 0l;
+            private int processedSamples = 0;
             private float resetStep = 0;
             private float step2 = 0;
+            private int reset = 0;
             /**
              * {@inheritDoc}
              */
@@ -46,7 +47,7 @@ public class Enveloper {
             public void refresh(long ttl) {
                 totalSamples = (ttl * Settings.SAMPLESPERMILLI) + Settings.ATTENUATION;
                 resetStep = actual / (Settings.ATTENUATION);
-                processedSamples = Settings.ATTENUATION * -1;
+                reset = Settings.ATTENUATION;
                 step2 = 0;
             }
             /**
@@ -54,7 +55,7 @@ public class Enveloper {
              */
             @Override
             public boolean hasNext() {
-                return actual > 0 || processedSamples < totalSamples;
+                return reset >= 0 || processedSamples < totalSamples || actual > 0;
             }
             /**
              * {@inheritDoc}
@@ -62,30 +63,29 @@ public class Enveloper {
             @Override
             public Float next() {
 
-                if(this.processedSamples < 0){
+                if (reset == 0) {
+                    this.processedSamples = 0;
+                    this.actual = 0;
+                } else if (reset > 0) {
                     actual -= resetStep;
-                }else{
-                    if(this.processedSamples >= this.totalSamples){
-                        if (step2 == 0) {
-                            step2 = (actual / (rel * Settings.SAMPLESPERMILLI)) * -1;
-                        }
-                        if(actual <= 0){
-                            this.processedSamples++; // TODO procsamples++ poterbbne non servire
-                            return 0f;
-                        }else{
-                            actual += step2;
-                        }
-                    }else{
-                        if(actual >= atkVol){
-                            this.processedSamples++;
-                            return atkVol;
-                        }else{
-                            actual += step1;
-                        }
+                } else if (this.processedSamples >= this.totalSamples) {
+                    if (step2 == 0) {
+                        step2 = (actual / (rel * Settings.SAMPLESPERMILLI)) * -1;
                     }
+                    if (actual <= 0) {
+                        this.processedSamples++;
+                        return 0f;
+                    }
+                    actual += step2;
+                } else {
+                    if (actual >= atkVol) {
+                        return atkVol * (float)buff[this.processedSamples++];
+                    }
+                    actual += step1;
                 }
-                this.processedSamples++;
-                return actual;
+
+                this.reset--;
+                return (float)buff[this.processedSamples++] * actual;
             }
         };
     }

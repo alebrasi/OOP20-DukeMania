@@ -2,30 +2,29 @@ package AudioEngine;
 
 import java.util.Arrays;
 
-public class DrumSynth implements Synth{
+public class DrumSynth implements Synth {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public int checkKeys() {
-        return (int) Arrays.stream(DrumSamples.values()).filter(x->x.sampleBuffer.hasNext()).count();
+        return (int) Arrays.stream(DrumSamples.values()).filter(DrumSamples::hasNext).count();
     }
     /**
      * {@inheritDoc}
      */
     @Override
     public float getSample() {
-        // TODO CONTROLLO SE CE NE E ALMENO 1 CHE PLAYA
-        return (float) Arrays.stream(DrumSamples.values()).filter(x->x.sampleBuffer.hasNext()).mapToDouble(x->x.sampleBuffer.next()).sum();
+        // TODO FRATTO 3 CI VUOLE ?
+        return (float) Arrays.stream(DrumSamples.values()).filter(DrumSamples::hasNext).mapToDouble(DrumSamples::next).sum();
     }
-
     /**
-     * Start playing or restart playing a percussion
+     * Start playing or restart playing a percussion.
      * @param drum the percussion
      */
-    public void playPercussion(DrumSamples drum){
-        drum.sampleBuffer.refresh();
+    public void playPercussion(final DrumSamples drum) {
+        drum.refresh();
     }
 
 }
