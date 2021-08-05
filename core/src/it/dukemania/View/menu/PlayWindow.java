@@ -10,13 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import it.dukemania.Controller.filedialog.DialogResult;
+import it.dukemania.Controller.playscreen.PlayScreenController;
+import it.dukemania.Controller.playscreen.PlayScreenControllerImpl;
 import it.dukemania.View.AbstractView;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 
-import java.util.ArrayList;
-import java.util.List;
 
+//TODO Make singleton asset manager
 public class PlayWindow extends AbstractView {
+
+    final PlayScreenController controller = new PlayScreenControllerImpl();
 
     public PlayWindow(final String backgroundPath, final Skin skin) {
         super(backgroundPath, skin);
@@ -29,17 +32,6 @@ public class PlayWindow extends AbstractView {
         float screenWidth = mainStage.getWidth();
         float screenHeight = mainStage.getHeight();
 
-        List<Track> tracks = new ArrayList<>();
-        tracks.add(new Track("asd", "lol"));
-        tracks.add(new Track("sasas", "sdfsdfasdasdasdasdad"));
-        tracks.add(new Track("sahghs", "sdujg"));
-        tracks.add(new Track("sdfgdf", "sdfghd"));
-        tracks.add(new Track("sdfasfg", "ssrfsadf"));
-        tracks.add(new Track("sdfasfg", "ssrfsadf"));
-        tracks.add(new Track("sdffhsjdfhasdag", "ssrfsadfsdsfdsdf"));
-        tracks.add(new Track("sdfasfg", "ssrfsadf"));
-        tracks.add(new Track("sdfasfg", "ssrfsadf"));
-
         Container<Table> mainMenuContainer = new Container<>();
         Table tblConfigSong = new Table(skin);
         Table tblTracks = new Table();
@@ -47,8 +39,9 @@ public class PlayWindow extends AbstractView {
         TextButton btnSongSelect = new TextButton("Select song", skin);
         Label lblSongName = new Label("Darude sandstorm.mid", skin);
         Label lblConfig = new Label("Configure Song", skin);
-        Label lblTrackName = new Label("Track", skin);
+        Label lblTrackName = new Label("Track Name", skin);
         Label lblInstruments = new Label("Instrument", skin);
+        Label lblTrackID = new Label("Track ID", skin);
         TextButton btnBackToTitle = new TextButton("Back to title screen", skin);
 
 
@@ -64,18 +57,20 @@ public class PlayWindow extends AbstractView {
                 ButtonGroup<CheckBox> playableTracks = new ButtonGroup<>();
                 playableTracks.setMinCheckCount(1);
                 playableTracks.setMaxCheckCount(1);
-                String[] ins = {"Bass", "Drum", "Synth", "", "Guitar"};
+                String[] ins = controller.getAllInstruments();
 
                 tblTracks.clearChildren();
-                tracks.forEach(s -> {
+                controller.getTracks().forEach(s -> {
                     //TODO Fix height of SelectBox
-                    SelectBox<String> instruments = new SelectBox<>(skin);
-                    instruments.setItems(ins);
-                    instruments.setMaxListCount(3);
-                    CheckBox ck = new CheckBox(s.trackName, skin);
+                    SelectBox<String> slctInstruments = new SelectBox<>(skin);
+                    slctInstruments.setItems(ins);
+                    slctInstruments.setSelected(s.getInstrumentName());
+                    slctInstruments.setMaxListCount(3);
+                    CheckBox ck = new CheckBox(String.valueOf(s.getTrackID()), skin);
                     playableTracks.add(ck);
-                    tblTracks.add(ck).expand().align(Align.left).padRight(30);
-                    tblTracks.add(instruments).expand().align(Align.right).padRight(30);
+                    tblTracks.add(ck).expand().align(Align.center);
+                    tblTracks.add(new Label(s.getTrackName(), skin)).align(Align.left);
+                    tblTracks.add(slctInstruments).expand().align(Align.right);
                     tblTracks.row();
                 });
                 tblConfigSong.getCell(scrollTableTracks).width(tblTracks.getWidth() + 100);
@@ -101,17 +96,19 @@ public class PlayWindow extends AbstractView {
         scrollTableTracks.setFadeScrollBars(false);
         scrollTableTracks.setScrollingDisabled(true, false);
 
+        //TODO Fix table config song layout
         tblConfigSong.add(btnSongSelect);
         tblConfigSong.add(lblSongName).padLeft(100).padRight(30).colspan(2);
         tblConfigSong.row();
         tblConfigSong.add(lblConfig).padTop(25).padBottom(10).colspan(3);
         tblConfigSong.row();
-        tblConfigSong.add(lblTrackName).expand().align(Align.left).padLeft(20);
+        tblConfigSong.add(lblTrackID).expand().align(Align.left).padLeft(20);
+        tblConfigSong.add(lblTrackName).expand().align(Align.center);
         tblConfigSong.add(lblInstruments).expand().align(Align.right).padRight(20);
         tblConfigSong.row();
-        tblConfigSong.add(scrollTableTracks).expand().fillX().colspan(2).padTop(20).padBottom(20).height(200);
+        tblConfigSong.add(scrollTableTracks).expand().fillX().colspan(3).padTop(20).padBottom(20).height(200);
         tblConfigSong.row();
-        tblConfigSong.add(btnBackToTitle);
+        tblConfigSong.add(btnBackToTitle).padLeft(20);
 
         //TODO Dispose texture
         NinePatch patch = new NinePatch(new Texture(Gdx.files.internal("background.png")), 0, 0, 0, 0);
