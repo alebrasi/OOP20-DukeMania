@@ -40,6 +40,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     public void create() {
 
         List<Track> tracks = new ArrayList<>();
+        /*
         tracks.add(new Track("asd", "lol"));
         tracks.add(new Track("sasas", "sdfsdfasdasdasdasdad"));
         tracks.add(new Track("sahghs", "sdujg"));
@@ -49,6 +50,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         tracks.add(new Track("sdffhsjdfhasdag", "ssrfsadfsdsfdsdf"));
         tracks.add(new Track("sdfasfg", "ssrfsadf"));
         tracks.add(new Track("sdfasfg", "ssrfsadf"));
+
+         */
 
         //---------------------------------------------------------------------------------------------
         String TEXTURE_PATH = "textures/quantum-horizon/quantum-horizon-ui.json";
@@ -120,7 +123,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                     SelectBox<String> instruments = new SelectBox<>(skin);
                     instruments.setItems(ins);
                     instruments.setMaxListCount(3);
-                    CheckBox ck = new CheckBox(s.trackName, skin);
+                    CheckBox ck = new CheckBox(s.getTrackName(), skin);
                     playableTracks.add(ck);
                     tblTracks.add(ck).expand().align(Align.left).padRight(30);
                     tblTracks.add(instruments).expand().align(Align.right).padRight(30);
