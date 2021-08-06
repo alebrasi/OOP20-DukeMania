@@ -1,8 +1,11 @@
 package it.dukemania.View.notesGraphics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 
 import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
@@ -25,6 +28,8 @@ public class NoteImpl implements Note {
 	private int ySparks;
 	private long startNote;
 	private long duration;
+	private Size dimensions = new SizeImpl();
+	private OrthographicCamera camera;
 	
 	
 	public NoteImpl(int heightpos, int width, Columns letter, SpriteBatch batch, int posyBlue, int posySparks, int height, long startNote, long duration) {
@@ -34,13 +39,13 @@ public class NoteImpl implements Note {
 		this.xNote = 50;
 		this.yNote = height;
 		this.column = letter;
-		if(letter.equals(Columns.column1)) {
+		if(letter.equals(Columns.COLUMN1)) {
 			this.posxNote = width / 8 - this.xNote / 2;
-		} if(letter.equals(Columns.column2)) {
+		} if(letter.equals(Columns.COLUMN2)) {
 			this.posxNote = 3 * width / 8 - this.xNote / 2;
-		} if(letter.equals(Columns.column3)) {
+		} if(letter.equals(Columns.COLUMN3)) {
 			this.posxNote = 5 * width / 8 - this.xNote / 2;
-		} if(letter.equals(Columns.column4)) {
+		} if(letter.equals(Columns.COLUMN4)) {
 			this.posxNote = 7 * width / 8 - this.xNote / 2;
 		} 
 		this.posyNote = heightpos;
@@ -52,14 +57,20 @@ public class NoteImpl implements Note {
 		this.ySparks = 70;
 		this.startNote = startNote;
 		this.duration = duration;
+		camera = new OrthographicCamera(this.dimensions.getSize().getX(),this.dimensions.getSize().getY());
 	}
 
 	@Override
 	public void drawNote() {
-		if (this.posyNote  > 0) {
+		if (this.posyNote  > 10) {
 			this.posyNote -= (this.speedNote * Gdx.graphics.getDeltaTime());
-			this.batchNote.draw(this.textureNote, this.posxNote, this.posyNote, this.xNote, this.yNote, 0, 1, 1, 0);
-			
+			/*Rectangle scissors = new Rectangle(0,0,this.dimensions.getSize().getX()*2,50); 
+	                Rectangle clipBounds = new Rectangle(-this.dimensions.getSize().getX(),-this.dimensions.getSize().getY()+279,this.dimensions.getSize().getX()*2,this.dimensions.getSize().getY()*2);
+	                ScissorStack.calculateScissors(camera, this.batchNote.getTransformMatrix(), clipBounds, scissors); 
+	                ScissorStack.pushScissors(scissors);*/
+	                this.batchNote.draw(this.textureNote, this.posxNote, this.posyNote, this.xNote, this.yNote, 0, 1, 1, 0);
+	                /*this.batchNote.flush();    
+	                ScissorStack.popScissors();*/
 		}
 
 	}

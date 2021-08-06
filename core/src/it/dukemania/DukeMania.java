@@ -9,7 +9,6 @@ import java.lang.Math;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 
 //import AudioEngine.Engine;
 import it.dukemania.View.notesGraphics.Note;
@@ -36,10 +36,8 @@ public class DukeMania extends ApplicationAdapter {
 	//Engine ae = null;
 	
 	//sofi
-        //refactora finish line blue
 	//private Logic logic = new LogicImpl();         //rapo
 	private Size dimensions = new SizeImpl();
-	//private SpriteBatch batchbg;
         private Stage stage;
         private TextureAtlas atlas;
         private Skin skin;
@@ -53,14 +51,11 @@ public class DukeMania extends ApplicationAdapter {
         private Texture background;
         private int buttonHeight;
         private SpriteBatch batch;
-        private Texture textureFinishLineBlue;
+        //private SpriteBatch batchbg;
         private int xNote;
         private int yNote;
         private int posySparks;
-        private int posxBlue;
         private int posyBlue;
-        private int xBlue = 50;
-        private int yBlue = 50;
         private NoteLogic note6uno; //nell'attesa dell'array di rapo
         private NoteLogic note7uno;
         private NoteLogic note8uno;
@@ -78,15 +73,13 @@ public class DukeMania extends ApplicationAdapter {
             this.buttonHeight = 2 * this.dimensions.getSize().getY() / 9;
             this.posySparks = this.buttonHeight - 35; //15
             this.posyBlue = this.buttonHeight;   //20
-            this.posxBlue = 0;
-            this.yBlue = this.dimensions.getSize().getX();
-            this.xBlue = this.dimensions.getSize().getX();
             //notes = logic.getnotes();      //rapo
     }
 	
 	@Override
 	public void create () {
 		batch =	new SpriteBatch();
+                //this.batchbg = new SpriteBatch();
 		//ae = new Engine();
 		
 		//sofi
@@ -94,16 +87,16 @@ public class DukeMania extends ApplicationAdapter {
                 Gdx.input.setInputProcessor(stage);
                 this.background = new Texture(Gdx.files.internal("galaxy.png"));
                 this.timeStart = Instant.now().toEpochMilli();
-                this.note6uno = new NoteLogicImpl(3,200,1, Columns.column1, 200);
-                this.note7uno = new NoteLogicImpl(2,600,2, Columns.column2, 200);
-                this.note8uno = new NoteLogicImpl(1,1000,3, Columns.column3, 200);
-                this.note9uno = new NoteLogicImpl(4,1400,4, Columns.column4, 200);
-                this.note10uno = new NoteLogicImpl(2,1600,2, Columns.column2, 200);
+                this.note6uno = new NoteLogicImpl(3,200,1, Columns.COLUMN1, 200);
+                this.note7uno = new NoteLogicImpl(2,600,2, Columns.COLUMN2, 200);
+                this.note8uno = new NoteLogicImpl(1,1000,3, Columns.COLUMN3, 200);
+                this.note9uno = new NoteLogicImpl(4,1400,4, Columns.COLUMN4, 200);
+                this.note10uno = new NoteLogicImpl(2,1600,5, Columns.COLUMN2, 200);
 
                 this.logicNotes.add(note6uno);
                 this.logicNotes.add(note7uno);
                 this.logicNotes.add(note8uno);
-                this.logicNotes.add(note9uno);
+                this.logicNotes.add(note9uno); 
                 this.logicNotes.add(note10uno);
                 for (NoteLogic noteLogic : logicNotes) {
                         this.notes.add(associationNote(noteLogic));
@@ -114,7 +107,6 @@ public class DukeMania extends ApplicationAdapter {
                 this.skin = new Skin();
                 this.atlas = new TextureAtlas(Gdx.files.internal("pink and blue button.atlas"));  //(Gdx.files.internal("black and blue.atlas"));
                 this.skin.addRegions(atlas);
-                this.textureFinishLineBlue = new Texture(Gdx.files.internal("blue line.png"));
 
                 
                 this.styleDown = new TextButtonStyle();
@@ -150,6 +142,8 @@ public class DukeMania extends ApplicationAdapter {
                 stage.addActor(button4);
                 //button.setTransform(true);
                 //button.setScale(0.2f);
+                
+                
 	}
 	
 	private Note associationNote(NoteLogic noteLogic) {
@@ -182,28 +176,27 @@ public class DukeMania extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-	        Gdx.gl.glClearColor(.25f, .25f, .25f, 1);
+	        //Gdx.gl.glClearColor(.25f, .25f, .25f, 1);
+	        Gdx.gl.glClearColor(0,1,4,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//ae.playBuffer();
+		//this.batchbg.begin(); //fixa il problema
 		this.batch.begin();
 		
 		//sofi
-		//prova bg
-		//this.batchbg.begin();
-		//this.batchbg.draw(background, 0, 0);
-		this.batch.draw(background,0,0,this.dimensions.getSize().getX()+250,this.dimensions.getSize().getY());
-		//prova bg
 		button1.setStyle(this.styleUp);
                 button2.setStyle(this.styleUp);
                 button3.setStyle(this.styleUp);
                 button4.setStyle(this.styleUp);
                 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-                this.batch.draw(this.textureFinishLineBlue, this.posxBlue, this.posyBlue, this.xBlue, this.yBlue, 0, 1, 1, 0);
+                
+                this.batch.draw(background,0,0,this.dimensions.getSize().getX()+250,this.dimensions.getSize().getY());    
                 
                 
                 long actualTime = Instant.now().toEpochMilli() - this.timeStart;
                 
                 this.notesPlaying = isPlaying(actualTime);
+                
                 
                 
                 if (!this.notesPlaying.isEmpty()) {
@@ -213,50 +206,43 @@ public class DukeMania extends ApplicationAdapter {
                         
                         if (this.keyboard.isColumn1Selected()) {
                             button1.setStyle(this.styleDown);
-                            n.isSparked(Columns.column1, this.batch);
-                            this.textureFinishLineBlue = new Texture(Gdx.files.internal("fucsia line.png"));
+                            n.isSparked(Columns.COLUMN1, this.batch);
                         }
              
                         if (this.keyboard.isColumn2Selected()) {
                                 button2.setStyle(this.styleDown);
-                                n.isSparked(Columns.column2, this.batch);
-                                this.textureFinishLineBlue = new Texture(Gdx.files.internal("fucsia line.png"));
+                                n.isSparked(Columns.COLUMN2, this.batch);
                         }
                         if (this.keyboard.isColumn3Selected()) {
                                 button3.setStyle(this.styleDown);
-                                n.isSparked(Columns.column3, this.batch);
-                                this.textureFinishLineBlue = new Texture(Gdx.files.internal("fucsia line.png"));
+                                n.isSparked(Columns.COLUMN3, this.batch);
                         }
                         if (this.keyboard.isColumn4Selected()) {
                                 button4.setStyle(this.styleDown);
-                                n.isSparked(Columns.column4, this.batch);
-                                this.textureFinishLineBlue = new Texture(Gdx.files.internal("fucsia line.png"));
+                                n.isSparked(Columns.COLUMN4, this.batch);
                         }
                         
                         if (!this.keyboard.isButton1Pressed()) {
                                 button1.setStyle(this.styleUp);
-                                this.textureFinishLineBlue = new Texture(Gdx.files.internal("blue line.png")); //rosso solo sul primo
                         }
                         if (!this.keyboard.isButton2Pressed()) {
                                 button2.setStyle(this.styleUp);
-                                //this.textureFinishLineBlue = new Texture(Gdx.files.internal("blue line.png"));
                         }
                         if (!this.keyboard.isButton3Pressed()) {
                                 button3.setStyle(this.styleUp);
-                                //this.textureFinishLineBlue = new Texture(Gdx.files.internal("blue line.png"));
                         }
                         if (!this.keyboard.isButton4Pressed()) {
                                 button4.setStyle(this.styleUp);
-                                //this.textureFinishLineBlue = new Texture(Gdx.files.internal("blue line.png"));
                         }
                     }
                     this.notesPlaying.removeAll(notFinished(this.notesPlaying, actualTime));
                     
                 }
-                
+        
         this.batch.end();
         //this.batchbg.end();
-        stage.draw();
+        
+        this.stage.draw();
 
 	}
 	
