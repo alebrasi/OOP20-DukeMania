@@ -1,6 +1,7 @@
 package it.dukemania.View.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -9,12 +10,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import it.dukemania.Controller.filedialog.DialogResult;
 import it.dukemania.Controller.playscreen.PlayScreenController;
 import it.dukemania.Controller.playscreen.PlayScreenControllerImpl;
+import it.dukemania.Model.InstrumentType;
+import it.dukemania.Model.MyTrack;
+import it.dukemania.Model.Song;
 import it.dukemania.View.AbstractView;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 
+import java.util.ArrayList;
+import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 //TODO Make singleton asset manager
 public class PlayWindow extends AbstractView {
@@ -28,6 +38,8 @@ public class PlayWindow extends AbstractView {
     @Override
     public void create() {
         super.create();
+        deserialize();
+        //serialize();
 
         float screenWidth = mainStage.getWidth();
         float screenHeight = mainStage.getHeight();
@@ -121,5 +133,42 @@ public class PlayWindow extends AbstractView {
 
         mainStage.addActor(mainMenuContainer);
         Gdx.input.setInputProcessor(mainStage);
+    }
+
+    private void deserialize() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = Gdx.files.local("song_config.json").readString();
+
+        try {
+
+            JavaType listSongType = objectMapper.constructType(new TypeReference<List<Song>>() {
+            });
+
+            List<Song> s = objectMapper.readValue(json, listSongType);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void serialize() {
+        List<MyTrack> tracks = new ArrayList<>();
+        List<Song> songs = new ArrayList<>();
+        tracks.add(new MyTrack("Slap Bass", InstrumentType.SLAP_BASS_1, null, 1));
+        tracks.add(new MyTrack("Guitar Solo", InstrumentType.ELECTRIC_GUITAR_C, null, 2));
+        songs.add(new Song("This game", 3, tracks, 160));
+        songs.add(new Song("Red Zone", 3, tracks, 180));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String sas = "";
+
+        try {
+            sas = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(songs);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(sas);
+        FileHandle handle = Gdx.files.local("song_config.json");
+        System.out.println(handle.path());
+        handle.writeString(sas, false);
     }
 }
