@@ -1,6 +1,6 @@
 package it.dukemania.Controller.playscreen;
 
-import it.dukemania.View.menu.Track;
+import it.dukemania.Model.Track;
 
 import java.util.ArrayList;
 import java.util.List;

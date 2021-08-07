@@ -1,7 +1,6 @@
-package it.dukemania.View.menu;
+package it.dukemania.Model.serializers;
 
 public class Track {
-
     final private String trackName;
     final private String instrumentName;
     final private int trackID;
