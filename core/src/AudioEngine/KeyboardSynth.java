@@ -13,14 +13,14 @@ public class KeyboardSynth implements Synth {
             final double[] positions = new double[steps.length];
             long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 100);
             double [] buff = LongStream.range(0, total).mapToDouble(
-                k-> {
+                k -> {
                     float noteLfoVal = noteLFO.apply(k);
                     return 	IntStream.range(0, steps.length)
                             .mapToDouble(x->waves[x].getAt((int) ((positions[x] = positions[x] + steps[x] * noteLfoVal)  % Settings.WAVETABLE_SIZE)))
                             .sum() / steps.length * volumeLFO.apply(k);
                 }
             ).toArray();
-            envIterator = env.createEnveloper(buff);
+            envIterator = env.createBufferManager(buff);
         }
 
         private final BufferManager<Float> envIterator;

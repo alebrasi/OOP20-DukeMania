@@ -46,7 +46,7 @@ enum DrumSamples implements Iterator<Float> {
         Random rnd = new Random();
         double [] buff = IntStream.range(0, 20000).mapToDouble(x -> rnd.nextFloat()).toArray();
         Filters.sampleNHold(buff, 10);
-        Snare.sampleBuffer = new Enveloper(10l, 1f, 300l).createEnveloper(buff);
+        Snare.sampleBuffer = new Enveloper(10l, 1f, 300l).createBufferManager(buff);
     }
 
     /**
@@ -55,7 +55,7 @@ enum DrumSamples implements Iterator<Float> {
     static void getHat() {
         Random rnd = new Random();
         double [] buff = IntStream.range(0, 7000).mapToDouble(x -> rnd.nextFloat()).toArray();
-        Hat.sampleBuffer = new Enveloper(10l, 1f, 25l).createEnveloper(buff);
+        Hat.sampleBuffer = new Enveloper(10l, 1f, 25l).createBufferManager(buff);
     }
 
     /**
@@ -69,7 +69,7 @@ enum DrumSamples implements Iterator<Float> {
         for (int i = 0; i < buff.length; i++) {
             buff[i] = WaveTable.Square.getAt((int) ((pos = pos + step * lfoOsc1.apply((long) i)) % Settings.WAVETABLE_SIZE));
         }
-        Kick.sampleBuffer = new Enveloper(10l, 1f, 100l).createEnveloper(buff);
+        Kick.sampleBuffer = new Enveloper(10l, 1f, 100l).createBufferManager(buff);
     }
 
     /**
@@ -83,7 +83,7 @@ enum DrumSamples implements Iterator<Float> {
         for (int i = 0; i < buff.length; i++) {
             buff[i] = WaveTable.Triangle.getAt((int) ((pos = pos + step * lfoOsc1.apply((long) i)) % Settings.WAVETABLE_SIZE));
         }
-        Tom.sampleBuffer = new Enveloper(10l, 1f, 100l).createEnveloper(buff);
+        Tom.sampleBuffer = new Enveloper(10l, 1f, 100l).createBufferManager(buff);
     }
 
     static {

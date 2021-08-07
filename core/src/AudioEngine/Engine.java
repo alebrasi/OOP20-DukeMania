@@ -48,13 +48,13 @@ public class Engine {
         if (pos == 0 || pos == 30  || pos == 60||  pos == 90 || pos == 180 || pos == 195+15) {
             ds.playPercussion(DrumSamples.Kick);
         }
-        if (pos == 15|| pos == 15+7 || pos == 60 || pos == 75 || pos == 82 || pos == 120 || pos == 150 || pos == 195 || pos == 195 + 7) {
+        if (pos == 15 || pos == 15+7 || pos == 60 || pos == 75 || pos == 82 || pos == 120 || pos == 150 || pos == 195 || pos == 195 + 7) {
             ds.playPercussion(DrumSamples.Hat);
         }
         if (pos == 45 || pos == 165 || pos == 225) {
             ds.playPercussion(DrumSamples.Snare);
         }
-        if (pos == 105  || pos == 135 ) {
+        if (pos == 105  || pos == 135) {
             ds.playPercussion(DrumSamples.Tom);
         }
 
@@ -78,8 +78,7 @@ public class Engine {
         }
          */
 
-
-
+        System.out.println(ds.checkKeys());
         for(int i=0;i<buffer.length;i++){
             buffer[i] = ds.getSample();
         }

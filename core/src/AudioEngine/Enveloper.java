@@ -32,14 +32,14 @@ public class Enveloper {
      * Create the actual volume enveloper, using the class parameters.
      * @return the volume enveloper as an Iterator
      */
-    public BufferManager<Float> createEnveloper(final double [] buff) {
+    public BufferManager<Float> createBufferManager(final double [] buff) {
         return new BufferManager<Float>() {
             private float actual = 0f;
             private float totalSamples = 0l;
             private int processedSamples = 0;
             private float resetStep = 0;
             private float step2 = 0;
-            private int reset = 0;
+            private int reset = -1;
             /**
              * {@inheritDoc}
              */
@@ -63,25 +63,28 @@ public class Enveloper {
             @Override
             public Float next() {
 
-                if (reset == 0) {
-                    this.processedSamples = 0;
-                    this.actual = 0;
-                } else if (reset > 0) {
+                if (reset > 0) {
                     actual -= resetStep;
-                } else if (this.processedSamples >= this.totalSamples) {
-                    if (step2 == 0) {
-                        step2 = (actual / (rel * Settings.SAMPLESPERMILLI)) * -1;
-                    }
-                    if (actual <= 0) {
-                        this.processedSamples++;
-                        return 0f;
-                    }
-                    actual += step2;
                 } else {
-                    if (actual >= atkVol) {
-                        return atkVol * (float)buff[this.processedSamples++];
+                    if (reset == 0) {
+                        this.processedSamples = 0;
+                        this.actual = 0;
                     }
-                    actual += step1;
+                    if (this.processedSamples >= this.totalSamples) {
+                        if (step2 == 0) {
+                            step2 = (actual / (rel * Settings.SAMPLESPERMILLI)) * -1;
+                        }
+                        if (actual <= 0) {
+                            this.processedSamples++;
+                            return 0f;
+                        }
+                        actual += step2;
+                    } else {
+                        if (actual >= atkVol) {
+                            return atkVol * (float)buff[this.processedSamples++];
+                        }
+                        actual += step1;
+                    }
                 }
 
                 this.reset--;
