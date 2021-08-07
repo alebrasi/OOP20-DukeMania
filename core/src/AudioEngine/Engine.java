@@ -39,12 +39,12 @@ public class Engine {
     public void playBuffer(){
 
 
-        /*
+
         if(pos++ % 100 == 0){
             synthetizers.get(0).playTimedNote(100f, 100000l);
         }
-         */
 
+        /*
         if (pos == 0 || pos == 30  || pos == 60||  pos == 90 || pos == 180 || pos == 195+15) {
             ds.playPercussion(DrumSamples.Kick);
         }
@@ -57,7 +57,7 @@ public class Engine {
         if (pos == 105  || pos == 135) {
             ds.playPercussion(DrumSamples.Tom);
         }
-
+*/
         pos = (pos + 1) % 240;
 
         /*
@@ -70,19 +70,21 @@ public class Engine {
          */
 
 
-        /*
+
         int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
-        System.out.println(num);
         for(int i=0;i<buffer.length;i++){
             buffer[i] = (float) (synthetizers.stream().mapToDouble(Synth::getSample).sum() * 1);
+            System.out.println(buffer[i]);
         }
-         */
 
+/*
         System.out.println(ds.checkKeys());
         for(int i=0;i<buffer.length;i++){
             buffer[i] = ds.getSample();
         }
 
+
+ */
 
 
         //System.out.println(num);

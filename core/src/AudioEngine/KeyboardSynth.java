@@ -1,6 +1,8 @@
 package AudioEngine;
 
 import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -8,16 +10,17 @@ import java.util.stream.LongStream;
 public class KeyboardSynth implements Synth {
 
     private class Note {
-        public Note(Enveloper env, float freq, long time, WaveTable[]waves, Function<Long, Float> noteLFO, Function<Long, Float> volumeLFO, double [] offsets) {
-            double[] steps = Arrays.stream(offsets).map(x->((Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE)).toArray();
+        Note(final Enveloper env, final float freq, final long time, final WaveTable[]waves, final Function<Long, Float> noteLFO, final Function<Long, Float> volumeLFO, final double [] offsets) {
+            double[] steps = Arrays.stream(offsets).map(x -> ((Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE)).toArray();
             final double[] positions = new double[steps.length];
             long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 100);
             double [] buff = LongStream.range(0, total).mapToDouble(
                 k -> {
                     float noteLfoVal = noteLFO.apply(k);
-                    return 	IntStream.range(0, steps.length)
-                            .mapToDouble(x->waves[x].getAt((int) ((positions[x] = positions[x] + steps[x] * noteLfoVal)  % Settings.WAVETABLE_SIZE)))
-                            .sum() / steps.length * volumeLFO.apply(k);
+                    return IntStream.range(0, steps.length).mapToDouble(x -> {
+                        positions[x] = positions[x] + steps[x] * noteLfoVal;
+                        return waves[x].getAt((int) (positions[x] % Settings.WAVETABLE_SIZE));
+                    }).sum() / steps.length * volumeLFO.apply(k);
                 }
             ).toArray();
             envIterator = env.createBufferManager(buff);
@@ -39,9 +42,14 @@ public class KeyboardSynth implements Synth {
 
     /**
      * costructor of KeyboardSynth, usually called by a builder.
-     * @param freqs the frequencies of the notes we want to load
+     * @param env the enveloper which all the notees of the synth must follow
+     * @param waves the wave forms of the osacillators
+     * @param nlfo the note lfo
+     * @param vlfo the volume lfo
+     * @param offsets the offsets of the oscilaltors
+     * @param freqs a list of pairs, X is the note frequency, Y is the maxium duration for the note (in ms)
      */
-    public KeyboardSynth(Enveloper env, WaveTable[]waves, Function<Long, Float> nlfo, Function<Long, Float> vlfo, double [] offsets, List<Pair<Float, Long>> freqs) {
+    public KeyboardSynth(final Enveloper env, final WaveTable [] waves, final Function<Long, Float> nlfo, final Function<Long, Float> vlfo, final double [] offsets, final List<Pair<Float, Long>> freqs) {
         freqs.forEach(x -> keys.put(x.getX(), new Note(env, x.getX(), x.getY(), waves, nlfo, vlfo, offsets)));
     }
     /**
