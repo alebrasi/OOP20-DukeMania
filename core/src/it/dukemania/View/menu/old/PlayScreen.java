@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import it.dukemania.Controller.filedialog.DialogResult;
 import it.dukemania.View.menu.FileDialog;
-import it.dukemania.View.menu.Track;
+import it.dukemania.Model.Track;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
 import it.dukemania.windowmanager.Window;
 
