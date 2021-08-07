@@ -1,4 +1,4 @@
-package it.dukemania.Model.serializers;
+package it.dukemania.Model;
 
 public class Track {
     final private String trackName;
