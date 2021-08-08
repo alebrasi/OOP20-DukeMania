@@ -1,9 +1,11 @@
 package it.dukemania.View.notesGraphics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 
@@ -30,6 +32,7 @@ public class NoteImpl implements Note {
 	private long duration;
 	private Size dimensions = new SizeImpl();
 	private OrthographicCamera camera;
+	//private ShapeRenderer renderer = new ShapeRenderer();
 	
 	
 	public NoteImpl(int heightpos, int width, Columns letter, SpriteBatch batch, int posyBlue, int posySparks, int height, long startNote, long duration) {
@@ -57,7 +60,8 @@ public class NoteImpl implements Note {
 		this.ySparks = 70;
 		this.startNote = startNote;
 		this.duration = duration;
-		camera = new OrthographicCamera(this.dimensions.getSize().getX(),this.dimensions.getSize().getY());
+		//camera = new OrthographicCamera(this.dimensions.getSize().getX(),this.dimensions.getSize().getY());
+                //renderer.setProjectionMatrix(batch.getProjectionMatrix());
 	}
 
 	@Override
@@ -68,9 +72,23 @@ public class NoteImpl implements Note {
 	                Rectangle clipBounds = new Rectangle(-this.dimensions.getSize().getX(),-this.dimensions.getSize().getY()+279,this.dimensions.getSize().getX()*2,this.dimensions.getSize().getY()*2);
 	                ScissorStack.calculateScissors(camera, this.batchNote.getTransformMatrix(), clipBounds, scissors); 
 	                ScissorStack.pushScissors(scissors);*/
+	                
+			//Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY(), dimensions.getSize().getX(), 50);
+			
+			Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY(), dimensions.getSize().getX(), -dimensions.getSize().getY() + 110);
+			
+			
+	                /*renderer.begin(ShapeRenderer.ShapeType.Filled);
+	                renderer.setColor(Color.RED);
+	                renderer.rect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
+	                renderer.end();*/
+	                
+			
+			batchNote.flush();
+	                ScissorStack.pushScissors(clipBounds);
 	                this.batchNote.draw(this.textureNote, this.posxNote, this.posyNote, this.xNote, this.yNote, 0, 1, 1, 0);
-	                /*this.batchNote.flush();    
-	                ScissorStack.popScissors();*/
+	                batchNote.flush();
+	                ScissorStack.popScissors();
 		}
 
 	}

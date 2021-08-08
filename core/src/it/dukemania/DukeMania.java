@@ -10,16 +10,21 @@ import java.lang.Math;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 //import AudioEngine.Engine;
 import it.dukemania.View.notesGraphics.Note;
@@ -38,6 +43,7 @@ public class DukeMania extends ApplicationAdapter {
 	//sofi
 	//private Logic logic = new LogicImpl();         //rapo
 	private Size dimensions = new SizeImpl();
+        private Stage buttonsStage;
         private Stage stage;
         private TextureAtlas atlas;
         private Skin skin;
@@ -49,9 +55,10 @@ public class DukeMania extends ApplicationAdapter {
         private TextButton button3;
         private TextButton button4;
         private Texture background;
+        private Image backgroundImage;
         private int buttonHeight;
         private SpriteBatch batch;
-        //private SpriteBatch batchbg;
+        private SpriteBatch backgroundBatch;
         private int xNote;
         private int yNote;
         private int posySparks;
@@ -66,6 +73,9 @@ public class DukeMania extends ApplicationAdapter {
         private List<Note> notesPlaying = new ArrayList<>(); 
         private long timeStart = 0;
         private EventsFromKeyboard keyboard;
+        private OrthographicCamera camera = new OrthographicCamera();
+        private Viewport buttonsViewport;
+        private Viewport stageViewport;
         
         public DukeMania() { 
             this.xNote = 50;
@@ -78,70 +88,77 @@ public class DukeMania extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-		batch =	new SpriteBatch();
-                //this.batchbg = new SpriteBatch();
-		//ae = new Engine();
-		
-		//sofi
-		this.stage = new Stage((new ScreenViewport()));
-                Gdx.input.setInputProcessor(stage);
-                this.background = new Texture(Gdx.files.internal("galaxy.png"));
-                this.timeStart = Instant.now().toEpochMilli();
-                this.note6uno = new NoteLogicImpl(3,200,1, Columns.COLUMN1, 200);
-                this.note7uno = new NoteLogicImpl(2,600,2, Columns.COLUMN2, 200);
-                this.note8uno = new NoteLogicImpl(1,1000,3, Columns.COLUMN3, 200);
-                this.note9uno = new NoteLogicImpl(4,1400,4, Columns.COLUMN4, 200);
-                this.note10uno = new NoteLogicImpl(2,1600,5, Columns.COLUMN2, 200);
+	    this.background = new Texture(Gdx.files.internal("galaxy.png"));
+	    this.backgroundImage = new Image(this.background);
+	    this.batch = new SpriteBatch();
+	    this.backgroundBatch = new SpriteBatch();
+	    this.buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
+	    this.stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera); //backgroundimage.width
+	    Container<Table> backgroundContainer = new Container<>();
+	    //ae = new Engine();
 
-                this.logicNotes.add(note6uno);
-                this.logicNotes.add(note7uno);
-                this.logicNotes.add(note8uno);
-                this.logicNotes.add(note9uno); 
-                this.logicNotes.add(note10uno);
-                for (NoteLogic noteLogic : logicNotes) {
-                        this.notes.add(associationNote(noteLogic));
-                }
-                
-                
-                this.font = new BitmapFont();
-                this.skin = new Skin();
-                this.atlas = new TextureAtlas(Gdx.files.internal("pink and blue button.atlas"));  //(Gdx.files.internal("black and blue.atlas"));
-                this.skin.addRegions(atlas);
+	    //sofi
+	    this.buttonsStage = new Stage(this.buttonsViewport, this.batch);
+	    this.stage = new Stage(this.stageViewport, this.backgroundBatch);
+            Gdx.input.setInputProcessor(buttonsStage);
+            this.timeStart = Instant.now().toEpochMilli();
+            this.note6uno = new NoteLogicImpl(3,200,1, Columns.COLUMN1, 200);
+            this.note7uno = new NoteLogicImpl(2,600,2, Columns.COLUMN2, 200);
+            this.note8uno = new NoteLogicImpl(1,1000,3, Columns.COLUMN3, 200);
+            this.note9uno = new NoteLogicImpl(4,1400,4, Columns.COLUMN4, 200);
+            this.note10uno = new NoteLogicImpl(2,1600,5, Columns.COLUMN2, 200);
 
-                
-                this.styleDown = new TextButtonStyle();
-                this.styleDown.font = font;
-                this.styleDown.up = this.skin.getDrawable("button up");  //("grigio e azzurro");
-                this.styleDown.down = this.skin.getDrawable("botton down");  //("nero e azzurro");
-                this.styleUp = new TextButtonStyle();
-                this.styleUp.font = font;
-                this.styleUp.up = this.skin.getDrawable("botton down");
-                this.styleUp.down = this.skin.getDrawable("button up");
-                
-                this.button1 = new TextButton("", this.styleUp);
-                this.button2 = new TextButton("", this.styleUp);
-                this.button3 = new TextButton("", this.styleUp);
-                this.button4 = new TextButton("", this.styleUp);
-                
-                //set the position of each button
-                this.button1.setPosition(0,0);
-                this.button2.setPosition(this.dimensions.getSize().getX() / 4,0);
-                this.button3.setPosition(2 * this.dimensions.getSize().getX() / 4,0);
-                this.button4.setPosition(3 * this.dimensions.getSize().getX() / 4,0);
-                //set the size of the buttons
-                this.button1.setSize(this.dimensions.getSize().getX() / 4, buttonHeight);
-                this.button2.setSize(this.dimensions.getSize().getX() / 4, buttonHeight);
-                this.button3.setSize(this.dimensions.getSize().getX() / 4, buttonHeight);
-                this.button4.setSize(this.dimensions.getSize().getX() / 4, buttonHeight);
-                
+            this.logicNotes.add(note6uno);
+            this.logicNotes.add(note7uno);
+            this.logicNotes.add(note8uno);
+            this.logicNotes.add(note9uno); 
+            this.logicNotes.add(note10uno);
+            for (NoteLogic noteLogic : logicNotes) {
+                    this.notes.add(associationNote(noteLogic));
+            }
+            
+            
+            this.font = new BitmapFont();
+            this.skin = new Skin();
+            this.atlas = new TextureAtlas(Gdx.files.internal("pink and blue button.atlas"));
+            this.skin.addRegions(atlas);
 
-                
-                stage.addActor(button1);
-                stage.addActor(button2);
-                stage.addActor(button3);
-                stage.addActor(button4);
-                //button.setTransform(true);
-                //button.setScale(0.2f);
+            
+            this.styleDown = new TextButtonStyle();
+            this.styleDown.font = font;
+            this.styleDown.up = this.skin.getDrawable("button up");
+            this.styleDown.down = this.skin.getDrawable("botton down");
+            this.styleUp = new TextButtonStyle();
+            this.styleUp.font = font;
+            this.styleUp.up = this.skin.getDrawable("botton down");
+            this.styleUp.down = this.skin.getDrawable("button up");
+            
+            this.button1 = new TextButton("", this.styleUp);
+            this.button2 = new TextButton("", this.styleUp);
+            this.button3 = new TextButton("", this.styleUp);
+            this.button4 = new TextButton("", this.styleUp);
+            
+            //set the position of each button
+            this.button1.setPosition(0,0);
+            this.button2.setPosition(this.dimensions.getSize().getX() / 4,0);
+            this.button3.setPosition(2 * this.dimensions.getSize().getX() / 4,0);
+            this.button4.setPosition(3 * this.dimensions.getSize().getX() / 4,0);
+            //set the size of the buttons
+            this.button1.setSize(this.dimensions.getSize().getX() / 4, buttonHeight);
+            this.button2.setSize(this.dimensions.getSize().getX() / 4, buttonHeight);
+            this.button3.setSize(this.dimensions.getSize().getX() / 4, buttonHeight);
+            this.button4.setSize(this.dimensions.getSize().getX() / 4, buttonHeight);
+            
+
+
+            this.buttonsStage.addActor(button1);
+            this.buttonsStage.addActor(button2);
+            this.buttonsStage.addActor(button3);
+            this.buttonsStage.addActor(button4);
+            this.stage.addActor(backgroundImage);
+            this.stage.addActor(backgroundContainer);
+            //button.setTransform(true);
+            //button.setScale(0.2f);
                 
                 
 	}
@@ -177,21 +194,19 @@ public class DukeMania extends ApplicationAdapter {
 	@Override
 	public void render () {
 	        //Gdx.gl.glClearColor(.25f, .25f, .25f, 1);
-	        Gdx.gl.glClearColor(0,1,4,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//ae.playBuffer();
-		//this.batchbg.begin(); //fixa il problema
+		this.stage.draw();
+		this.backgroundBatch.begin();
+		this.buttonsStage.draw();
 		this.batch.begin();
+		
 		
 		//sofi
 		button1.setStyle(this.styleUp);
                 button2.setStyle(this.styleUp);
                 button3.setStyle(this.styleUp);
                 button4.setStyle(this.styleUp);
-                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-                
-                this.batch.draw(background,0,0,this.dimensions.getSize().getX()+250,this.dimensions.getSize().getY());    
-                
                 
                 long actualTime = Instant.now().toEpochMilli() - this.timeStart;
                 
@@ -240,16 +255,16 @@ public class DukeMania extends ApplicationAdapter {
                 }
         
         this.batch.end();
-        //this.batchbg.end();
+        this.backgroundBatch.end();
         
-        this.stage.draw();
 
 	}
 	
 	@Override
 	public void dispose () {
 		this.batch.dispose();
-		//this.batchbg.dispose();
+		this.background.dispose();
+		this.backgroundBatch.dispose();
 	}
 	
 	
