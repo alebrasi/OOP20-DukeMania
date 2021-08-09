@@ -1,4 +1,4 @@
-package AudioEngine;
+package it.dukemania.audioengine;
 
 /*
  * A standard generic Pair<X,Y>, with getters, hashCode, equals, and toString well implemented. 
