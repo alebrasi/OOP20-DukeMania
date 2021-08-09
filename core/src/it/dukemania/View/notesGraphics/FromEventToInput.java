@@ -1,41 +1,39 @@
 package it.dukemania.View.notesGraphics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
-public class FromEventToInput implements EventsFromKeyboard{
+public class FromEventToInput implements EventsFromKeyboard {
     private Note note;
-    
-    
+    private List<Integer> availableKeys = new ArrayList<>();
+    private int number;
 
-    public FromEventToInput(Note note) {
+
+    public FromEventToInput(final Note note, final int number) {
         this.note = note;
+        this.number = number;
+    }
+
+    private List<Integer> setNumberOfKeys() {
+        this.availableKeys.add(Input.Keys.D);
+        this.availableKeys.add(Input.Keys.F);
+        this.availableKeys.add(Input.Keys.J);
+        this.availableKeys.add(Input.Keys.K);
+        if (this.number == 4) {
+            return this.availableKeys;
+        }
+        return this.availableKeys; //edit this method
     }
 
     @Override
-    public boolean isColumn1Selected() {
-        return (Gdx.input.isKeyPressed(Input.Keys.D) && this.note.getColumn().equals(Columns.COLUMN1));
+    public boolean isColumnSelected() {
+        return (Gdx.input.isKeyPressed((this.associationKeyColumn(this.note.getColumn()))));
 
-    }
-
-    @Override
-    public boolean isColumn2Selected() {
-
-        return (Gdx.input.isKeyPressed(Input.Keys.F) && this.note.getColumn().equals(Columns.COLUMN2));
-    }
-
-    @Override
-    public boolean isColumn3Selected() {
-
-        return (Gdx.input.isKeyPressed(Input.Keys.J) && this.note.getColumn().equals(Columns.COLUMN3));
-    }
-
-    @Override
-    public boolean isColumn4Selected() {
-
-        return (Gdx.input.isKeyPressed(Input.Keys.K) && this.note.getColumn().equals(Columns.COLUMN4));
     }
 
     @Override
@@ -56,6 +54,26 @@ public class FromEventToInput implements EventsFromKeyboard{
     @Override
     public boolean isButton4Pressed() {
         return Gdx.input.isKeyPressed(Input.Keys.K);
+    }
+
+
+
+    @Override
+    public int associationKeyColumn(final Columns column) {
+        if (column.equals(Columns.COLUMN1)) {
+            return Input.Keys.D;
+        }
+        if (column.equals(Columns.COLUMN2)) {
+            return Input.Keys.F;
+        }
+        if (column.equals(Columns.COLUMN3)) {
+            return Input.Keys.J;
+        }
+        if (column.equals(Columns.COLUMN4)) {
+            return Input.Keys.K;
+        }
+        return 0;
+        //TODO if setnumberofcolumn>4 
     }
 
 }

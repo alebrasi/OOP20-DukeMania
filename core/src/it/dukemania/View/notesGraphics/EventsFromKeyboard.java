@@ -1,21 +1,20 @@
 package it.dukemania.View.notesGraphics;
 
+import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
+
 public interface EventsFromKeyboard {
-    
-    boolean isColumn1Selected();
-    
-    boolean isColumn2Selected();
-    
-    boolean isColumn3Selected();
-    
-    boolean isColumn4Selected();
-    
+
+    boolean isColumnSelected();
+
     boolean isButton1Pressed();
-    
+
     boolean isButton2Pressed();
-    
+
     boolean isButton3Pressed();
-    
+
     boolean isButton4Pressed();
-    
+
+    int associationKeyColumn(Columns column);
+
 }
+

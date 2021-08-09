@@ -14,8 +14,14 @@ public interface Note {
 	
 	long getDuration();
 	
+	long getTimeOfFall();
+	
 	Columns getColumn();
 	
 	int getPosyNote();
+	
+	boolean isPressed();
+	
+	void setIsPressed(boolean isPressed);
 	
 }
