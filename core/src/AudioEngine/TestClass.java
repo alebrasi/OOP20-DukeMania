@@ -7,7 +7,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -76,14 +75,15 @@ public class TestClass {
 
     @Test
     void testKeyboardSynth() throws Exception {
+        final float atkVol = 0.8f;
         SynthBuilderImpl builder = new SynthBuilderImpl();
-        Enveloper env = new Enveloper(100l, 0.8f, 100l);
+        Enveloper env = new Enveloper(100l, atkVol, 100l);
         builder.setEnveloper(env);
         builder.setWavetables(new WaveTable[]{WaveTable.Saw});
         builder.setOffsets(new double[]{1});
         List<Pair<Float, Long>> notes = new ArrayList<>();
-        notes.add(new Pair(100f, 10000l));
-        notes.add(new Pair(200f, 100000l));
+        notes.add(new Pair<>(100f, 10000l));
+        notes.add(new Pair<>(200f, 100000l));
         KeyboardSynth ks = builder.build(notes);
 
         Assertions.assertEquals(0, ks.checkKeys());
@@ -93,45 +93,57 @@ public class TestClass {
         Assertions.assertTrue(ks.getSample() != 0);
 
         List<Double> allValues = IntStream.range(0, 300000).mapToDouble(x -> ks.getSample()).boxed().collect(Collectors.toList());
-        double max = allValues.stream().mapToDouble(Double::doubleValue).max().getAsDouble();
-        double min = allValues.stream().mapToDouble(Double::doubleValue).min().getAsDouble();
-        Assertions.assertTrue(max <= 0.8f && min >= -0.8f);
+        double max = allValues.stream().mapToDouble(Double::doubleValue).max().orElse(0);
+        double min = allValues.stream().mapToDouble(Double::doubleValue).min().orElse(0);
+        Assertions.assertTrue(max <= atkVol && min >= -atkVol);
 
-        IntStream.range(0, 10000).mapToDouble(x -> ks.getSample());
+        IntStream.range(0, 10000).forEach(x -> ks.getSample());
         Assertions.assertEquals(0, ks.checkKeys());
     }
 
     @Test
-    void testLFO() {
-        Function<Long, Float> lfo = LFOFactory.straightLineLFO(1.5f, 500);
-        long totalSamples = (long) (500 * Settings.SAMPLESPERMILLI);
+    void testStraightLFO() {
+        final float targetMult = 1.5f;
+        final Function<Long, Float> lfo = LFOFactory.straightLineLFO(targetMult, 500);
+        final long totalSamples = (long) (500 * Settings.SAMPLESPERMILLI);
         final double [] arrStraight = LongStream.range(0, totalSamples).mapToDouble(lfo::apply).toArray();
         Assertions.assertTrue(IntStream.range(0, arrStraight.length - 1).noneMatch(i -> arrStraight[i] > arrStraight[i + 1]));
         Assertions.assertEquals(1.0, lfo.apply(totalSamples), 0.0);
-        Assertions.assertTrue(checkTolerance(lfo.apply(totalSamples - 1), 1.5f));
+        Assertions.assertTrue(checkTolerance(lfo.apply(totalSamples - 1), targetMult));
+    }
 
-        lfo = LFOFactory.squareLFO(1.5f, 0.8f, 1000);
-        totalSamples = (long) (1000 * Settings.SAMPLESPERMILLI);
-        List<Double> arrSquare = LongStream.range(0, totalSamples).mapToDouble(lfo::apply).boxed().collect(Collectors.toList());
-        Map<Double, Long> freqCounter = arrSquare.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting()));
-        long finalTotalSamples = totalSamples;
-        Assertions.assertTrue(freqCounter.values().stream().allMatch(x -> x == finalTotalSamples / 2));
+    @Test
+    void testSquareLFO() {
+        final float multMax = 1.5f, multmin = 0.8f;
+        final Function<Long, Float> lfo = LFOFactory.squareLFO(multMax, multmin, 1000);
+        final long totalSamples = (long) (1000 * Settings.SAMPLESPERMILLI);
+        final List<Double> arrSquare = LongStream.range(0, totalSamples).mapToDouble(lfo::apply).boxed().collect(Collectors.toList());
+        final Map<Double, Long> freqCounter = arrSquare.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting()));
+        Assertions.assertTrue(freqCounter.values().stream().allMatch(x -> x == totalSamples / 2));
+    }
 
-        lfo = LFOFactory.sineLFO(2f, 1.5f, 2000);
-        totalSamples = (long) (2000 * Settings.SAMPLESPERMILLI);
-        List<Double> arrSine = LongStream.range(0, totalSamples).mapToDouble(lfo::apply).boxed().collect(Collectors.toList());
-        Assertions.assertEquals(2.0, arrSine.get(0));
-        Assertions.assertEquals(1.5, arrSine.get((int) (totalSamples / 2)));
-        Assertions.assertEquals(2.0, arrSine.get((int) totalSamples - 1));
-        Assertions.assertTrue(arrSine.get((int) (totalSamples / 4)) > 1.5 || arrSine.get((int) (totalSamples / 4)) < 2.0);
-        Assertions.assertTrue(arrSine.get((int) (totalSamples / 1.5)) < -1.5 || arrSine.get((int) (totalSamples / 1.5)) > -2.0);
+    @Test
+    void testSineLFO() {
+        final float multMax = 2f, multMin = 1.5f;
+        final Function<Long, Float> lfo = LFOFactory.sineLFO(multMax, multMin, 2000);
+        final long totalSamples = (long) (2000 * Settings.SAMPLESPERMILLI);
+        final List<Double> arrSine = LongStream.range(0, totalSamples).mapToDouble(lfo::apply).boxed().collect(Collectors.toList());
+        Assertions.assertEquals(multMax, arrSine.get(0));
+        Assertions.assertEquals(multMin, arrSine.get((int) (totalSamples / 2)));
+        Assertions.assertEquals(multMax, arrSine.get((int) totalSamples - 1));
+        Assertions.assertTrue(arrSine.get((int) (totalSamples / 4)) > multMin || arrSine.get((int) (totalSamples / 4)) < multMax);
+        Assertions.assertTrue(arrSine.get((int) (totalSamples / multMin)) < -multMin || arrSine.get((int) (totalSamples / multMin)) > -multMax);
+    }
 
-        lfo = LFOFactory.buildIntervals(new float [] {1f, 0f, 1f, 0.5f}, 1000);
-        totalSamples = (long) (1000 * Settings.SAMPLESPERMILLI);
-        List<Double> arrIntervals = LongStream.range(0, totalSamples).mapToDouble(lfo::apply).boxed().collect(Collectors.toList());
-        Assertions.assertTrue(arrIntervals.get(0) == 1f);
-        Assertions.assertTrue(arrIntervals.get((int) (totalSamples / 4)) == 0f);
-        Assertions.assertTrue(arrIntervals.get((int) (totalSamples / 2)) == 1f);
-        Assertions.assertTrue(arrIntervals.get((int) (totalSamples - 1)) == 0.5f);
+    @Test
+    void testIntervalLFO() {
+        final float int1 = 1f, int2 = 0.3f, int3 = 1f, int4 = 1.5f;
+        final Function<Long, Float> lfo = LFOFactory.buildIntervals(new float [] {int1, int2, int3, int4}, 1000);
+        final long totalSamples = (long) (1000 * Settings.SAMPLESPERMILLI);
+        final List<Double> arrIntervals = LongStream.range(0, totalSamples).mapToDouble(lfo::apply).boxed().collect(Collectors.toList());
+        Assertions.assertEquals(int1, arrIntervals.get(0));
+        Assertions.assertEquals(int2, arrIntervals.get((int) (totalSamples / 4)));
+        Assertions.assertEquals(int3, arrIntervals.get((int) (totalSamples / 2)));
+        Assertions.assertEquals(int4, arrIntervals.get((int) (totalSamples - 1)));
     }
 }

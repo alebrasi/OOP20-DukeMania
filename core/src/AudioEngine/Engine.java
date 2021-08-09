@@ -8,20 +8,21 @@ import java.util.List;
 
 public class Engine {
 
-    private List<KeyboardSynth> synthetizers = new ArrayList<>();
+    private final List<KeyboardSynth> synthetizers = new ArrayList<>();
     private final AudioDevice ad = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
     private final float [] buffer = new float[Settings.BUFFER_LENGHT];
     private final DrumSynth ds = new DrumSynth();
 
-    public Engine(){
+    public Engine() {
 
         SynthBuilderImpl b = new SynthBuilderImpl();
         b.setEnveloper(new Enveloper(10l, 1f, 100l));
-        b.setWavetables(new WaveTable[]{WaveTable.Sine,WaveTable.Sine,WaveTable.Sine});
+        b.setWavetables(new WaveTable[]{WaveTable.Saw,WaveTable.Saw,WaveTable.Saw});
         b.setOffsets(new double[]{1d,1.02f, 0.999f});
+        b.setNoteLFO(LFOFactory.sineLFO(2f,1f,1000));
 
         List<Pair<Float, Long>> notes = new ArrayList<>();
-        notes.add(new Pair(100f, 10000l)); // ricordarsi il / 1000 dai micros
+        notes.add(new Pair<>(100f, 10000l)); // ricordarsi il / 1000 dai micros
 
         try {
             synthetizers.add(b.build(notes));
@@ -31,17 +32,17 @@ public class Engine {
 
     }
 
-    long pos = 0;
+    private long pos = 0;
 
     /**
-     * Calculates and plays a bufffer to the LibGDX audio device
+     * Calculates and plays a bufffer to the LibGDX audio device.
      */
-    public void playBuffer(){
+    public void playBuffer() {
 
 
 
-        if(pos++ % 100 == 0){
-            synthetizers.get(0).playTimedNote(100f, 100000l);
+        if (pos++ == 100) {
+            synthetizers.get(0).playTimedNote(100f, 10000000l);
         }
 
         /*
@@ -58,7 +59,6 @@ public class Engine {
             ds.playPercussion(DrumSamples.Tom);
         }
 */
-        pos = (pos + 1) % 240;
 
         /*
         if(pos == 15 || pos == 45 || pos == 60 || pos == 52 || pos == 67 || pos == 105){
@@ -72,9 +72,8 @@ public class Engine {
 
 
         int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
-        for(int i=0;i<buffer.length;i++){
+        for (int i = 0; i < buffer.length; i++) {
             buffer[i] = (float) (synthetizers.stream().mapToDouble(Synth::getSample).sum() * 1);
-            System.out.println(buffer[i]);
         }
 
 /*
