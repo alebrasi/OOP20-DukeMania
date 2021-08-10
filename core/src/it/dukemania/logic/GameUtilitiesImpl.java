@@ -32,4 +32,5 @@ public class GameUtilitiesImpl implements GameUtilities {
                             return difficulty.isEmpty() ? DifficultyLevel.SCONOSCIUTO : difficulty.get();
                         }));
     }
+
 }
