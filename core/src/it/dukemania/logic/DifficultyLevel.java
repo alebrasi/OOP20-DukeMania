@@ -9,7 +9,7 @@ public enum DifficultyLevel {
     MOLTO_DIFFICILE("Molto Difficile",5);
 
     private String effectiveName;
-    private int value;
+    private Integer value;
     DifficultyLevel(final String effectiveName, int value) {
             this.effectiveName = effectiveName;
             this.value = value;
@@ -19,7 +19,7 @@ public enum DifficultyLevel {
             return effectiveName;
     }
 
-    public int getValue() {
+    public Integer getNumericValue() {
         return value;
     }
     

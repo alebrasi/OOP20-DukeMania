@@ -9,8 +9,6 @@ import it.dukemania.midi.Song;
 
 public interface TrackFilter {
 
-    Collection<MyTrack> selectTrack(Song song);
-
     Collection<MyTrack> reduceTrack(Song song);
 
 }

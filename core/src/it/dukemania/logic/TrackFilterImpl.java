@@ -14,13 +14,14 @@ public class TrackFilterImpl implements TrackFilter {
 
     static final int MAX_NOTE = 600;
 
-    @Override
-    public Collection<MyTrack> selectTrack(final Song song) {
-        return song.getTracks().stream().filter(x -> x.getNotes().size() > MAX_NOTE).collect(Collectors.toList());
+    private Collection<MyTrack> selectTrack(final Song song) {
+        return song.getTracks().stream()
+                .filter(x -> x.getNotes().size() > MAX_NOTE)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<MyTrack> reduceTrack(final Song song) {
+    public final Collection<MyTrack> reduceTrack(final Song song) {
         int counter;
         List<Note> notes;
         for (MyTrack track:song.getTracks()) { 
