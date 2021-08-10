@@ -1,5 +1,7 @@
 package it.dukemania.logic;
 
+
+
 public enum DifficultyLevel {
     SCONOSCIUTO("???",0),
     MOLTO_FACILE("Molto Facile",1),
@@ -10,7 +12,7 @@ public enum DifficultyLevel {
 
     private String effectiveName;
     private Integer value;
-    DifficultyLevel(final String effectiveName, int value) {
+    DifficultyLevel(final String effectiveName, final int value) {
             this.effectiveName = effectiveName;
             this.value = value;
     }
@@ -22,5 +24,5 @@ public enum DifficultyLevel {
     public Integer getNumericValue() {
         return value;
     }
-    
+
 }

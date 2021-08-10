@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import it.dukemania.midi.MyTrack;
 
 
+
 public class GameUtilitiesImpl implements GameUtilities {
 
     private List<DifficultyLevel> getDifficulties() {

@@ -5,10 +5,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import it.dukemania.midi.Note;
 import it.dukemania.midi.MyTrack;
 import it.dukemania.midi.Song;
+
+
 
 public class TrackFilterImpl implements TrackFilter {
 

@@ -6,7 +6,6 @@ import it.dukemania.midi.Song;
 
 
 
-
 public interface TrackFilter {
 
     Collection<MyTrack> reduceTrack(Song song);

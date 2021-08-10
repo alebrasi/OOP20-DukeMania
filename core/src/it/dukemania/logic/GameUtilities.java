@@ -6,7 +6,9 @@ import java.util.Map;
 
 import it.dukemania.midi.MyTrack;
 
+
+
 public interface GameUtilities {
-    
+
     Map<MyTrack, DifficultyLevel> setTracksDifficulty(Collection<MyTrack> tracks);
 }
