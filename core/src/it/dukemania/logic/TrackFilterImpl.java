@@ -12,7 +12,7 @@ import it.dukemania.midi.Song;
 
 public class TrackFilterImpl implements TrackFilter {
 
-    private static final int MAX_NOTE = 600;
+    static final int MAX_NOTE = 600;
 
     @Override
     public Collection<MyTrack> selectTrack(final Song song) {
