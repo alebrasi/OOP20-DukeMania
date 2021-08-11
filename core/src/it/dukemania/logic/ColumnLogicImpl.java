@@ -1,6 +1,7 @@
 package it.dukemania.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,6 +9,8 @@ import java.util.stream.Stream;
 
 import it.dukemania.midi.MyTrack;
 import it.dukemania.midi.Note;
+import logic.ColumnsEnum;
+import logic.NoteRange;
 
 public class ColumnLogicImpl implements ColumnLogic {
 
@@ -69,36 +72,47 @@ public class ColumnLogicImpl implements ColumnLogic {
         //finch� non � minore del numero di colonne
         while (numberOfNotesForNoteType.size() > columnNumber) {
                 //(dovrebbe) ordinare per numero di note dal minore al maggiore
-                numberOfNotesForNoteType.sort((e1, e2) -> e1.getValue().compareTo(e2.getValue())); //questo funziona
+            numberOfNotesForNoteType.sort((e1, e2) -> e1.getValue().compareTo(e2.getValue())); //questo funziona
                 //System.out.println("current order");
                 //numberOfNotesForNoteType.forEach(t -> System.out.println(t.getKey().toString() +" "+ t.getValue().toString()));
                 //prendendo le prime 2 chiavi da sopra somma le due liste di note corrispondenti in una sola
 
                 //non so se sia accettabile come codice, spero di si; forse � il caso di farci un metodo a se?
-                notesForNoteType.put(numberOfNotesForNoteType.get(0).getKey(), 
-                                Stream.of(notesForNoteType.get(numberOfNotesForNoteType.get(0).getKey()),
-                                                notesForNoteType.get(numberOfNotesForNoteType.get(1).getKey()))
-                        .flatMap(x -> x.stream())
-                        .collect(Collectors.toList()
-                                                ));
+            notesForNoteType.put(numberOfNotesForNoteType.get(0).getKey(), 
+                    Stream.of(notesForNoteType.get(numberOfNotesForNoteType.get(0).getKey()),
+                    notesForNoteType.get(numberOfNotesForNoteType.get(1).getKey()))
+                    .flatMap(x -> x.stream())
+                    .collect(Collectors.toList()));
                 //rimuove l'altra chiave
-                notesForNoteType.remove(numberOfNotesForNoteType.get(1).getKey());
+            notesForNoteType.remove(numberOfNotesForNoteType.get(1).getKey());
                 //somma i quantitativi di note delle 2 liste in una sola
-                numberOfNotesForNoteType.get(0).setValue(numberOfNotesForNoteType.get(0).getValue() 
-                                + numberOfNotesForNoteType.get(1).getValue());
+            numberOfNotesForNoteType.get(0).setValue(numberOfNotesForNoteType.get(0).getValue() 
+                    + numberOfNotesForNoteType.get(1).getValue());
                 //rimuove il secondo quantitativo
-                numberOfNotesForNoteType.remove(1);
+            numberOfNotesForNoteType.remove(1);
         }
 //teoricamente elimina le collisioni
         return generateNoteRanges(notesForNoteType.values().stream()
-                        .peek(t -> t.removeAll(overlappingNotes(t)))
-                        .collect(Collectors.toList()));
+                .peek(t -> t.removeAll(overlappingNotes(t)))
+                .collect(Collectors.toList()));
 
     }
 
-    private List<List<Note>> generateNoteRanges(final List<List<Note>> collect) {
-        // TODO Auto-generated method stub
-        return collect;
+    private List<List<Note>> generateNoteRanges(final List<List<Note>> columnTrack) {
+        List<ColumnsEnum> columnList = Arrays.stream(ColumnsEnum.values()).collect(Collectors.toList());
+        columnList.sort((e1, e2) -> e1.getNumericValue().compareTo(e2.getNumericValue()));
+
+        noteRanges = columnTrack.stream().map(t -> {
+                ColumnsEnum column = columnList.remove(0);
+                System.out.println(column);
+                return t.stream().map(r -> {
+                        return new NoteRange(column, r.getStartTime(), r.getStartTime()
+                        + r.getDuration().get().intValue());
+                }).collect(Collectors.toList());
+        }).collect(Collectors.toList()).stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        return columnTrack;
     }
 
     @Override
