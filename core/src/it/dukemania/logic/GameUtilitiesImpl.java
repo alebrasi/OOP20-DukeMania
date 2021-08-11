@@ -28,7 +28,7 @@ public class GameUtilitiesImpl implements GameUtilities {
                             int numberOfDifficulties = DifficultyLevel.values().length - 1;
                             Optional<DifficultyLevel> difficulty = getDifficulties().stream()
                                     .filter(y -> 
-                                    x.getNotes().size() <= TrackFilterImpl.MAX_NOTE / numberOfDifficulties * y.getNumericValue())
+                                    x.getNotes().size() <= TrackFilter.MAX_NOTE / numberOfDifficulties * y.getNumericValue())
                                     .findFirst();
                             return difficulty.isEmpty() ? DifficultyLevel.SCONOSCIUTO : difficulty.get();
                         }));

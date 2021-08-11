@@ -13,8 +13,6 @@ import it.dukemania.midi.Song;
 
 public class TrackFilterImpl implements TrackFilter {
 
-    static final int MAX_NOTE = 600;
-
     private Collection<MyTrack> selectTrack(final Song song) {
         return song.getTracks().stream()
                 .filter(x -> x.getNotes().size() > MAX_NOTE)
@@ -34,6 +32,7 @@ public class TrackFilterImpl implements TrackFilter {
                                 for (Note note : notes) {
                                         //non sono sicuro mantenga l'ordine delle note ogni volta ma credo di si
                                         if (counter != (notes.size() / MAX_NOTE)) {
+                                        
                                                 track.deleteNote(note); //metodo aggiunnto da me, elimina una nota dalla traccia
                                                 counter += 1;
                                         }
@@ -42,6 +41,7 @@ public class TrackFilterImpl implements TrackFilter {
                                         }
                                 }
                         }
+                        System.out.println(track.getNotes().size());
                 }
         return song.getTracks();
     }
