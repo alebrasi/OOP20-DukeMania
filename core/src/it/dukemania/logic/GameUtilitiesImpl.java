@@ -21,7 +21,7 @@ public class GameUtilitiesImpl implements GameUtilities {
     }
 
     @Override
-    public final Map<MyTrack, DifficultyLevel> setTracksDifficulty(final Collection<MyTrack> tracks) {
+    public final Map<MyTrack, DifficultyLevel> setTracksDifficulty(final List<MyTrack> tracks) {
         return tracks.stream()
                 .collect(Collectors
                         .toMap(x -> x, x -> { 
@@ -30,6 +30,7 @@ public class GameUtilitiesImpl implements GameUtilities {
                                     .filter(y -> 
                                     x.getNotes().size() <= TrackFilter.MAX_NOTE / numberOfDifficulties * y.getNumericValue())
                                     .findFirst();
+                            System.out.println("diff:" + difficulty);
                             return difficulty.isEmpty() ? DifficultyLevel.SCONOSCIUTO : difficulty.get();
                         }));
     }

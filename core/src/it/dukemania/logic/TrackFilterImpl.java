@@ -2,6 +2,7 @@ package it.dukemania.logic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class TrackFilterImpl implements TrackFilter {
     }
 
     @Override
-    public final Collection<MyTrack> reduceTrack(final Song song) {
+    public final List<MyTrack> reduceTrack(final Song song) {
         int counter;
         List<Note> notes;
         for (MyTrack track:song.getTracks()) { 
@@ -41,9 +42,10 @@ public class TrackFilterImpl implements TrackFilter {
                                         }
                                 }
                         }
-                        System.out.println(track.getNotes().size());
                 }
-        return song.getTracks();
+        return song.getTracks().stream()
+                .sorted((e1, e2) -> (Integer.valueOf(e1.getNotes().size()).compareTo(Integer.valueOf(e2.getNotes().size()))))
+                .collect(Collectors.toList());
     }
 
 }
