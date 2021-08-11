@@ -9,8 +9,6 @@ import it.dukemania.midi.Song;
 
 public interface TrackFilter {
 
-    int MAX_NOTE = 600;
-
     List<MyTrack> reduceTrack(Song song);
 
 }
