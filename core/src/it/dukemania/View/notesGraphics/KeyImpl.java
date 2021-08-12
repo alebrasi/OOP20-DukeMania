@@ -5,7 +5,6 @@ package it.dukemania.View.notesGraphics;
 
 import java.time.Instant;
 
-import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
 public class KeyImpl implements Key {
     private long time;

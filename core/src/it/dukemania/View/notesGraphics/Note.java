@@ -2,7 +2,6 @@ package it.dukemania.View.notesGraphics;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
 public interface Note {
 	

@@ -6,7 +6,6 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
 public class FromEventToInput implements EventsFromKeyboard {
     private Note note;
@@ -32,9 +31,10 @@ public class FromEventToInput implements EventsFromKeyboard {
 
     @Override
     public boolean isColumnSelected() {
-        return (Gdx.input.isKeyPressed((this.associationKeyColumn(this.note.getColumn()))));
+        return Gdx.input.isKeyPressed(this.associationKeyNumber(this.note.getColumn().getNumericvalue()));
 
     }
+
 
     @Override
     public boolean isButton1Pressed() {
@@ -56,24 +56,49 @@ public class FromEventToInput implements EventsFromKeyboard {
         return Gdx.input.isKeyPressed(Input.Keys.K);
     }
 
-
+    /*TASTI
+     * 1 - D 
+     * 2 - F
+     * 3 - J
+     * 4 - K
+     * 5 - S
+     * 6 - L
+     * 7 - A
+     * 8 - P
+     * */
 
     @Override
-    public int associationKeyColumn(final Columns column) {
-        if (column.equals(Columns.COLUMN1)) {
+    public int associationKeyNumber(final int column) {
+        if (column == 1) {
             return Input.Keys.D;
         }
-        if (column.equals(Columns.COLUMN2)) {
+        if (column == 2) {
             return Input.Keys.F;
         }
-        if (column.equals(Columns.COLUMN3)) {
+        if (column == 3) {
             return Input.Keys.J;
         }
-        if (column.equals(Columns.COLUMN4)) {
+        if (column == 4) {
             return Input.Keys.K;
         }
+        if (column == 5) {
+            return Input.Keys.S;
+        }
+        if (column == 6) {
+            return Input.Keys.L;
+        }
+        if (column == 7) {
+            return Input.Keys.A;
+        }
+        if (column == 8) {
+            return Input.Keys.P;
+        }
         return 0;
-        //TODO if setnumberofcolumn>4 
+    }
+
+    @Override
+    public boolean isButtonPressed(final int numberOfColumn) {
+        return Gdx.input.isKeyPressed(this.associationKeyNumber(numberOfColumn));
     }
 
 }

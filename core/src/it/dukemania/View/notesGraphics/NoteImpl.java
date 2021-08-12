@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 
-import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
 public class NoteImpl implements Note {
     private SpriteBatch batchNote;
@@ -36,14 +35,16 @@ public class NoteImpl implements Note {
     //private ShapeRenderer renderer = new ShapeRenderer();
 	
 	
-	public NoteImpl(final int heightpos, final int width, final Columns letter, final SpriteBatch batch, final int posyBlue, final int posySparks, final int height, final long startNote, final long duration) {
+	public NoteImpl(final int heightpos, final int width, final Columns letter, final SpriteBatch batch, final int posyBlue, final int posySparks, final int height, final long startNote, final long duration, final int numberOfColumns) {
 		this.batchNote = batch;
 		this.textureNote = new Texture(Gdx.files.internal("nota azzurra.png"));
 		this.textureSparks = new Texture(Gdx.files.internal("blue spark.png"));
 		this.xNote = 50;
 		this.yNote = height;
 		this.column = letter;
-		if (letter.equals(Columns.COLUMN1)) {
+		this.posxNote = 25; //(this.column.getNumericvalue() * 2 - 1) * width / this.column.getNumericvalue() * 2 - this.xNote / 2;
+		System.out.println("pos note" + this.posxNote);
+		/*if (letter.equals(Columns.COLUMN1)) {
 			this.posxNote = width / 8 - this.xNote / 2;
 		} 
 		if (letter.equals(Columns.COLUMN2)) {
@@ -54,7 +55,7 @@ public class NoteImpl implements Note {
 		} 
 		if (letter.equals(Columns.COLUMN4)) {
 			this.posxNote = 7 * width / 8 - this.xNote / 2;
-		} 
+		} */
 		this.posyNote = heightpos;
 		this.speedNote = 200.0;
 		this.posyBlue = posyBlue;
@@ -134,12 +135,11 @@ public class NoteImpl implements Note {
     }
 
     @Override
-    public void setIsPressed(boolean isPressed) {
+    public void setIsPressed(final boolean isPressed) {
         this.isPressed = isPressed;
         
     }
-    
-    
+
 
 
 	

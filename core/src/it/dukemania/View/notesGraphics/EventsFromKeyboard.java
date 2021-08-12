@@ -1,6 +1,5 @@
 package it.dukemania.View.notesGraphics;
 
-import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
 public interface EventsFromKeyboard {
 
@@ -14,7 +13,9 @@ public interface EventsFromKeyboard {
 
     boolean isButton4Pressed();
 
-    int associationKeyColumn(Columns column);
+    boolean isButtonPressed(int numberOfColumn);
+
+    int associationKeyNumber(int numberOfColumn);
 
 }
 

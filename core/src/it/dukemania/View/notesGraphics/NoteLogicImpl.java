@@ -1,6 +1,5 @@
 package it.dukemania.View.notesGraphics;
 
-import it.dukemania.View.notesGraphics.ColumnsEnum.Columns;
 
 public class NoteLogicImpl implements NoteLogic {
     private int height;
