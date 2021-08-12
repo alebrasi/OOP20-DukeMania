@@ -42,7 +42,7 @@ public class NoteImpl implements Note {
 		this.xNote = 50;
 		this.yNote = height;
 		this.column = letter;
-		this.posxNote = 25; //(this.column.getNumericvalue() * 2 - 1) * width / this.column.getNumericvalue() * 2 - this.xNote / 2;
+		this.posxNote = 0;
 		System.out.println("pos note" + this.posxNote);
 		/*if (letter.equals(Columns.COLUMN1)) {
 			this.posxNote = width / 8 - this.xNote / 2;

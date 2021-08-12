@@ -138,7 +138,7 @@ public class DukeMania extends ApplicationAdapter {
         this.styleUp.up = this.skin.getDrawable("botton down");
         this.styleUp.down = this.skin.getDrawable("button up");
 
-
+        //placement of the buttons 
         for (int i = 0; i < this.numberOfColumns; i++) {
             this.buttons.add(new TextButton("", this.styleUp));
             this.buttons.get(i).setSize(this.BUTTONDIM, this.BUTTONDIM);  //set the size of the buttons
@@ -148,17 +148,19 @@ public class DukeMania extends ApplicationAdapter {
             this.buttonsStage.addActor(this.buttons.get(i));
         }
 
-
+        //adding elements on the stage
         this.stage.addActor(backgroundImage);
         this.stage.addActor(backgroundContainer);
 
 	}
 	
+	//this method calculates the displacement of the position of the buttons as a function of the number of columns
 	private int calculateShifting() {
 	    return this.numberOfColumns == 4 || this.numberOfColumns == 8 ? 0 : this.numberOfColumns == 5 ? 20 : this.numberOfColumns == 7 
 	            ? 4 : 9;
 	}
 	
+	//this method associates the logical note to the corresponding graphic note
 	private Note associationNote(final NoteLogic noteLogic) {
             return new NoteImpl(this.dimensions.getSize().getY(), this.dimensions.getSize().getX(), noteLogic.getColumn(), this.batch, posyBlue, posySparks, noteLogic.getHeight() * this.yNote, noteLogic.getTimeStart(), noteLogic.getDuration(), this.numberOfColumns);
         }
@@ -198,6 +200,7 @@ public class DukeMania extends ApplicationAdapter {
 		this.batch.begin();
 
 		//sofi
+		//set the style of the buttons
 		for (final TextButton b : this.buttons) {
 		    b.setStyle(this.styleUp);
 		}
@@ -205,13 +208,15 @@ public class DukeMania extends ApplicationAdapter {
         final long actualTime = Instant.now().toEpochMilli() - this.timeStart;
 
         this.notesPlaying = getPlayingNotes(actualTime);
-
+        
+        //drawing of each note
         if (!this.notesPlaying.isEmpty()) {
             for (final Note n : this.notesPlaying) {
                 n.drawNote();
-                this.keyboard = new FromEventToInput(n, this.numberOfColumns); //replace 4 with the number of columns chosen by the user
+                this.keyboard = new FromEventToInput(n, this.numberOfColumns);
                 this.key = new KeyImpl(n, actualTime);
-
+                
+                //set the sparks
                 if (this.keyboard.isColumnSelected()) {
                     n.isSparked(n.getColumn(), this.batch);
                 }
@@ -233,7 +238,8 @@ public class DukeMania extends ApplicationAdapter {
                 if (n.getTimeOfFall() > 0) {
                     System.out.println("nota " + n.getColumn().name() + "tempo di caduta " + n.getTimeOfFall());
                 }*/
-
+                
+                //change the style of the buttons if they are clicked
                 for (int i = 0; i < this.numberOfColumns; i++) {
                     if (!this.keyboard.isButtonPressed(i + 1)) {
                         this.buttons.get(i).setStyle(this.styleUp);
@@ -243,8 +249,8 @@ public class DukeMania extends ApplicationAdapter {
                 }
 
             }
+            //removal of notes that are terminated
             this.notesPlaying.removeAll(notFinished(this.notesPlaying, actualTime));
-
             }
 
         this.batch.end();
