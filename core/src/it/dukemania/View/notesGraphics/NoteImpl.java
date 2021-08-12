@@ -29,6 +29,7 @@ public class NoteImpl implements Note {
     private long startNote;
     private long duration;
     private Size dimensions = new SizeImpl();
+    private ComputingShift shift = new ComputingShiftImpl();
     private OrthographicCamera camera;
     private long timeOfFall;
     private boolean isPressed = false;
@@ -42,20 +43,8 @@ public class NoteImpl implements Note {
 		this.xNote = 50;
 		this.yNote = height;
 		this.column = letter;
-		this.posxNote = 0;
-		System.out.println("pos note" + this.posxNote);
-		/*if (letter.equals(Columns.COLUMN1)) {
-			this.posxNote = width / 8 - this.xNote / 2;
-		} 
-		if (letter.equals(Columns.COLUMN2)) {
-			this.posxNote = 3 * width / 8 - this.xNote / 2;
-		} 
-		if (letter.equals(Columns.COLUMN3)) {
-			this.posxNote = 5 * width / 8 - this.xNote / 2;
-		} 
-		if (letter.equals(Columns.COLUMN4)) {
-			this.posxNote = 7 * width / 8 - this.xNote / 2;
-		} */
+		this.posxNote = (letter.getNumericvalue() - 1) * this.dimensions.getSize().getX() / numberOfColumns 
+		        + this.shift.calculateShifting(numberOfColumns) * letter.getNumericvalue() + this.shift.getNoteShift();
 		this.posyNote = heightpos;
 		this.speedNote = 200.0;
 		this.posyBlue = posyBlue;

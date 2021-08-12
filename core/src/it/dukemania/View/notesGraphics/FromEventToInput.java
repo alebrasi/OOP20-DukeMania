@@ -1,15 +1,11 @@
 package it.dukemania.View.notesGraphics;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 
 public class FromEventToInput implements EventsFromKeyboard {
     private Note note;
-    private List<Integer> availableKeys = new ArrayList<>();
     private int number;
 
 
@@ -18,16 +14,7 @@ public class FromEventToInput implements EventsFromKeyboard {
         this.number = number;
     }
 
-    private List<Integer> setNumberOfKeys() {
-        this.availableKeys.add(Input.Keys.D);
-        this.availableKeys.add(Input.Keys.F);
-        this.availableKeys.add(Input.Keys.J);
-        this.availableKeys.add(Input.Keys.K);
-        if (this.number == 4) {
-            return this.availableKeys;
-        }
-        return this.availableKeys; //edit this method
-    }
+
 
     @Override
     public boolean isColumnSelected() {
@@ -36,25 +23,6 @@ public class FromEventToInput implements EventsFromKeyboard {
     }
 
 
-    @Override
-    public boolean isButton1Pressed() {
-        return Gdx.input.isKeyPressed(Input.Keys.D);
-    }
-
-    @Override
-    public boolean isButton2Pressed() {
-        return Gdx.input.isKeyPressed(Input.Keys.F);
-    }
-
-    @Override
-    public boolean isButton3Pressed() {
-        return Gdx.input.isKeyPressed(Input.Keys.J);
-    }
-
-    @Override
-    public boolean isButton4Pressed() {
-        return Gdx.input.isKeyPressed(Input.Keys.K);
-    }
 
     /*TASTI
      * 1 - D 

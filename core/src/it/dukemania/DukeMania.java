@@ -27,6 +27,8 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import it.dukemania.View.notesGraphics.Columns;
+import it.dukemania.View.notesGraphics.ComputingShift;
+import it.dukemania.View.notesGraphics.ComputingShiftImpl;
 import it.dukemania.View.notesGraphics.EventsFromKeyboard;
 import it.dukemania.View.notesGraphics.FromEventToInput;
 import it.dukemania.View.notesGraphics.Key;
@@ -72,6 +74,7 @@ public class DukeMania extends ApplicationAdapter {
     private long timeStart = 0;
     private EventsFromKeyboard keyboard;
     private Key key;
+    private ComputingShift shift = new ComputingShiftImpl();
     private OrthographicCamera camera = new OrthographicCamera();
     private Viewport buttonsViewport;
     private Viewport stageViewport;
@@ -119,9 +122,6 @@ public class DukeMania extends ApplicationAdapter {
         this.logicNotes.add(note8uno);
         this.logicNotes.add(note9uno); 
         this.logicNotes.add(note10uno);
-        for (final NoteLogic noteLogic : logicNotes) {
-                this.notes.add(associationNote(noteLogic));
-        }
 
         this.font = new BitmapFont();
         this.skin = new Skin();
@@ -142,10 +142,14 @@ public class DukeMania extends ApplicationAdapter {
         for (int i = 0; i < this.numberOfColumns; i++) {
             this.buttons.add(new TextButton("", this.styleUp));
             this.buttons.get(i).setSize(this.BUTTONDIM, this.BUTTONDIM);  //set the size of the buttons
-            this.buttons.get(i).setPosition(i * this.dimensions.getSize().getX() / this.numberOfColumns + calculateShifting() * i, 0);  //set the position of each button
+            this.buttons.get(i).setPosition(i * this.dimensions.getSize().getX() / this.numberOfColumns + this.shift.calculateShifting(this.numberOfColumns) * i, 0);  //set the position of each button
             //this.buttons.get(i).setTransform(true);
             //this.buttons.get(i).setScale(0.6f);
             this.buttonsStage.addActor(this.buttons.get(i));
+        }
+
+        for (final NoteLogic noteLogic : logicNotes) {
+            this.notes.add(associationNote(noteLogic));
         }
 
         //adding elements on the stage
@@ -154,11 +158,6 @@ public class DukeMania extends ApplicationAdapter {
 
 	}
 	
-	//this method calculates the displacement of the position of the buttons as a function of the number of columns
-	private int calculateShifting() {
-	    return this.numberOfColumns == 4 || this.numberOfColumns == 8 ? 0 : this.numberOfColumns == 5 ? 20 : this.numberOfColumns == 7 
-	            ? 4 : 9;
-	}
 	
 	//this method associates the logical note to the corresponding graphic note
 	private Note associationNote(final NoteLogic noteLogic) {

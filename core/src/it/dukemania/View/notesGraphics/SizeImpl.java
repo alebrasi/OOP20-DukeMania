@@ -7,7 +7,7 @@ public class SizeImpl implements Size {
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int widthGUI =  (int) screenSize.getWidth();
     private int heightGUI = (int) screenSize.getHeight();
-    private int numberOfColumns = 6;
+    private int numberOfColumns = 8;
     private int width = this.widthGUI / (this.numberOfColumns == 4 ? 4 : 2);
     private int height = heightGUI * 2 / 3;
     private Pair<Integer, Integer> windowsize = new Pair<>(width, height);
