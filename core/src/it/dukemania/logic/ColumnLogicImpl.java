@@ -9,8 +9,7 @@ import java.util.stream.Stream;
 
 import it.dukemania.midi.MyTrack;
 import it.dukemania.midi.Note;
-import logic.ColumnsEnum;
-import logic.NoteRange;
+
 
 public class ColumnLogicImpl implements ColumnLogic {
 
@@ -61,12 +60,18 @@ public class ColumnLogicImpl implements ColumnLogic {
                         .collect(Collectors.toList());
     }
 
+    private List<ColumnsEnum> getColumnList() {
+        List<ColumnsEnum> columnList = Arrays.stream(ColumnsEnum.values()).collect(Collectors.toList());
+        columnList.sort((e1, e2) -> e1.getNumericValue().compareTo(e2.getNumericValue()));
+        return columnList;
+    }
+
     @Override
-    public final List<List<Note>> noteQueuing(final MyTrack track) {
-        //dice quante note ci sono per tipo
+    public final Map<ColumnsEnum, List<Note>> noteQueuing(final MyTrack track) {
+        //dice quante note ci sono per identifier
         List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
                         .collect(Collectors.groupingBy(Note::getIdentifier, Collectors.counting())).entrySet());
-        //raggruppa le note per tipo
+        //raggruppa le note per identifier
         Map<Integer, List<Note>> notesForNoteType = track.getNotes().stream().collect(Collectors.groupingBy(
                         Note::getIdentifier, Collectors.toList()));
         //finch� non � minore del numero di colonne
@@ -92,15 +97,16 @@ public class ColumnLogicImpl implements ColumnLogic {
             numberOfNotesForNoteType.remove(1);
         }
 //teoricamente elimina le collisioni
-        return generateNoteRanges(notesForNoteType.values().stream()
+        List<ColumnsEnum> columnList = getColumnList();
+        return (generateNoteRanges(notesForNoteType.values().stream()
                 .peek(t -> t.removeAll(overlappingNotes(t)))
-                .collect(Collectors.toList()));
-
+                .collect(Collectors.toList())))
+                .stream()
+                .collect(Collectors.toMap(t -> columnList.remove(0), t -> t));
     }
 
     private List<List<Note>> generateNoteRanges(final List<List<Note>> columnTrack) {
-        List<ColumnsEnum> columnList = Arrays.stream(ColumnsEnum.values()).collect(Collectors.toList());
-        columnList.sort((e1, e2) -> e1.getNumericValue().compareTo(e2.getNumericValue()));
+        List<ColumnsEnum> columnList = getColumnList();
 
         noteRanges = columnTrack.stream().map(t -> {
                 ColumnsEnum column = columnList.remove(0);

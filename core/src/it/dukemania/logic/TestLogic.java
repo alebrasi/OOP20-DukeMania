@@ -23,6 +23,7 @@ public class TestLogic {
 
     private TrackFilterImpl trackFilter;
     private GameUtilities gameUtilities;
+    private ColumnLogic columnLogic;
 
     private List<Note> createNotes(final int quantity) { 
         List<Note> testNotes = new ArrayList<>();
@@ -37,6 +38,7 @@ public class TestLogic {
     public void init() {
             this.trackFilter = new TrackFilterImpl();
             this.gameUtilities = new GameUtilitiesImpl();
+            this.columnLogic = new ColumnLogicImpl(4);
     }
 
 
@@ -82,6 +84,16 @@ public class TestLogic {
         assertEquals(trackmap.get(testTracksDiff.get(3)), DifficultyLevel.DIFFICILE);
         assertEquals(trackmap.get(testTracksDiff.get(4)), DifficultyLevel.MOLTO_DIFFICILE);
         assertEquals(trackmap.get(testTracksDiff.get(5)), DifficultyLevel.SCONOSCIUTO);
+    }
+
+    @org.junit.Test
+    public void testColumnLogic() {
+        List<Note> testNotes = new ArrayList<>();
+        testNotes.add(new GenericNote(Optional.of(2.0), 1, 0));
+        MyTrack testTrack = new MyTrack(null, testNotes, 0);
+        Map<ColumnsEnum, List<Note>> queuedNotes = this.columnLogic.noteQueuing(testTrack);
+        assertTrue(queuedNotes.size() == 1);
+        assertTrue(queuedNotes.get(ColumnsEnum.COLUMN_1).size() == 1);
     }
 
 }

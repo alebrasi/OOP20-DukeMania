@@ -14,7 +14,7 @@ import it.dukemania.midi.Song;
 public class TrackFilterImpl implements TrackFilter {
 
     static final int MAX_NOTE = 600;
-    
+
     private Collection<MyTrack> selectTrack(final Song song) {
         return song.getTracks().stream()
                 .filter(x -> x.getNotes().size() > MAX_NOTE)
