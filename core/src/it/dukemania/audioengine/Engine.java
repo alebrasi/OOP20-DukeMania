@@ -23,6 +23,7 @@ public class Engine {
 
         List<Pair<Float, Long>> notes = new ArrayList<>();
         notes.add(new Pair<>(100f, 10000l)); // ricordarsi il / 1000 dai micros
+        notes.add(new Pair<>(200f, 50000l)); // ricordarsi il / 1000 dai micros
 
         try {
             synthetizers.add(b.build(notes));
