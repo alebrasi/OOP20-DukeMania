@@ -21,6 +21,7 @@ public class SongSerializer extends StdSerializer<Song> {
     public void serialize(final Song value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         gen.writeObjectField("songName", value.getTitle());
+        gen.writeObjectField("fileHash", value.getSongHash());
         gen.writeObjectField("duration", value.getDuration());
         gen.writeObjectField("BPM", value.getBPM());
         gen.writeObjectField("Tracks", value.getTracks());

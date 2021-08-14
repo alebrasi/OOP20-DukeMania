@@ -15,11 +15,15 @@ public class Song {
     private final Collection<MyTrack> tracks;
     private final double bpm;
 
-    public Song(final String title, final double duration, final Collection<MyTrack> tracks, final double BPM) {
+
+    private final String songHash;
+
+    public Song(final String title, final String songHash, final double duration, final Collection<MyTrack> tracks, final double BPM) {
         this.title = title;
         this.duration = duration;
         this.tracks = tracks;
-        bpm = BPM;
+        this.bpm = BPM;
+        this.songHash = songHash;
     }
 
     public final String getTitle() {
@@ -33,5 +37,8 @@ public class Song {
     }
     public final Collection<MyTrack> getTracks() {
         return tracks;
+    }
+    public final String getSongHash() {
+        return songHash;
     }
 }

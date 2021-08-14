@@ -40,6 +40,6 @@ public class SongDeserializer extends StdDeserializer<Song> {
 
         List<MyTrack> tracks = mapper.readValue(mapper.treeAsTokens(trackNode), listTrackType);
 
-        return new Song(node.get("songName").asText(), node.get("duration").asDouble(), tracks, node.get("BPM").asDouble());
+        return new Song(node.get("songName").asText(), node.get("fileHash").asText(), node.get("duration").asDouble(), tracks, node.get("BPM").asDouble());
     }
 }
