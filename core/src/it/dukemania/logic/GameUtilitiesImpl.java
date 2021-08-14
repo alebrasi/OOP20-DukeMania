@@ -29,7 +29,7 @@ public class GameUtilitiesImpl implements GameUtilities {
                                     .filter(y -> 
                                     x.getNotes().size() <= TrackFilterImpl.MAX_NOTE / numberOfDifficulties * y.getNumericValue())
                                     .findFirst();
-                            return difficulty.isEmpty() ? DifficultyLevel.SCONOSCIUTO : difficulty.get();
+                            return difficulty.isEmpty() ? DifficultyLevel.UNKNOWN : difficulty.get();
                         }));
     }
 

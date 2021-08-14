@@ -33,17 +33,11 @@ public class ColumnLogicImpl implements ColumnLogic {
     public final int getColumnNumber() {
         return columnNumber;
     }
-
-    @Override
-    public final void increaseColumnNumber() {
-        this.columnNumber = (columnNumber + 1 <= COLUMN_MAX_CAP) ? this.columnNumber + 1 : this.columnNumber;
+    
+    public final void setColumnNumber(int columnNumber) {
+        this.columnNumber = columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP ? columnNumber : COLUMN_MIN_CAP;
     }
-
-    @Override
-    public final void decreaseColumnNumber() {
-        this.columnNumber = (columnNumber - 1 >= COLUMN_MIN_CAP) ? this.columnNumber - 1 : this.columnNumber;
-    }
-
+    
     private List<Note> overlappingNotes(final List<Note> notes) {
         //print di verifica funzionamento
         //Map<Note, List<Note>> collisioni = notes.stream().collect(Collectors.toMap(x->x, x->notes.stream().filter(y -> x!=y && (x.getStartTime() == y.getStartTime() || (x.getStartTime() < y.getStartTime() && (x.getStartTime() + x.getDuration().get() > y.getStartTime())))).collect(Collectors.toList()))).entrySet().stream().filter(x->x.getValue().size()!=0).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -107,7 +101,6 @@ public class ColumnLogicImpl implements ColumnLogic {
 
     private List<List<Note>> generateNoteRanges(final List<List<Note>> columnTrack) {
         List<ColumnsEnum> columnList = getColumnList();
-
         noteRanges = columnTrack.stream().map(t -> {
                 ColumnsEnum column = columnList.remove(0);
                 System.out.println(column);

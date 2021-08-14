@@ -11,9 +11,7 @@ public interface ColumnLogic {
 
     int getColumnNumber();
 
-    void increaseColumnNumber();
-
-    void decreaseColumnNumber();
+    void setColumnNumber(int columnNumber);
 
     Map<ColumnsEnum, List<Note>> noteQueuing(MyTrack track);
 

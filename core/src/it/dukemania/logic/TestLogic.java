@@ -28,7 +28,7 @@ public class TestLogic {
     private List<Note> createNotes(final int quantity) { 
         List<Note> testNotes = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
-            testNotes.add(new GenericNote(Optional.of(1.0), i, i));
+            testNotes.add(new GenericNote(Optional.of(2.0), i, 0));
         }
         return testNotes;
     }
@@ -67,23 +67,23 @@ public class TestLogic {
         int difficulties = DifficultyLevel.values().length - 1;
         List<MyTrack> testTracksDiff = new ArrayList<>();
         testTracksDiff.add(new MyTrack(null,
-                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.MOLTO_FACILE.getNumericValue()), 0));
+                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.VERY_EASY.getNumericValue()), 0));
         testTracksDiff.add(new MyTrack(null,
-                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.FACILE.getNumericValue()), 0));
+                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.EASY.getNumericValue()), 0));
         testTracksDiff.add(new MyTrack(null,
-                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.NORMALE.getNumericValue()), 0));
+                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.NORMAL.getNumericValue()), 0));
         testTracksDiff.add(new MyTrack(null,
-                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.DIFFICILE.getNumericValue()), 0));
+                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.DIFFICULT.getNumericValue()), 0));
         testTracksDiff.add(new MyTrack(null,
-                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.MOLTO_DIFFICILE.getNumericValue()), 0));
+                createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.VERY_DIFFICULT.getNumericValue()), 0));
         testTracksDiff.add(new MyTrack(null, createNotes(TrackFilterImpl.MAX_NOTE + 1), 0));
         Map<MyTrack, DifficultyLevel> trackmap = this.gameUtilities.setTracksDifficulty(testTracksDiff);
-        assertEquals(trackmap.get(testTracksDiff.get(0)), DifficultyLevel.MOLTO_FACILE);
-        assertEquals(trackmap.get(testTracksDiff.get(1)), DifficultyLevel.FACILE);
-        assertEquals(trackmap.get(testTracksDiff.get(2)), DifficultyLevel.NORMALE);
-        assertEquals(trackmap.get(testTracksDiff.get(3)), DifficultyLevel.DIFFICILE);
-        assertEquals(trackmap.get(testTracksDiff.get(4)), DifficultyLevel.MOLTO_DIFFICILE);
-        assertEquals(trackmap.get(testTracksDiff.get(5)), DifficultyLevel.SCONOSCIUTO);
+        assertEquals(trackmap.get(testTracksDiff.get(0)), DifficultyLevel.VERY_EASY);
+        assertEquals(trackmap.get(testTracksDiff.get(1)), DifficultyLevel.EASY);
+        assertEquals(trackmap.get(testTracksDiff.get(2)), DifficultyLevel.NORMAL);
+        assertEquals(trackmap.get(testTracksDiff.get(3)), DifficultyLevel.DIFFICULT);
+        assertEquals(trackmap.get(testTracksDiff.get(4)), DifficultyLevel.VERY_DIFFICULT);
+        assertEquals(trackmap.get(testTracksDiff.get(5)), DifficultyLevel.UNKNOWN);
     }
 
     @org.junit.Test
@@ -94,6 +94,22 @@ public class TestLogic {
         Map<ColumnsEnum, List<Note>> queuedNotes = this.columnLogic.noteQueuing(testTrack);
         assertTrue(queuedNotes.size() == 1);
         assertTrue(queuedNotes.get(ColumnsEnum.COLUMN_1).size() == 1);
+
+        testNotes.add(new GenericNote(Optional.of(2.0), 10, 1));
+        testNotes.add(new GenericNote(Optional.of(2.0), 20, 2));
+        testNotes.add(new GenericNote(Optional.of(2.0), 30, 3));
+        testNotes.add(new GenericNote(Optional.of(2.0), 40, 4));
+        testTrack = new MyTrack(null, testNotes, 0);
+        queuedNotes = this.columnLogic.noteQueuing(testTrack);
+        assertTrue(queuedNotes.size() == 4);
+        assertTrue(queuedNotes.values().stream().mapToInt(t -> t.size()).sum() == 5);
+        this.columnLogic.setColumnNumber(5);
+        queuedNotes = this.columnLogic.noteQueuing(testTrack);
+        assertTrue(queuedNotes.size() == 5);
+
+        testNotes.addAll(createNotes(10));
+        queuedNotes = this.columnLogic.noteQueuing(testTrack);
+        assertTrue(queuedNotes.values().stream().mapToInt(t -> t.size()).sum() == 5);
     }
 
 }
