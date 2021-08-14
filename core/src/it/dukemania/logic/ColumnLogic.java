@@ -13,7 +13,7 @@ public interface ColumnLogic {
 
     void setColumnNumber(int columnNumber);
 
-    Map<Columns, List<Note>> noteQueuing(MyTrack track);
+    List<List<LogicNoteImpl>> noteQueuing(MyTrack track);
 
     //riceve come imput i dati dalla grafica, verifica se l'intervallo in cui � stato premuto il tasto
     //coincide con quello della nota e restituisce un punteggio influenzato da:

@@ -55,9 +55,24 @@ public class ColumnLogicImpl implements ColumnLogic {
         columnList.sort((e1, e2) -> e1.getNumericValue().compareTo(e2.getNumericValue()));
         return columnList;
     }
+    
+    private List<List<Note>> generateNoteRanges(final List<List<Note>> columnTrack) {
+        List<Columns> columnList = getColumnList();
+        noteRanges = columnTrack.stream().map(t -> {
+                Columns column = columnList.remove(0);
+                System.out.println(column);
+                return t.stream().map(r -> {
+                        return new NoteRange(column, r.getStartTime(), r.getStartTime()
+                        + r.getDuration().get().intValue());
+                }).collect(Collectors.toList());
+        }).collect(Collectors.toList()).stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        return columnTrack;
+    }
 
     @Override
-    public final Map<Columns, List<Note>> noteQueuing(final MyTrack track) {
+    public final List<List<LogicNoteImpl>> noteQueuing(final MyTrack track) {
         //dice quante note ci sono per identifier
         List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
                         .collect(Collectors.groupingBy(Note::getIdentifier, Collectors.counting())).entrySet());
@@ -89,25 +104,15 @@ public class ColumnLogicImpl implements ColumnLogic {
 //teoricamente elimina le collisioni
         List<Columns> columnList = getColumnList();
         return (generateNoteRanges(notesForNoteType.values().stream()
-                .peek(t -> t.removeAll(overlappingNotes(t)))
+                .peek(x -> x.removeAll(overlappingNotes(x)))
                 .collect(Collectors.toList())))
-                .stream()
-                .collect(Collectors.toMap(t -> columnList.remove(0), t -> t));
-    }
-
-    private List<List<Note>> generateNoteRanges(final List<List<Note>> columnTrack) {
-        List<Columns> columnList = getColumnList();
-        noteRanges = columnTrack.stream().map(t -> {
-                Columns column = columnList.remove(0);
-                System.out.println(column);
-                return t.stream().map(r -> {
-                        return new NoteRange(column, r.getStartTime(), r.getStartTime()
-                        + r.getDuration().get().intValue());
-                }).collect(Collectors.toList());
-        }).collect(Collectors.toList()).stream()
-                .flatMap(List::stream)
+                .stream().map(x -> {
+                    Columns currentColumn = columnList.remove(0);
+                    return x.stream()
+                            .map(y -> new LogicNoteImpl(y, currentColumn))
+                            .collect(Collectors.toList());
+                })
                 .collect(Collectors.toList());
-        return columnTrack;
     }
 
     @Override
