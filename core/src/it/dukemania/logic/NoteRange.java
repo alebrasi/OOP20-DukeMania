@@ -2,18 +2,18 @@ package it.dukemania.logic;
 
 public class NoteRange {
 
-    private ColumnsEnum column;
+    private Columns column;
     private int start;
     private int end;
 
-    public NoteRange(final ColumnsEnum column, final int start, final int end) {
+    public NoteRange(final Columns column, final int start, final int end) {
         super();
         this.column = column;
         this.start = start;
         this.end = end;
     }
 
-    public final ColumnsEnum getColumn() {
+    public final Columns getColumn() {
         return column;
     }
 

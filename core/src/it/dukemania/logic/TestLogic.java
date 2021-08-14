@@ -60,6 +60,11 @@ public class TestLogic {
         assertTrue(filteredTracks.get(0).getNotes().size() == 10);
         assertTrue(filteredTracks.get(1).getNotes().size() <= TrackFilterImpl.MAX_NOTE);
 
+        testTracks.clear();
+        testNotes = createNotes(TrackFilterImpl.MAX_NOTE * 2 + 1);
+        testTracks.add(new MyTrack(null, testNotes, 0));
+        assertTrue(this.trackFilter.reduceTrack(new Song("title", 0, testTracks, 0)).stream()
+                .collect(Collectors.toList()).get(0).getNotes().size() <= TrackFilterImpl.MAX_NOTE);
     }
 
     @org.junit.Test
@@ -91,9 +96,9 @@ public class TestLogic {
         List<Note> testNotes = new ArrayList<>();
         testNotes.add(new GenericNote(Optional.of(2.0), 1, 0));
         MyTrack testTrack = new MyTrack(null, testNotes, 0);
-        Map<ColumnsEnum, List<Note>> queuedNotes = this.columnLogic.noteQueuing(testTrack);
+        Map<Columns, List<Note>> queuedNotes = this.columnLogic.noteQueuing(testTrack);
         assertTrue(queuedNotes.size() == 1);
-        assertTrue(queuedNotes.get(ColumnsEnum.COLUMN_1).size() == 1);
+        assertTrue(queuedNotes.get(Columns.COLUMN_1).size() == 1);
 
         testNotes.add(new GenericNote(Optional.of(2.0), 10, 1));
         testNotes.add(new GenericNote(Optional.of(2.0), 20, 2));

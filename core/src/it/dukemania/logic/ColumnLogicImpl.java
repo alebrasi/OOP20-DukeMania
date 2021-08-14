@@ -33,16 +33,12 @@ public class ColumnLogicImpl implements ColumnLogic {
     public final int getColumnNumber() {
         return columnNumber;
     }
-    
-    public final void setColumnNumber(int columnNumber) {
+
+    public final void setColumnNumber(final int columnNumber) {
         this.columnNumber = columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP ? columnNumber : COLUMN_MIN_CAP;
     }
-    
+
     private List<Note> overlappingNotes(final List<Note> notes) {
-        //print di verifica funzionamento
-        //Map<Note, List<Note>> collisioni = notes.stream().collect(Collectors.toMap(x->x, x->notes.stream().filter(y -> x!=y && (x.getStartTime() == y.getStartTime() || (x.getStartTime() < y.getStartTime() && (x.getStartTime() + x.getDuration().get() > y.getStartTime())))).collect(Collectors.toList()))).entrySet().stream().filter(x->x.getValue().size()!=0).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        //System.out.println("col"+collisioni.size());
-        //collisioni.forEach((k,v) -> System.out.println(k.getStartTime() +" "+ k.getDuration() +" "+ v.size()));
         //lo stream fatto da gian cambiato per far si che non prenda una MyTrack ma una List<Note>
         return notes.stream().collect(Collectors.toMap(x -> x, x -> notes.stream()
                         .filter(y -> x != y && (x.getStartTime() == y.getStartTime()
@@ -54,14 +50,14 @@ public class ColumnLogicImpl implements ColumnLogic {
                         .collect(Collectors.toList());
     }
 
-    private List<ColumnsEnum> getColumnList() {
-        List<ColumnsEnum> columnList = Arrays.stream(ColumnsEnum.values()).collect(Collectors.toList());
+    private List<Columns> getColumnList() {
+        List<Columns> columnList = Arrays.stream(Columns.values()).collect(Collectors.toList());
         columnList.sort((e1, e2) -> e1.getNumericValue().compareTo(e2.getNumericValue()));
         return columnList;
     }
 
     @Override
-    public final Map<ColumnsEnum, List<Note>> noteQueuing(final MyTrack track) {
+    public final Map<Columns, List<Note>> noteQueuing(final MyTrack track) {
         //dice quante note ci sono per identifier
         List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
                         .collect(Collectors.groupingBy(Note::getIdentifier, Collectors.counting())).entrySet());
@@ -91,7 +87,7 @@ public class ColumnLogicImpl implements ColumnLogic {
             numberOfNotesForNoteType.remove(1);
         }
 //teoricamente elimina le collisioni
-        List<ColumnsEnum> columnList = getColumnList();
+        List<Columns> columnList = getColumnList();
         return (generateNoteRanges(notesForNoteType.values().stream()
                 .peek(t -> t.removeAll(overlappingNotes(t)))
                 .collect(Collectors.toList())))
@@ -100,9 +96,9 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     private List<List<Note>> generateNoteRanges(final List<List<Note>> columnTrack) {
-        List<ColumnsEnum> columnList = getColumnList();
+        List<Columns> columnList = getColumnList();
         noteRanges = columnTrack.stream().map(t -> {
-                ColumnsEnum column = columnList.remove(0);
+                Columns column = columnList.remove(0);
                 System.out.println(column);
                 return t.stream().map(r -> {
                         return new NoteRange(column, r.getStartTime(), r.getStartTime()
@@ -115,7 +111,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     @Override
-    public final int verifyNote(final ColumnsEnum column, final int start, final int end) {
+    public final int verifyNote(final Columns column, final int start, final int end) {
         // TODO Auto-generated method stub
         return 0;
     }
