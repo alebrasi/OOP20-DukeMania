@@ -103,7 +103,6 @@ public class DukeMania extends ApplicationAdapter {
 	    this.backgroundBatch = new SpriteBatch();
 	    this.buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
 	    this.stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera); //backgroundimage.width
-	    final Container<Table> backgroundContainer = new Container<>();
 	    //ae = new Engine();
 
 	    //sofi
@@ -154,7 +153,6 @@ public class DukeMania extends ApplicationAdapter {
 
         //adding elements on the stage
         this.stage.addActor(backgroundImage);
-        this.stage.addActor(backgroundContainer);
 
 	}
 	
@@ -207,14 +205,14 @@ public class DukeMania extends ApplicationAdapter {
         final long actualTime = Instant.now().toEpochMilli() - this.timeStart;
 
         this.notesPlaying = getPlayingNotes(actualTime);
-        
+
         //drawing of each note
         if (!this.notesPlaying.isEmpty()) {
             for (final Note n : this.notesPlaying) {
                 n.drawNote();
-                this.keyboard = new FromEventToInput(n, this.numberOfColumns);
+                this.keyboard = new FromEventToInput(n);
                 this.key = new KeyImpl(n, actualTime);
-                
+
                 //set the sparks
                 if (this.keyboard.isColumnSelected()) {
                     n.isSparked(n.getColumn(), this.batch);
@@ -237,7 +235,7 @@ public class DukeMania extends ApplicationAdapter {
                 if (n.getTimeOfFall() > 0) {
                     System.out.println("nota " + n.getColumn().name() + "tempo di caduta " + n.getTimeOfFall());
                 }*/
-                
+
                 //change the style of the buttons if they are clicked
                 for (int i = 0; i < this.numberOfColumns; i++) {
                     if (!this.keyboard.isButtonPressed(i + 1)) {
@@ -260,6 +258,7 @@ public class DukeMania extends ApplicationAdapter {
 	
 	@Override
 	public void dispose() {
+	    this.stage.dispose();
 		this.batch.dispose();
 		this.background.dispose();
 		this.backgroundBatch.dispose();

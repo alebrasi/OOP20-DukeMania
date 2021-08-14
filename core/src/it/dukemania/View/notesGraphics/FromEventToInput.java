@@ -6,12 +6,11 @@ import com.badlogic.gdx.Input;
 
 public class FromEventToInput implements EventsFromKeyboard {
     private Note note;
-    private int number;
 
 
-    public FromEventToInput(final Note note, final int number) {
+
+    public FromEventToInput(final Note note) { 
         this.note = note;
-        this.number = number;
     }
 
 

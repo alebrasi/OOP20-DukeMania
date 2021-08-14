@@ -11,7 +11,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 
 
-public class AssetManager {
+public final class AssetManager {
+    private static AssetManager instance = null;
+    private String value;
+
+    private AssetManager(final String value) {
+        this.value = value;
+    }
+
+    public static AssetManager getInstance(final String value) {
+        if (instance == null) {
+            instance = new AssetManager(value);
+        }
+        return instance;
+    }
+
 
     public static class TextureFiles {
 
@@ -81,4 +95,11 @@ public class AssetManager {
             textureAtlasAssociations.put("pink and blue button.atlas", new TextureAtlas(Gdx.files.internal("pink and blue button.atlas")));
         }
     }
+
+    public static void loadAll() {
+        TextureFiles.load();
+        SkinFiles.load();
+        FontFiles.load();
+    }
+
 }
