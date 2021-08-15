@@ -1,6 +1,6 @@
 package it.dukemania.Controller.playscreen;
 
-import it.dukemania.Model.Track;
+import it.dukemania.Model.TrackInfo;
 
 import java.util.List;
 
@@ -17,6 +17,6 @@ public interface PlayScreenController {
     */
     void openSong(String path);
     void setPlayTrack(int trackNumber);
-    List<Track> getTracks();
+    List<TrackInfo> getTracks();
     String[] getAllInstruments();
 }

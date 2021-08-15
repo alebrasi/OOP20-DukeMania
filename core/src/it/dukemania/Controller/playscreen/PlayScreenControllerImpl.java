@@ -1,15 +1,55 @@
 package it.dukemania.Controller.playscreen;
 
-import it.dukemania.Model.Track;
+import it.dukemania.Model.InstrumentType;
+import it.dukemania.Model.MyTrack;
+import it.dukemania.Model.Song;
+import it.dukemania.Model.TrackInfo;
+import it.dukemania.Model.serializers.Configuration;
+import it.dukemania.util.storage.Storage;
+import it.dukemania.util.storage.StorageFactoryImpl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PlayScreenControllerImpl implements PlayScreenController {
 
+    private final Storage storage = new StorageFactoryImpl().getExternalStorage();
+    private final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    private final List<Song> songs = getSongsConfiguration();
+    private List<MyTrack> currentTracks;
+
+    public PlayScreenControllerImpl() throws NoSuchAlgorithmException {
+
+    }
+
     @Override
     public void openSong(final String path) {
+        currentTracks = Collections.emptyList();
+        byte[] fileBytes = new byte[0];
+        try {
+            fileBytes = storage.readFileAsByte(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String hashedFile = getHashString(fileBytes);
+        Optional<Song> song = songs.stream().filter(s -> s.getSongHash().equals(hashedFile)).findFirst();
+        if (song.isPresent()) {
+            Song s = song.get();
+            currentTracks = (List<MyTrack>) s.getTracks();
+        }
+    }
 
+    private String getHashString(final byte[] bytes) {
+        StringBuilder stringHash = new StringBuilder();
+        byte[] d = digest.digest(bytes);
+        //Convert each byte to its relative hex value (in String format)
+        for (byte b : d) {
+            stringHash.append(String.format("%02x", b));
+        }
+        return stringHash.toString();
     }
 
     @Override
@@ -18,25 +58,42 @@ public class PlayScreenControllerImpl implements PlayScreenController {
     }
 
     @Override
-    public List<Track> getTracks() {
-        List<Track> tracks = new ArrayList<>();
-        tracks.add(new Track(1, "asd", "Bass"));
-        tracks.add(new Track(2, "sasas", "Guitar"));
-        tracks.add(new Track(3, "sahghs", "Drums"));
-        tracks.add(new Track(4, "sdfgdf", "Keyboard"));
-        tracks.add(new Track(5, "sdfasfg", "Koto"));
-        tracks.add(new Track(6, "sdfasfg", "Sax"));
-        tracks.add(new Track(7, "sdffhsjdfhasdag", "KeyBoard"));
-        tracks.add(new Track(8, "sdfasfg", "Guitar"));
-        tracks.add(new Track(9, "sdfasfg", "Sax"));
-        return tracks;
+    public List<TrackInfo> getTracks() {
+        return currentTracks
+                .stream()
+                .map(t -> new TrackInfo(t.getChannel(), t.getName(), t.getInstrument().toString()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public String[] getAllInstruments() {
+        return Arrays.stream(InstrumentType.values()).map(Enum::toString).toArray(String[]::new);
+    }
 
-        String[] instruments = { "Bass", "Guitar", "Drums", "Keyboard", "Koto", "Sax" };
+    private List<Song> getSongsConfiguration() {
+        Configuration.song d = new Configuration.song();
+        List<Song> f = Collections.emptyList();
+        try {
+            f = d.readAll();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
 
-        return instruments;
+    private void writeSongsConfiguration(final List<Song> songs) {
+        List<MyTrack> tracks = new ArrayList<>();
+        List<Song> mySongs = new ArrayList<>();
+        tracks.add(new MyTrack("Slap Bass", InstrumentType.SLAP_BASS_1, null, 1));
+        tracks.add(new MyTrack("Guitar Solo", InstrumentType.ELECTRIC_GUITAR_C, null, 2));
+        mySongs.add(new Song("This game", "asasdasdasdad", 3, tracks, 160));
+        mySongs.add(new Song("Red Zone", "agdgggdgfg", 3, tracks, 180));
+
+        Configuration.song s = new Configuration.song();
+        try {
+            s.writeAll(songs);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
