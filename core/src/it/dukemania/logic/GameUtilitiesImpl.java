@@ -36,8 +36,9 @@ public class GameUtilitiesImpl implements GameUtilities {
         return difficulties;
     }
 
+
     @Override
-    public final Map<MyTrack, DifficultyLevel> setTracksDifficulty(final List<MyTrack> tracks) {
+    public final Map<MyTrack, DifficultyLevel> generateTracksDifficulty(final List<MyTrack> tracks) {
         //return associateValueToElements(tracks, getDifficulties(), DifficultyLevel.values().length - 1, TrackFilterImpl.MAX_NOTE, DifficultyLevel.UNKNOWN);
         return tracks.stream()
                 .collect(Collectors
@@ -47,19 +48,15 @@ public class GameUtilitiesImpl implements GameUtilities {
                                     .filter(y -> 
                                     x.getNotes().size() <= TrackFilterImpl.MAX_NOTE / numberOfDifficulties * y.getNumericValue())
                                     .findFirst();
-                            return difficulty.isEmpty() ? DifficultyLevel.UNKNOWN : difficulty.get();
+                            return difficulty.orElse(DifficultyLevel.UNKNOWN);
                         }));
     }
     //return an int between 1 and 4 based on the duration of the note and the max duration of a note in the current track
-    public static final int setNoteHeight(final Optional<Double> noteDuration, final Optional<Double> maxDuration) {
+    public static final int generateNoteHeight(final Optional<Double> noteDuration, final Optional<Double> maxDuration) {
         return IntStream.iterate(1, i -> i + 1)
         .limit(MAX_HEIGHT)
-        .filter(x -> 
-        (noteDuration.isEmpty() ? 0 : Math.round(noteDuration.get()))
-        <= (maxDuration.isEmpty() ? 0 : Math.round(maxDuration.get())) / MAX_HEIGHT * x )
+        .filter(x -> Math.round(noteDuration.orElse(0.0)) <= (Math.round(maxDuration.orElse(0.0))) / MAX_HEIGHT * x)
         .findFirst()
-        .getAsInt();
-
-
+        .orElse(1);
     }
 }

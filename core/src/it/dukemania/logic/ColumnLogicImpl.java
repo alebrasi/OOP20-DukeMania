@@ -2,6 +2,7 @@ package it.dukemania.logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,7 +11,6 @@ import java.util.stream.Stream;
 
 import it.dukemania.midi.MyTrack;
 import it.dukemania.midi.Note;
-
 
 public class ColumnLogicImpl implements ColumnLogic {
 
@@ -71,9 +71,9 @@ public class ColumnLogicImpl implements ColumnLogic {
                 .collect(Collectors.toList());
         return columnTrack;
     }
-    
+
     //return the max duration of a note in a track
-    private Optional<Double> getMaxDuration (MyTrack track) {
+    private Optional<Double> getMaxDuration(final MyTrack track) {
         return track.getNotes().stream()
                 .max((e1, e2) -> e1.getDuration().get().compareTo(e2.getDuration().get()))
                 .get()
@@ -122,7 +122,7 @@ public class ColumnLogicImpl implements ColumnLogic {
                     return x.stream()
                             .map(y -> 
                             new LogicNoteImpl(y, currentColumn, GameUtilitiesImpl
-                                    .setNoteHeight(y.getDuration(), getMaxDuration(track))))
+                                    .generateNoteHeight(y.getDuration(), getMaxDuration(track))))
                             .collect(Collectors.toList());
                 })
                 .collect(Collectors.toList());
@@ -130,8 +130,19 @@ public class ColumnLogicImpl implements ColumnLogic {
 
     @Override
     public final int verifyNote(final Columns column, final int start, final int end) {
-        // TODO Auto-generated method stub
-        return 0;
+        NoteRange currentRange = noteRanges.stream()
+                .filter(x -> x.getColumn().equals(column))
+                .filter(x -> x.getStart() < end)
+                .sorted(Comparator.comparingInt(NoteRange::getStart))
+                .findFirst()
+                .orElse(noteRanges.get(0));
+        int normalPoint = (int) ((end - start - Math.abs(currentRange.getEnd() - end)
+                - Math.abs(currentRange.getStart() - start)) / (end - start)  * NOTE_POINT);
+        this.combo = normalPoint >= NOTE_POINT - NOTE_TOLERANCE ? (this.combo < MAX_COMBO ? this.combo + 1 : this.combo) : 0;
+        return ((normalPoint >= NOTE_POINT - NOTE_TOLERANCE 
+                ? NOTE_POINT : (normalPoint + NOTE_TOLERANCE < 0 ? 0 
+                        : normalPoint + NOTE_TOLERANCE)) + COMBO_POINT * combo) * columnNumber;
+
     }
 
 }

@@ -21,7 +21,9 @@ public class TrackFilterImpl implements TrackFilter {
            return new MyTrack(x.getInstrument(), x.getNotes().stream()
                    .filter(y -> (notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0))
                    .collect(Collectors.toList()), x.getChannel());
-        }).collect(Collectors.toList());
+        })
+                .sorted((e1, e2) -> (Integer.valueOf(e1.getNotes().size()).compareTo(Integer.valueOf(e2.getNotes().size()))))
+                .collect(Collectors.toList());
     }
 
 }
