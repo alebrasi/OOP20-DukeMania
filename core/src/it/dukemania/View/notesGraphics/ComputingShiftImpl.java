@@ -1,7 +1,7 @@
 package it.dukemania.View.notesGraphics;
 
 public class ComputingShiftImpl implements ComputingShift {
-    private static final int NOTE_SHIFT = 25;
+    private static final int NOTE_SHIFT = 35;
 
     //this method calculates the displacement of the position of the buttons as a function of the number of columns
     @Override

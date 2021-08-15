@@ -9,12 +9,20 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -37,6 +45,7 @@ import it.dukemania.View.notesGraphics.Note;
 import it.dukemania.View.notesGraphics.NoteImpl;
 import it.dukemania.View.notesGraphics.NoteLogic;
 import it.dukemania.View.notesGraphics.NoteLogicImpl;
+import it.dukemania.View.notesGraphics.Pair;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
 
@@ -47,14 +56,23 @@ public class DukeMania extends ApplicationAdapter {
     //sofi
     //private Logic logic = new LogicImpl();         //rapo
     private final Size dimensions;
+    private Pair<Integer, Integer> scoreboardSize;
     private Stage buttonsStage;
     private Stage stage;
     private TextureAtlas atlas;
     private Skin skin;
     private BitmapFont font;
+    private BitmapFont fontScoreboard;
+    private GlyphLayout layout = new GlyphLayout(); 
+    private float fontWidth;
+    private float fontHeight;
+    private FreeTypeFontGenerator generator;
+    private FreeTypeFontParameter parameter;
+    private String text;
     private TextButtonStyle styleDown;
     private TextButtonStyle styleUp;
     private Texture background;
+    private Texture scoreboard;
     private Image backgroundImage;
     private int buttonHeight;
     private SpriteBatch batch;
@@ -97,8 +115,11 @@ public class DukeMania extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-	    this.background = new Texture(Gdx.files.internal("galaxy.png"));
+	    this.background = new Texture(Gdx.files.internal("sfumature blu viola.png")); 
 	    this.backgroundImage = new Image(this.background);
+	    this.scoreboard = new Texture(Gdx.files.internal("immagine elettrica.jpg"), true);
+	    this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+	    //this.scoreboardSize = new Pair<>(this.scoreboard.getWidth(), this.scoreboard.getHeight());//edit
 	    this.batch = new SpriteBatch();
 	    this.backgroundBatch = new SpriteBatch();
 	    this.buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
@@ -114,7 +135,7 @@ public class DukeMania extends ApplicationAdapter {
         this.note7uno = new NoteLogicImpl(2, 600, 2, Columns.COLUMN2, 200);
         this.note8uno = new NoteLogicImpl(1, 1000, 3, Columns.COLUMN3, 200);
         this.note9uno = new NoteLogicImpl(4, 1400, 4, Columns.COLUMN4, 200);
-        this.note10uno = new NoteLogicImpl(2, 1600, 5, Columns.COLUMN2, 200);
+        this.note10uno = new NoteLogicImpl(5, 1600, 5, Columns.COLUMN2, 200);
 
         this.logicNotes.add(note6uno);
         this.logicNotes.add(note7uno);
@@ -124,18 +145,28 @@ public class DukeMania extends ApplicationAdapter {
 
         this.font = new BitmapFont();
         this.skin = new Skin();
-        this.atlas = new TextureAtlas(Gdx.files.internal("pink and blue button.atlas"));
+        this.atlas = new TextureAtlas(Gdx.files.internal("pink and blue buttons.atlas"));
         this.skin.addRegions(atlas);
+        this.text = "104";
+
+        this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.ttf"));
+        this.parameter = new FreeTypeFontParameter();
+        this.parameter.size = 40;
+        this.parameter.color = Color.GOLD;
+        this.parameter.shadowColor = Color.RED;
+        this.parameter.shadowOffsetX = 2;
+        this.fontScoreboard = generator.generateFont(this.parameter);
+        fontScoreboard.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 
         this.styleDown = new TextButtonStyle();
         this.styleDown.font = font;
-        this.styleDown.up = this.skin.getDrawable("button up");
-        this.styleDown.down = this.skin.getDrawable("botton down");
+        this.styleDown.up = this.skin.getDrawable("button down");
+        this.styleDown.down = this.skin.getDrawable("button up");
         this.styleUp = new TextButtonStyle();
         this.styleUp.font = font;
-        this.styleUp.up = this.skin.getDrawable("botton down");
-        this.styleUp.down = this.skin.getDrawable("button up");
+        this.styleUp.up = this.skin.getDrawable("button up");
+        this.styleUp.down = this.skin.getDrawable("button down");
 
         //placement of the buttons 
         for (int i = 0; i < this.numberOfColumns; i++) {
@@ -196,7 +227,15 @@ public class DukeMania extends ApplicationAdapter {
 		this.buttonsStage.draw();
 		this.batch.begin();
 
+
 		//sofi
+
+		layout.setText(fontScoreboard, "104");
+		this.fontWidth = layout.width;
+		this.fontHeight = layout.height; 
+		this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - 80, this.dimensions.getSize().getX(), 80);
+		this.fontScoreboard.draw(batch, text, this.dimensions.getSize().getX() / 2 - this.fontWidth / 2, this.dimensions.getSize().getY() - this.fontHeight * 0.75f);
+
 		//set the style of the buttons
 		for (final TextButton b : this.buttons) {
 		    b.setStyle(this.styleUp);
@@ -262,6 +301,7 @@ public class DukeMania extends ApplicationAdapter {
 		this.batch.dispose();
 		this.background.dispose();
 		this.backgroundBatch.dispose();
+		this.generator.dispose();
 	}
 	
 	
