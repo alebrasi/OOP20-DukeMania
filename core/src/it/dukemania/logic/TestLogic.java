@@ -105,10 +105,10 @@ public class TestLogic {
         assertTrue(queuedNotes.size() == 1);
         assertTrue(queuedNotes.get(0).size() == 1);
         //test with 5 notes with different identifier and 4 columns
-        testNotes.add(new GenericNote(Optional.of(2.0), 10, 1));
+        testNotes.add(new GenericNote(Optional.of(1.0), 10, 1));
         testNotes.add(new GenericNote(Optional.of(2.0), 20, 2));
-        testNotes.add(new GenericNote(Optional.of(2.0), 30, 3));
-        testNotes.add(new GenericNote(Optional.of(2.0), 40, 4));
+        testNotes.add(new GenericNote(Optional.of(3.0), 30, 3));
+        testNotes.add(new GenericNote(Optional.of(4.0), 40, 4));
         testTrack = new MyTrack(null, testNotes, 0);
         queuedNotes = this.columnLogic.noteQueuing(testTrack);
         assertTrue(queuedNotes.size() == 4);

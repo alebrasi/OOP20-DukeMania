@@ -129,7 +129,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     @Override
-    public final int verifyNote(final Columns column, final int start, final int end) {
+    public final int verifyNote(final Columns column, final long start, final long end) {
         NoteRange currentRange = noteRanges.stream()
                 .filter(x -> x.getColumn().equals(column))
                 .filter(x -> x.getStart() < end)

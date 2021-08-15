@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import it.dukemania.midi.MyTrack;
 
 
@@ -15,20 +13,7 @@ import it.dukemania.midi.MyTrack;
 public class GameUtilitiesImpl implements GameUtilities {
 
     static final int MAX_HEIGHT = 4;
-/*   
-    private static <A,B> Map<A, B> associateValueToElements(final List<A> elements, List<B> values, int numberOfValues, int maxRange, B correctionValue) {
-        return elements.stream()
-                .collect(Collectors
-                        .toMap(x -> x, x -> { 
-                            //int numberOfDifficulties = DifficultyLevel.values().length - 1;
-                            Optional<B> value = values.stream()
-                                    .filter(y -> 
-                                    operation1(x) <= maxRange / numberOfValues * operation2(y))
-                                    .findFirst();
-                            return value.isEmpty() ? correctionValue : value.get();
-                        }));
-    }
-*/
+
     private List<DifficultyLevel> getDifficulties() {
         List<DifficultyLevel> difficulties = Arrays.stream(DifficultyLevel.values())
                 .collect(Collectors.toList());
@@ -39,7 +24,6 @@ public class GameUtilitiesImpl implements GameUtilities {
 
     @Override
     public final Map<MyTrack, DifficultyLevel> generateTracksDifficulty(final List<MyTrack> tracks) {
-        //return associateValueToElements(tracks, getDifficulties(), DifficultyLevel.values().length - 1, TrackFilterImpl.MAX_NOTE, DifficultyLevel.UNKNOWN);
         return tracks.stream()
                 .collect(Collectors
                         .toMap(x -> x, x -> { 
