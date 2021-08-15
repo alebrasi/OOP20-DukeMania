@@ -8,10 +8,11 @@ public class LogicNoteImpl implements LogicNote {
     private long duration;
     private Columns column;
 
-    public LogicNoteImpl(final Note note, final Columns column) {
+    public LogicNoteImpl(final Note note, final Columns column, int height) {
        this.noteStrarts = note.getStartTime();
        this.duration = Math.round(note.getDuration().get());
        this.column = column;
+       this.height = height;
     }
 
     public final int getHeight() {

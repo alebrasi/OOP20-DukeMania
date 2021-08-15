@@ -96,9 +96,9 @@ public class TestLogic {
         List<Note> testNotes = new ArrayList<>();
         testNotes.add(new GenericNote(Optional.of(2.0), 1, 0));
         MyTrack testTrack = new MyTrack(null, testNotes, 0);
-        Map<Columns, List<Note>> queuedNotes = this.columnLogic.noteQueuing(testTrack);
+        List<List<LogicNoteImpl>> queuedNotes = this.columnLogic.noteQueuing(testTrack);
         assertTrue(queuedNotes.size() == 1);
-        assertTrue(queuedNotes.get(Columns.COLUMN_1).size() == 1);
+        assertTrue(queuedNotes.get(0).size() == 1);
 
         testNotes.add(new GenericNote(Optional.of(2.0), 10, 1));
         testNotes.add(new GenericNote(Optional.of(2.0), 20, 2));
@@ -107,14 +107,14 @@ public class TestLogic {
         testTrack = new MyTrack(null, testNotes, 0);
         queuedNotes = this.columnLogic.noteQueuing(testTrack);
         assertTrue(queuedNotes.size() == 4);
-        assertTrue(queuedNotes.values().stream().mapToInt(t -> t.size()).sum() == 5);
+        assertTrue(queuedNotes.stream().mapToInt(t -> t.size()).sum() == 5);
         this.columnLogic.setColumnNumber(5);
         queuedNotes = this.columnLogic.noteQueuing(testTrack);
         assertTrue(queuedNotes.size() == 5);
 
         testNotes.addAll(createNotes(10));
         queuedNotes = this.columnLogic.noteQueuing(testTrack);
-        assertTrue(queuedNotes.values().stream().mapToInt(t -> t.size()).sum() == 5);
+        assertTrue(queuedNotes.stream().mapToInt(t -> t.size()).sum() == 5);
     }
 
 }

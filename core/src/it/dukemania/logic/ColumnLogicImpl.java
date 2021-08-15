@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,7 +56,7 @@ public class ColumnLogicImpl implements ColumnLogic {
         columnList.sort((e1, e2) -> e1.getNumericValue().compareTo(e2.getNumericValue()));
         return columnList;
     }
-    
+
     private List<List<Note>> generateNoteRanges(final List<List<Note>> columnTrack) {
         List<Columns> columnList = getColumnList();
         noteRanges = columnTrack.stream().map(t -> {
@@ -69,6 +70,14 @@ public class ColumnLogicImpl implements ColumnLogic {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         return columnTrack;
+    }
+    
+    //return the max duration of a note in a track
+    private Optional<Double> getMaxDuration (MyTrack track) {
+        return track.getNotes().stream()
+                .max((e1, e2) -> e1.getDuration().get().compareTo(e2.getDuration().get()))
+                .get()
+                .getDuration();
     }
 
     @Override
@@ -101,15 +110,19 @@ public class ColumnLogicImpl implements ColumnLogic {
                 //rimuove il secondo quantitativo
             numberOfNotesForNoteType.remove(1);
         }
+
 //teoricamente elimina le collisioni
         List<Columns> columnList = getColumnList();
         return (generateNoteRanges(notesForNoteType.values().stream()
                 .peek(x -> x.removeAll(overlappingNotes(x)))
                 .collect(Collectors.toList())))
-                .stream().map(x -> {
+                .stream()
+                .map(x -> {
                     Columns currentColumn = columnList.remove(0);
                     return x.stream()
-                            .map(y -> new LogicNoteImpl(y, currentColumn))
+                            .map(y -> 
+                            new LogicNoteImpl(y, currentColumn, GameUtilitiesImpl
+                                    .setNoteHeight(y.getDuration(), getMaxDuration(track))))
                             .collect(Collectors.toList());
                 })
                 .collect(Collectors.toList());
