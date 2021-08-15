@@ -2,20 +2,27 @@ package it.dukemania.util.storage;
 
 import com.badlogic.gdx.Gdx;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class StorageFactoryImpl implements StorageFactory {
 
-    private static String configFolderName = ".dukemania";
-    private static String homeFolderPath = System.getProperty("user.home");
-    private static String separator = File.separator;
-    private static String configPath = homeFolderPath + separator + configFolderName;
-    private final Function<String, File> assetMappingFunction = (path) -> Gdx.files.internal(path).file();
-    private final Function<String, File> configurationMappingFunction = (path) -> new File(configPath + separator + path);
+    private static final String CONFIG_FOLDER_NAME = ".dukemania";
+    private static final String USER_HOME_PATH = System.getProperty("user.home");
+    private static final String FILE_SEPARATOR = File.separator;
+    private static final String CONFIGS_PATH = USER_HOME_PATH + FILE_SEPARATOR + CONFIG_FOLDER_NAME;
+
+    private final Function<String, File> configurationMappingFunction = (path) -> new File(CONFIGS_PATH + FILE_SEPARATOR + path);
     private final Function<String, File> externalMappingFunction = File::new;
+    private final Function<String, File> assetMappingFunction = (path) -> {
+        if (Gdx.files.internal(path).file().exists()) {
+            return Gdx.files.internal((path)).file().getAbsoluteFile();
+        }
+        return Gdx.files.internal("core" + FILE_SEPARATOR + "assets" + FILE_SEPARATOR + path).file().getAbsoluteFile();
+    };
 
     @Override
     public Storage getAssetStorage() {
@@ -28,11 +35,11 @@ public class StorageFactoryImpl implements StorageFactory {
     }
 
     @Override
-    public Storage getExternalStorage(final String path) {
+    public Storage getExternalStorage() {
         return new StorageImpl(externalMappingFunction);
     }
 
-    private final class StorageImpl implements Storage {
+    private static final class StorageImpl implements Storage {
 
         private final Function<String, File> fileMapping;
 
@@ -47,8 +54,12 @@ public class StorageFactoryImpl implements StorageFactory {
 
         @Override
         public String readFileAsString(final String filePath) throws IOException {
-            System.out.println(fileMapping.apply(filePath).toPath());
             return Files.readString(fileMapping.apply(filePath).toPath());
+        }
+
+        @Override
+        public byte[] readFileAsByte(final String filePath) throws IOException {
+            return Files.readAllBytes(fileMapping.apply(filePath).toPath());
         }
 
         @Override
@@ -57,13 +68,30 @@ public class StorageFactoryImpl implements StorageFactory {
         }
 
         @Override
+        public boolean createDirectoryRecursively(final String path) {
+            return fileMapping.apply(path).mkdirs();
+        }
+
+        @Override
+        public boolean createFileIfNotExists(final String path) {
+            String[] dirs = path.split(FILE_SEPARATOR);
+            String tmpPath = Arrays.stream(dirs).limit(dirs.length - 1).collect(Collectors.joining(FILE_SEPARATOR));
+            createDirectoryRecursively(tmpPath);
+            try {
+                return fileMapping.apply(path).createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
         public String getDirectorySeparator() {
-            return separator;
+            return FILE_SEPARATOR;
         }
 
         @Override
         public File getAsFile(final String path) {
-            File a = new File("asd");
             return fileMapping.apply(path);
         }
 

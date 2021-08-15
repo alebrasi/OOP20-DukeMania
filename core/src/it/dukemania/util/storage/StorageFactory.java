@@ -7,5 +7,5 @@ public interface StorageFactory {
      */
     Storage getAssetStorage();
     Storage getConfigurationStorage();
-    Storage getExternalStorage(String path);
+    Storage getExternalStorage();
 }
