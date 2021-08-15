@@ -14,6 +14,8 @@ import it.dukemania.windowmanager.DukeManiaWindowState;
 import it.dukemania.windowmanager.Window;
 import it.dukemania.windowmanager.WindowManager;
 
+import java.security.NoSuchAlgorithmException;
+
 public class DukeManiaTest extends ApplicationAdapter {
 
     private final WindowManager wdm = new WindowManager();
@@ -27,8 +29,6 @@ public class DukeManiaTest extends ApplicationAdapter {
     private final int fontSize = 50;
     private float fontBorderWidth = 0.5f;
     private final Color fontColor = Color.BLACK;
-
-    private Skin skin;
 
     private BitmapFont generateFont() {
         generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_PATH));
@@ -44,7 +44,7 @@ public class DukeManiaTest extends ApplicationAdapter {
 
     private Skin createSkin() {
         BitmapFont font = generateFont();
-        skin = new Skin();
+        Skin skin = new Skin();
         skin.add("font", font);
         skin.add("title", font);
         skin.addRegions(new TextureAtlas(Gdx.files.internal(ATLAS_PATH)));
@@ -55,14 +55,21 @@ public class DukeManiaTest extends ApplicationAdapter {
     @Override
     public void create() {
         Skin skin = createSkin();
-        Window playScreen = new PlayWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        Window playScreen = null;
         Window titleScreen = new TitleWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        try {
+            playScreen = new PlayWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            Gdx.app.exit();
+            System.exit(1);
+        }
 
         titleScreen.setWindowListener(wdm);
-        playScreen.setWindowListener(wdm);
 
         wdm.addWindow(titleScreen, DukeManiaWindowState.TITLE);
         wdm.addWindow(playScreen, DukeManiaWindowState.PLAY);
+        playScreen.setWindowListener(wdm);
         wdm.switchWindow(DukeManiaWindowState.TITLE);
     }
 
