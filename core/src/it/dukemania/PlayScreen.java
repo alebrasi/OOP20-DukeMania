@@ -50,7 +50,7 @@ import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
 
 
-public class DukeMania extends ApplicationAdapter {
+public class PlayScreen extends ApplicationAdapter {
     //Engine ae = null;
     //cambiare la texture della scoreboard e il testo
 
@@ -101,7 +101,7 @@ public class DukeMania extends ApplicationAdapter {
     private List<TextButton> buttons = new ArrayList<>();
     private static final int BUTTONDIM = 120;
 
-        public DukeMania() { 
+        public PlayScreen() { 
             this.xNote = 50;
             this.yNote = 80;
             this.dimensions = new SizeImpl();
