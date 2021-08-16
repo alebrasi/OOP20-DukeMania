@@ -6,17 +6,18 @@ import it.dukemania.Model.serializers.SongDeserializer;
 import it.dukemania.Model.serializers.SongSerializer;
 
 import java.util.Collection;
+import java.util.List;
 
 @JsonDeserialize(using = SongDeserializer.class)
 @JsonSerialize(using = SongSerializer.class)
-public class Song {
+public class SongConfiguration {
     private final String title;
     private final double  duration;
-    private final Collection<MyTrack> tracks;
+    private final List<MyTrack> tracks;
     private final double bpm;
     private final String songHash;
 
-    public Song(final String title, final String songHash, final double duration, final Collection<MyTrack> tracks, final double BPM) {
+    public SongConfiguration(final String title, final String songHash, final double duration, final List<MyTrack> tracks, final double BPM) {
         this.title = title;
         this.duration = duration;
         this.tracks = tracks;
@@ -33,7 +34,7 @@ public class Song {
     public final double getDuration() {
         return duration;
     }
-    public final Collection<MyTrack> getTracks() {
+    public final List<MyTrack> getTracks() {
         return tracks;
     }
     public final String getSongHash() {
