@@ -1,8 +1,7 @@
 package it.dukemania.Controller.songselection;
 
 import it.dukemania.Model.InstrumentType;
-import it.dukemania.Model.MyTrack;
-import it.dukemania.Model.Song;
+import it.dukemania.Model.SongInfo;
 import it.dukemania.Model.TrackInfo;
 import it.dukemania.Model.serializers.Configuration;
 import it.dukemania.Model.serializers.synthesizer.SynthInfo;
@@ -20,8 +19,8 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     private final Storage storage = new StorageFactoryImpl().getExternalStorage();
     private final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    private final List<Song> songs = getSongsConfiguration();
-    private List<MyTrack> currentTracks;
+    private final List<SongInfo> songs = getSongsConfiguration();
+    private List<TrackInfo> currentTracks;
 
     public SongSelectionWindowControllerImpl() throws NoSuchAlgorithmException {
 
@@ -37,10 +36,10 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
             e.printStackTrace();
         }
         String hashedFile = getHashString(fileBytes);
-        Optional<Song> song = songs.stream().filter(s -> s.getSongHash().equals(hashedFile)).findFirst();
+        Optional<SongInfo> song = songs.stream().filter(s -> s.getSongHash().equals(hashedFile)).findFirst();
         if (song.isPresent()) {
-            Song s = song.get();
-            currentTracks = (List<MyTrack>) s.getTracks();
+            SongInfo s = song.get();
+            currentTracks = s.getTracks();
         }
     }
 
@@ -61,10 +60,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public List<TrackInfo> getTracks() {
-        return currentTracks
-                .stream()
-                .map(t -> new TrackInfo(t.getChannel(), t.getName(), t.getInstrument().toString()))
-                .collect(Collectors.toList());
+        return currentTracks;
     }
 
     @Override
@@ -73,9 +69,10 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         return Arrays.stream(InstrumentType.values()).map(Enum::toString).toArray(String[]::new);
     }
 
-    private List<Song> getSongsConfiguration() {
+    private List<SongInfo> getSongsConfiguration() {
+        writeSongsConfiguration(null);
         Configuration.song d = new Configuration.song();
-        List<Song> f = Collections.emptyList();
+        List<SongInfo> f = Collections.emptyList();
         try {
             f = d.readAll();
         } catch (IOException e) {
@@ -84,17 +81,17 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         return f;
     }
 
-    private void writeSongsConfiguration(final List<Song> songs) {
-        List<MyTrack> tracks = new ArrayList<>();
-        List<Song> mySongs = new ArrayList<>();
-        tracks.add(new MyTrack("Slap Bass", InstrumentType.SLAP_BASS_1, null, 1));
-        tracks.add(new MyTrack("Guitar Solo", InstrumentType.ELECTRIC_GUITAR_C, null, 2));
-        mySongs.add(new Song("This game", "asasdasdasdad", 3, tracks, 160));
-        mySongs.add(new Song("Red Zone", "agdgggdgfg", 3, tracks, 180));
+    private void writeSongsConfiguration(final List<SongInfo> songs) {
+        List<TrackInfo> tracks = new ArrayList<>();
+        List<SongInfo> mySongs = new ArrayList<>();
+        tracks.add(new TrackInfo(1, "Slap Bass", InstrumentType.SLAP_BASS_1));
+        tracks.add(new TrackInfo(2, "Guitar Solo", InstrumentType.ELECTRIC_GUITAR_C));
+        mySongs.add(new SongInfo("This game", "8e155c5c5b4b0b2c2cbedbcdcc58d59859cf493aa67d6a26e8d079872d062f9b", 3, tracks, 160));
+        mySongs.add(new SongInfo("Red Zone", "agdgggdgfg", 3, tracks, 180));
 
         Configuration.song s = new Configuration.song();
         try {
-            s.writeAll(songs);
+            s.writeAll(mySongs);
         } catch (IOException e) {
             e.printStackTrace();
         }

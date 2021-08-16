@@ -67,9 +67,9 @@ public class SongSelectionWindow extends AbstractView {
                     //TODO Fix height of SelectBox
                     SelectBox<String> slctInstruments = new SelectBox<>(skin);
                     slctInstruments.setItems(ins);
-                    slctInstruments.setSelected(s.getInstrumentName());
+                    slctInstruments.setSelected(s.getInstrument().toString());
                     slctInstruments.setMaxListCount(3);
-                    CheckBox ck = new CheckBox(String.valueOf(s.getTrackID()), skin);
+                    CheckBox ck = new CheckBox(String.valueOf(s.getChannel()), skin);
                     playableTracks.add(ck);
                     tblTracks.add(ck).expand().align(Align.center);
                     tblTracks.add(new Label(s.getTrackName(), skin)).align(Align.left);
