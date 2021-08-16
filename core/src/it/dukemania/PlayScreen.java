@@ -148,7 +148,7 @@ public class PlayScreen extends ApplicationAdapter {
         this.skin = new Skin();
         this.atlas = new TextureAtlas(Gdx.files.internal("pink and blue buttons.atlas"));
         this.skin.addRegions(atlas);
-        this.text = "1000000000000000";
+        this.text = "700000";
 
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.ttf"));
         this.parameter = new FreeTypeFontParameter();
@@ -230,11 +230,10 @@ public class PlayScreen extends ApplicationAdapter {
 
 
 		//sofi
-		//this.dimensions.getSize().getX() / 2 - this.fontWidth / 2
 		layout.setText(fontScoreboard, this.text);
 		this.fontWidth = layout.width;
 		this.fontHeight = layout.height; 
-		this.fontScoreboard.draw(batch, text, 0, this.dimensions.getSize().getY() - this.fontHeight * 0.75f);
+		this.fontScoreboard.draw(batch, text, this.dimensions.getSize().getX() / 2 - this.fontWidth / 2, this.dimensions.getSize().getY() - this.fontHeight * 0.75f);
 		this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - 80, this.dimensions.getSize().getX(), 80);
 
 		//set the style of the buttons
