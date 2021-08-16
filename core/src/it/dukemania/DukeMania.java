@@ -52,6 +52,7 @@ import it.dukemania.View.notesGraphics.SizeImpl;
 
 public class DukeMania extends ApplicationAdapter {
     //Engine ae = null;
+    //cambiare la texture della scoreboard e il testo
 
     //sofi
     //private Logic logic = new LogicImpl();         //rapo
@@ -117,7 +118,7 @@ public class DukeMania extends ApplicationAdapter {
 	public void create() {
 	    this.background = new Texture(Gdx.files.internal("sfumature blu viola.png")); 
 	    this.backgroundImage = new Image(this.background);
-	    this.scoreboard = new Texture(Gdx.files.internal("immagine elettrica.jpg"), true);
+	    this.scoreboard = new Texture(Gdx.files.internal("blue scoreboard.png"), true);
 	    this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	    //this.scoreboardSize = new Pair<>(this.scoreboard.getWidth(), this.scoreboard.getHeight());//edit
 	    this.batch = new SpriteBatch();
