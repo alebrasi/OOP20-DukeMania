@@ -14,8 +14,6 @@ public class Song {
     private final double  duration;
     private final Collection<MyTrack> tracks;
     private final double bpm;
-
-
     private final String songHash;
 
     public Song(final String title, final String songHash, final double duration, final Collection<MyTrack> tracks, final double BPM) {
