@@ -8,11 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import it.dukemania.Model.InstrumentType;
 import it.dukemania.Model.MyTrack;
+import it.dukemania.Model.TrackInfo;
 
 import java.io.IOException;
 import java.util.Collections;
 
-public class TrackDeserializer extends StdDeserializer<MyTrack> {
+public class TrackDeserializer extends StdDeserializer<TrackInfo> {
 
     public TrackDeserializer() {
         this(null);
@@ -23,7 +24,7 @@ public class TrackDeserializer extends StdDeserializer<MyTrack> {
     }
 
     @Override
-    public MyTrack deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public TrackInfo deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
 
@@ -31,6 +32,6 @@ public class TrackDeserializer extends StdDeserializer<MyTrack> {
                                         .treeAsTokens(node.get("instrument"))
                                         .readValueAs(InstrumentType.class);
 
-        return new MyTrack(node.get("trackName").asText(), instrument, Collections.emptyList(), node.get("channel").asInt());
+        return new TrackInfo(node.get("channel").asInt(), node.get("trackName").asText(), instrument);
     }
 }
