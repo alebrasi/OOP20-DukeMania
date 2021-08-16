@@ -1,13 +1,33 @@
 package it.dukemania.audioengine;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import it.dukemania.Model.serializers.synthesizer.SynthBuilderDeserializer;
+import it.dukemania.Model.serializers.synthesizer.SynthBuilderSerializer;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+@JsonDeserialize(using = SynthBuilderDeserializer.class)
+@JsonSerialize(using = SynthBuilderSerializer.class)
 public class SynthBuilderImpl implements SynthBuilder {
 
     private Enveloper env;
     private WaveTable[] waves;
+
+    public Enveloper getEnv() {
+        return env;
+    }
+
+    public WaveTable[] getWaves() {
+        return waves;
+    }
+
+    public double[] getOffsets() {
+        return offsets;
+    }
+
     private double [] offsets;
     private Optional<Function<Long, Float>> noteLFO = Optional.empty();
     private Optional<Function<Long, Float>> volumeLFO = Optional.empty();
