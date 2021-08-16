@@ -4,7 +4,7 @@ public enum DukeManiaWindowState implements WindowState {
     PLAY(3),
     TITLE(0),
     OPTIONS(1),
-    SELECT_SONG(2);
+    SONG_SELECTION(2);
 
     private final int stateValue;
 

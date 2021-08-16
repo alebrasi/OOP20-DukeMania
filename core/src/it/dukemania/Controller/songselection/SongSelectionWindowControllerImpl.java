@@ -1,4 +1,4 @@
-package it.dukemania.Controller.playscreen;
+package it.dukemania.Controller.songselection;
 
 import it.dukemania.Model.InstrumentType;
 import it.dukemania.Model.MyTrack;
@@ -14,14 +14,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PlayScreenControllerImpl implements PlayScreenController {
+public class SongSelectionWindowControllerImpl implements SongSelectionWindowController {
 
     private final Storage storage = new StorageFactoryImpl().getExternalStorage();
     private final MessageDigest digest = MessageDigest.getInstance("SHA-256");
     private final List<Song> songs = getSongsConfiguration();
     private List<MyTrack> currentTracks;
 
-    public PlayScreenControllerImpl() throws NoSuchAlgorithmException {
+    public SongSelectionWindowControllerImpl() throws NoSuchAlgorithmException {
 
     }
 

@@ -42,7 +42,7 @@ public class TitleWindow extends AbstractView {
                 if (switchWindowNotifier != null) {
                     System.out.println("Play");
 
-                    switchWindowNotifier.switchWindow(DukeManiaWindowState.PLAY);
+                    switchWindowNotifier.switchWindow(DukeManiaWindowState.SONG_SELECTION);
                 }
             }
         });

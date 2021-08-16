@@ -10,20 +10,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import it.dukemania.Controller.filedialog.DialogResult;
-import it.dukemania.Controller.playscreen.PlayScreenController;
-import it.dukemania.Controller.playscreen.PlayScreenControllerImpl;
+import it.dukemania.Controller.songselection.SongSelectionWindowController;
+import it.dukemania.Controller.songselection.SongSelectionWindowControllerImpl;
 import it.dukemania.View.AbstractView;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 
 import java.security.NoSuchAlgorithmException;
 
-public class PlayWindow extends AbstractView {
+public class SongSelectionWindow extends AbstractView {
 
-    private final PlayScreenController controller = new PlayScreenControllerImpl();
+    private final SongSelectionWindowController controller = new SongSelectionWindowControllerImpl();
     private final int FILE_DIALOG_SIZE = 800;
     private final int TABLE_CONFIGS_OFFSET_Y = -300;
 
-    public PlayWindow(final String backgroundPath, final Skin skin) throws NoSuchAlgorithmException {
+    public SongSelectionWindow(final String backgroundPath, final Skin skin) throws NoSuchAlgorithmException {
         super(backgroundPath, skin);
     }
 

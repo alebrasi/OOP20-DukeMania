@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import it.dukemania.View.menu.PlayWindow;
+import it.dukemania.View.menu.SongSelectionWindow;
 import it.dukemania.View.menu.TitleWindow;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 import it.dukemania.windowmanager.Window;
@@ -58,7 +58,7 @@ public class DukeManiaTest extends ApplicationAdapter {
         Window playScreen = null;
         Window titleScreen = new TitleWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
         try {
-            playScreen = new PlayWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+            playScreen = new SongSelectionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             Gdx.app.exit();
@@ -68,7 +68,7 @@ public class DukeManiaTest extends ApplicationAdapter {
         titleScreen.setWindowListener(wdm);
 
         wdm.addWindow(titleScreen, DukeManiaWindowState.TITLE);
-        wdm.addWindow(playScreen, DukeManiaWindowState.PLAY);
+        wdm.addWindow(playScreen, DukeManiaWindowState.SONG_SELECTION);
         playScreen.setWindowListener(wdm);
         wdm.switchWindow(DukeManiaWindowState.TITLE);
     }

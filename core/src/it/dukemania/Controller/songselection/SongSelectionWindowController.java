@@ -1,10 +1,10 @@
-package it.dukemania.Controller.playscreen;
+package it.dukemania.Controller.songselection;
 
 import it.dukemania.Model.TrackInfo;
 
 import java.util.List;
 
-public interface PlayScreenController {
+public interface SongSelectionWindowController {
     /*
     TODO:
         - Select song
