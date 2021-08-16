@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import it.dukemania.midi.Note;
-import it.dukemania.midi.MyTrack;
+import it.dukemania.Model.MyTrack;
 import it.dukemania.midi.Song;
 
 

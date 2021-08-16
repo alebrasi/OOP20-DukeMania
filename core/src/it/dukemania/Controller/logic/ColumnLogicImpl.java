@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import it.dukemania.midi.MyTrack;
+import it.dukemania.Model.MyTrack;
 import it.dukemania.midi.Note;
 
 public class ColumnLogicImpl implements ColumnLogic {
