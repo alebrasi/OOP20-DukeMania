@@ -116,9 +116,9 @@ public class PlayScreen extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-	    this.background = new Texture(Gdx.files.internal("sfumature blu viola.png")); 
+	    this.background = new Texture(Gdx.files.internal("blue shade.png")); 
 	    this.backgroundImage = new Image(this.background);
-	    this.scoreboard = new Texture(Gdx.files.internal("blue scoreboard.png"), true);
+	    this.scoreboard = new Texture(Gdx.files.internal("transparent scoreboard.png"), true);
 	    this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	    //this.scoreboardSize = new Pair<>(this.scoreboard.getWidth(), this.scoreboard.getHeight());//edit
 	    this.batch = new SpriteBatch();
@@ -148,13 +148,13 @@ public class PlayScreen extends ApplicationAdapter {
         this.skin = new Skin();
         this.atlas = new TextureAtlas(Gdx.files.internal("pink and blue buttons.atlas"));
         this.skin.addRegions(atlas);
-        this.text = "104";
+        this.text = "1000000000000000";
 
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.ttf"));
         this.parameter = new FreeTypeFontParameter();
         this.parameter.size = 40;
-        this.parameter.color = Color.GOLD;
-        this.parameter.shadowColor = Color.RED;
+        this.parameter.color = Color.WHITE;
+        this.parameter.shadowColor = Color.BLACK;
         this.parameter.shadowOffsetX = 2;
         this.fontScoreboard = generator.generateFont(this.parameter);
         fontScoreboard.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -230,12 +230,12 @@ public class PlayScreen extends ApplicationAdapter {
 
 
 		//sofi
-
-		layout.setText(fontScoreboard, "104");
+		//this.dimensions.getSize().getX() / 2 - this.fontWidth / 2
+		layout.setText(fontScoreboard, this.text);
 		this.fontWidth = layout.width;
 		this.fontHeight = layout.height; 
+		this.fontScoreboard.draw(batch, text, 0, this.dimensions.getSize().getY() - this.fontHeight * 0.75f);
 		this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - 80, this.dimensions.getSize().getX(), 80);
-		this.fontScoreboard.draw(batch, text, this.dimensions.getSize().getX() / 2 - this.fontWidth / 2, this.dimensions.getSize().getY() - this.fontHeight * 0.75f);
 
 		//set the style of the buttons
 		for (final TextButton b : this.buttons) {

@@ -12,6 +12,7 @@ public class DesktopLauncher {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         Size dimensions = new SizeImpl();
         config.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
+        config.setResizable(false);
         new Lwjgl3Application(new PlayScreen(), config);
     }
 }
