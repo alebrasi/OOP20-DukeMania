@@ -3,10 +3,10 @@ package it.dukemania.midi;
 import java.util.List;
 import java.util.Optional;
 
-public class Factory implements AbstractFactory {
+public class FactoryImpl implements AbstractFactory {
 
     @Override
-    public final Note createNote(final Optional<Double> duration, final int startTime, final int identifier) {
+    public final Note createNote(final Optional<Long> duration, final long startTime, final int identifier) {
         return new Note(duration, startTime, identifier);
     }
 

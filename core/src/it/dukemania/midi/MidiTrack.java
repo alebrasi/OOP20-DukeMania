@@ -2,7 +2,7 @@ package it.dukemania.midi;
 
 import java.util.List;
 
-public interface TrackInterface {
+public interface MidiTrack {
 
     List<AbstractNote> getNotes();
 

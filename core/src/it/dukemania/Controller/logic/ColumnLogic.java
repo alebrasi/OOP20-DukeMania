@@ -2,6 +2,7 @@ package it.dukemania.Controller.logic;
 
 import java.util.List;
 import it.dukemania.Model.MyTrack;
+import it.dukemania.midi.MidiTrack;
 
 
 public interface ColumnLogic {
@@ -10,7 +11,7 @@ public interface ColumnLogic {
 
     void setColumnNumber(int columnNumber);
 
-    List<List<LogicNoteImpl>> noteQueuing(MyTrack track);
+    List<List<LogicNoteImpl>> noteQueuing(MidiTrack track);
 
     //riceve come imput i dati dalla grafica, verifica se l'intervallo in cui � stato premuto il tasto
     //coincide con quello della nota e restituisce un punteggio influenzato da:

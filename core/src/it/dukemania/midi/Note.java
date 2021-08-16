@@ -8,7 +8,7 @@ public class Note extends AbstractNote {
     private static final double FREQ_A4 = 440;
     private final double frequency;
 
-    public Note(final Optional<Double> duration, final int startTime, final int identifier) {
+    public Note(final Optional<Long> duration, final long startTime, final int identifier) {
         super(duration, startTime, identifier);
         this.frequency = (double) (Math.pow(2, (double) (identifier - NUM_A4) / NUM_NOTE)) * FREQ_A4;
     }

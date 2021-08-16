@@ -2,11 +2,11 @@ package it.dukemania.midi;
 
 import java.util.List;
 
-public class PercussionTrack implements TrackInterface {
+public class PercussionTrackImpl implements MidiTrack {
     protected final List<AbstractNote> notes;
     private final int channel;
 
-    public PercussionTrack(final List<AbstractNote> notes, final int channel) {
+    public PercussionTrackImpl(final List<AbstractNote> notes, final int channel) {
         this.notes = notes;
         this.channel = channel;
     }

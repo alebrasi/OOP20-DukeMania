@@ -5,11 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import it.dukemania.Model.MyTrack;
+import it.dukemania.midi.MidiTrack;
 
 
 
 public interface GameUtilities {
 
-    Map<MyTrack, DifficultyLevel> generateTracksDifficulty(List<MyTrack> tracks);
+    Map<MidiTrack, DifficultyLevel> generateTracksDifficulty(List<MidiTrack> testTracksDiff);
 
 }

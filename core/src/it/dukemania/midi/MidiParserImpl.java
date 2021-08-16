@@ -20,9 +20,6 @@ import javax.sound.midi.Track;
 public class MidiParserImpl implements MidiParser {
     private static final int SET_TEMPO = 0X51;
     private static final int MICROSEC_PER_MIN = 60_000_000;
-    private static final int PERCUSSION_TRACK = 10;
-    private static final int MIN = 35;
-    private static final int MAX = 81;
 
 
     @Override
@@ -56,7 +53,7 @@ public class MidiParserImpl implements MidiParser {
 
         final double microsecPerTick = sequence.getMicrosecondLength() / sequence.getTickLength();
 
-        final List<TrackInterface> myTracks = new ArrayList<>();
+        final List<MidiTrack> myTracks = new ArrayList<>();
         double bpm = 0;
         for (final Track t : sequence.getTracks()) {
             final List<AbstractNote> notes = new ArrayList<>(); // inizializzo un collection di note e un enum di instrument
@@ -98,15 +95,14 @@ public class MidiParserImpl implements MidiParser {
                     //+ " " + (n.getClass() == Note.class ? ((Note) n).getFrequency() : ((DrumSound) n).getInstrument())));
             System.out.println();
             */
-            final TrackInterface track = factory.get().createTrack(instrument, notes, channel.get());
+            final MidiTrack track = factory.get().createTrack(instrument, notes, channel.get());
             //final TrackImpl track = new TrackImpl(instrument, notes, channel.get());  // creo la mytrack da aggiungere alla song
             myTracks.add(track);                                        // la agggiungo
         }
         // CREO LA SONG
         myTracks.removeIf(x -> x.getNotes().size() == 0);
         myTracks.sort((t1, t2) -> t1.getChannel() - t2.getChannel());
-        final Song song = new Song(myMidi.getName(), sequence.getMicrosecondLength(), bpm, "hash");    // per titolo da nomefile
-        song.setTracks(myTracks);
+        final Song song = new Song(myMidi.getName(), sequence.getMicrosecondLength(), myTracks, bpm);    // per titolo da nomefile
         return song;
     }
 
@@ -119,8 +115,8 @@ public class MidiParserImpl implements MidiParser {
     */
 
 
-    private int calcTime(final long tick, final double microsecPerTick) {
-        return  (int) (tick * microsecPerTick);
+    private long calcTime(final long tick, final double microsecPerTick) {
+        return  (long) (tick * microsecPerTick);
     }
     // TODO passa tutto a long
 
@@ -134,7 +130,7 @@ public class MidiParserImpl implements MidiParser {
 
 
 
-    private static void addNote(final ShortMessage sm, final List<AbstractNote> notes, final int time,
+    private static void addNote(final ShortMessage sm, final List<AbstractNote> notes, final long time,
             final AbstractFactory factory) {
         final int data = sm.getData1();
         if (sm.getCommand() == ShortMessage.NOTE_ON && sm.getData2() != 0) {
@@ -155,7 +151,7 @@ public class MidiParserImpl implements MidiParser {
                                             .findAny();
             if (n0.isPresent()) {
                 notes.set(notes.indexOf(n0.get()), factory.createNote(
-                        Optional.of((double) (time - n0.get().getStartTime())), n0.get().getStartTime(), data));
+                        Optional.of((long) (time - n0.get().getStartTime())), n0.get().getStartTime(), data));
                 //TODO ask for int-int=double -> long
                 /*
                 notes.remove(n0.get());
@@ -163,7 +159,7 @@ public class MidiParserImpl implements MidiParser {
                 Optional.of((double) (time - n0.get().getStartTime())), n0.get().getStartTime(), data));
                 */
                 //TODO si puo cancellare
-                notes.sort((n1, n2) -> n1.getStartTime() - n2.getStartTime());
+                notes.sort((n1, n2) -> (int) (n1.getStartTime() - n2.getStartTime()));
             }
         }
     }

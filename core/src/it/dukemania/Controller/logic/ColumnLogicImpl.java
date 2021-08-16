@@ -9,8 +9,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import it.dukemania.Model.MyTrack;
-import it.dukemania.midi.Note;
+import it.dukemania.midi.AbstractNote;
+import it.dukemania.midi.MidiTrack;
+//import it.dukemania.Model.MyTrack;
 
 public class ColumnLogicImpl implements ColumnLogic {
 
@@ -39,9 +40,9 @@ public class ColumnLogicImpl implements ColumnLogic {
         this.columnNumber = columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP ? columnNumber : COLUMN_MIN_CAP;
     }
 
-    private List<Note> overlappingNotes(final List<Note> notes) {
+    private List<AbstractNote> overlappingNotes(final List<AbstractNote> x2) {
         //lo stream fatto da gian cambiato per far si che non prenda una MyTrack ma una List<Note>
-        return notes.stream().collect(Collectors.toMap(x -> x, x -> notes.stream()
+        return x2.stream().collect(Collectors.toMap(x -> x, x -> x2.stream()
                         .filter(y -> x != y && (x.getStartTime() == y.getStartTime()
                         || (x.getStartTime() < y.getStartTime() && (x.getStartTime() + x.getDuration().get()
                                         > y.getStartTime())))).collect(Collectors.toList()))).entrySet().stream()
@@ -57,9 +58,9 @@ public class ColumnLogicImpl implements ColumnLogic {
         return columnList;
     }
 
-    private List<List<Note>> generateNoteRanges(final List<List<Note>> columnTrack) {
+    private List<List<AbstractNote>> generateNoteRanges(final List<List<AbstractNote>> list) {
         List<Columns> columnList = getColumnList();
-        noteRanges = columnTrack.stream().map(t -> {
+        noteRanges = list.stream().map(t -> {
                 Columns column = columnList.remove(0);
                 System.out.println(column);
                 return t.stream().map(r -> {
@@ -69,11 +70,11 @@ public class ColumnLogicImpl implements ColumnLogic {
         }).collect(Collectors.toList()).stream()
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
-        return columnTrack;
+        return list;
     }
 
     //return the max duration of a note in a track
-    private Optional<Double> getMaxDuration(final MyTrack track) {
+    private Optional<Long> getMaxDuration(final MidiTrack track) {
         return track.getNotes().stream()
                 .max((e1, e2) -> e1.getDuration().get().compareTo(e2.getDuration().get()))
                 .get()
@@ -81,13 +82,13 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     @Override
-    public final List<List<LogicNoteImpl>> noteQueuing(final MyTrack track) {
+    public final List<List<LogicNoteImpl>> noteQueuing(final MidiTrack track) {
         //dice quante note ci sono per identifier
         List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
-                        .collect(Collectors.groupingBy(Note::getIdentifier, Collectors.counting())).entrySet());
+                        .collect(Collectors.groupingBy(AbstractNote::getIdentifier, Collectors.counting())).entrySet());
         //raggruppa le note per identifier
-        Map<Integer, List<Note>> notesForNoteType = track.getNotes().stream().collect(Collectors.groupingBy(
-                        Note::getIdentifier, Collectors.toList()));
+        Map<Integer, List<AbstractNote>> notesForNoteType = track.getNotes().stream().collect(Collectors.groupingBy(
+                        AbstractNote::getIdentifier, Collectors.toList()));
         //finch� non � minore del numero di colonne
         while (numberOfNotesForNoteType.size() > columnNumber) {
                 //(dovrebbe) ordinare per numero di note dal minore al maggiore
@@ -133,7 +134,7 @@ public class ColumnLogicImpl implements ColumnLogic {
         NoteRange currentRange = noteRanges.stream()
                 .filter(x -> x.getColumn().equals(column))
                 .filter(x -> x.getStart() < end)
-                .sorted(Comparator.comparingInt(NoteRange::getStart))
+                .sorted(Comparator.comparingLong(NoteRange::getStart))
                 .findFirst()
                 .orElse(noteRanges.get(0));
         int normalPoint = (int) ((end - start - Math.abs(currentRange.getEnd() - end)

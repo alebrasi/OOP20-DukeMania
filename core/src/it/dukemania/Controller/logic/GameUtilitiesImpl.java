@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import it.dukemania.Model.MyTrack;
+import it.dukemania.midi.MidiTrack;
 
 
 
@@ -23,7 +23,7 @@ public class GameUtilitiesImpl implements GameUtilities {
 
 
     @Override
-    public final Map<MyTrack, DifficultyLevel> generateTracksDifficulty(final List<MyTrack> tracks) {
+    public final Map<MidiTrack, DifficultyLevel> generateTracksDifficulty(final List<MidiTrack> tracks) {
         return tracks.stream()
                 .collect(Collectors
                         .toMap(x -> x, x -> { 
@@ -36,10 +36,10 @@ public class GameUtilitiesImpl implements GameUtilities {
                         }));
     }
     //return an int between 1 and 4 based on the duration of the note and the max duration of a note in the current track
-    public static final int generateNoteHeight(final Optional<Double> noteDuration, final Optional<Double> maxDuration) {
+    public static final int generateNoteHeight(final Optional<Long> noteDuration, final Optional<Long> maxDuration) {
         return IntStream.iterate(1, i -> i + 1)
         .limit(MAX_HEIGHT)
-        .filter(x -> Math.round(noteDuration.orElse(0.0)) <= (Math.round(maxDuration.orElse(0.0))) / MAX_HEIGHT * x)
+        .filter(x -> noteDuration.orElse(0L) <= maxDuration.orElse(0L) / MAX_HEIGHT * x)
         .findFirst()
         .orElse(1);
     }

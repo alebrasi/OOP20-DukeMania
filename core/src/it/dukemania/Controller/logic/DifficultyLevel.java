@@ -3,12 +3,12 @@ package it.dukemania.Controller.logic;
 
 
 public enum DifficultyLevel {
-    UNKNOWN("???",0),
-    VERY_EASY("Very Easy",1),
-    EASY("Easy",2),
-    NORMAL("Normal",3),
-    DIFFICULT("Difficult",4),
-    VERY_DIFFICULT("Very Difficult",5);
+    UNKNOWN("???", 0),
+    VERY_EASY("Very Easy", 1),
+    EASY("Easy", 2),
+    NORMAL("Normal", 3),
+    DIFFICULT("Difficult", 4),
+    VERY_DIFFICULT("Very Difficult", 5);
 
     private String effectiveName;
     private Integer numericValue;

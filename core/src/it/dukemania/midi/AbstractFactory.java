@@ -5,8 +5,8 @@ import java.util.Optional;
 
 public interface AbstractFactory {
 
-    AbstractNote createNote(Optional<Double> duration, int startTime, int identifier);
+    AbstractNote createNote(Optional<Long> duration, long startTime, int identifier);
 
-    TrackInterface createTrack(Enum<InstrumentType> instrument, List<AbstractNote> notes, int channel);
+    MidiTrack createTrack(Enum<InstrumentType> instrument, List<AbstractNote> notes, int channel);
 
 }

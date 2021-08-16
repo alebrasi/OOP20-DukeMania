@@ -3,25 +3,25 @@ package it.dukemania.Controller.logic;
 public class NoteRange {
 
     private Columns column;
-    private int start;
-    private int end;
+    private long start;
+    private long end;
 
-    public NoteRange(final Columns column, final int start, final int end) {
+    public NoteRange(final Columns column, final long l, final long m) {
         super();
         this.column = column;
-        this.start = start;
-        this.end = end;
+        this.start = l;
+        this.end = m;
     }
 
     public final Columns getColumn() {
         return column;
     }
 
-    public final int getStart() {
+    public final long getStart() {
         return start;
     }
 
-    public final int getEnd() {
+    public final long getEnd() {
         return end;
     }
 }

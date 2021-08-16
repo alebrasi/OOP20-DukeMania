@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class TrackImpl extends PercussionTrack {
+public class TrackImpl extends PercussionTrackImpl {
 
     private final Enum<InstrumentType> instrument;
-    private final Map<Integer, Double> notesMaxDuration;
+    private final Map<Integer, Long> notesMaxDuration;
 
     public TrackImpl(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
         super(notes, channel);
@@ -19,11 +19,11 @@ public class TrackImpl extends PercussionTrack {
     public final Enum<InstrumentType> getInstrument() {
         return instrument;
     }
-    public final Map<Integer, Double> getNotesMaxDuration() {
+    public final Map<Integer, Long> getNotesMaxDuration() {
         return notesMaxDuration;
     }
 
-    private Map<Integer, Double> calcMaxDuration() {
+    private Map<Integer, Long> calcMaxDuration() {
         return notes.stream()
                     .collect(Collectors.toMap(AbstractNote::getIdentifier,
                             n -> n.getDuration().get(), (d1, d2) -> d1 > d2 ? d1 : d2));

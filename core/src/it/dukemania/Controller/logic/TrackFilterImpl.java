@@ -1,11 +1,14 @@
 package it.dukemania.Controller.logic;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import it.dukemania.midi.Note;
-import it.dukemania.Model.MyTrack;
+import it.dukemania.midi.AbstractNote;
+import it.dukemania.midi.FactoryConfigurator;
+import it.dukemania.midi.MidiTrack;
 import it.dukemania.midi.Song;
+import it.dukemania.midi.TrackImpl;
 
 
 
@@ -14,15 +17,15 @@ public class TrackFilterImpl implements TrackFilter {
     static final int MAX_NOTE = 600;
 
     @Override
-    public final List<MyTrack> reduceTrack(final Song song) {
-        return song.getTracks().stream().map(x -> {
+    public final List<MidiTrack> reduceTrack(final Song song) {
+        return song.getTracks().stream().filter(x -> x.getChannel() != 10).map(x -> {
            int numberOfNotes = x.getNotes().size();
-           List<Note> notePos = x.getNotes();
-           return new MyTrack(x.getInstrument(), x.getNotes().stream()
-                   .filter(y -> (notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0))
+           List<AbstractNote> notePos = x.getNotes();
+           return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
+                   x.getNotes().stream().filter(y -> (notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0))
                    .collect(Collectors.toList()), x.getChannel());
         })
-                .sorted((e1, e2) -> (Integer.valueOf(e1.getNotes().size()).compareTo(Integer.valueOf(e2.getNotes().size()))))
+                .sorted(Comparator.comparing(e -> e.getNotes().size()))
                 .collect(Collectors.toList());
     }
 

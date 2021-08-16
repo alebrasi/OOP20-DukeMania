@@ -3,23 +3,23 @@ package it.dukemania.midi;
 import java.util.Optional;
 
 public abstract class AbstractNote {
-    private final Optional<Double> duration;
-    private final int startTime;
+    private final Optional<Long> duration;
+    private final long startTime;
     private final int identifier;
 
     //TODO guarda factory
 
-    public AbstractNote(final Optional<Double> duration, final int startTime, final int identifier) {
+    public AbstractNote(final Optional<Long> duration, final long startTime2, final int identifier) {
         this.duration = duration;
-        this.startTime = startTime;
+        this.startTime = startTime2;
         this.identifier = identifier;
     }
 
-    public final Optional<Double> getDuration() {
+    public final Optional<Long> getDuration() {
         return duration;
     }
 
-    public final int getStartTime() {
+    public final long getStartTime() {
         return startTime;
     }
 
