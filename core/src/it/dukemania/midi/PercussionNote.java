@@ -2,7 +2,7 @@ package it.dukemania.midi;
 
 import java.util.Optional;
 
-public class PercussionNote extends Note {
+public class PercussionNote extends AbstractNote {
     private static final int OFFSET = 35;
     private final Percussion instrument;
 
