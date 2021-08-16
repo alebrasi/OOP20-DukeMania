@@ -5,6 +5,8 @@ import it.dukemania.Model.MyTrack;
 import it.dukemania.Model.Song;
 import it.dukemania.Model.TrackInfo;
 import it.dukemania.Model.serializers.Configuration;
+import it.dukemania.Model.serializers.synthesizer.SynthInfo;
+import it.dukemania.audioengine.*;
 import it.dukemania.util.storage.Storage;
 import it.dukemania.util.storage.StorageFactoryImpl;
 
@@ -67,6 +69,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public String[] getAllInstruments() {
+        loadSynthesizers();
         return Arrays.stream(InstrumentType.values()).map(Enum::toString).toArray(String[]::new);
     }
 
@@ -95,5 +98,31 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadSynthesizers() {
+        SynthBuilderImpl b = new SynthBuilderImpl();
+        b.setEnveloper(new Enveloper(10l, 1f, 100l));
+        b.setWavetables(new WaveTable[]{WaveTable.Square});
+        b.setOffsets(new double[]{1f});
+        b.setNoteLFO(LFOFactory.squareLFO(2f,1f,200));
+
+        SynthBuilderImpl c = new SynthBuilderImpl();
+        c.setEnveloper(new Enveloper(10l, 1f, 100l));
+        c.setWavetables(new WaveTable[]{WaveTable.Triangle});
+        c.setOffsets(new double[]{1f});
+        c.setNoteLFO(LFOFactory.squareLFO(2f,1f,200));
+        c.setVolumeLFO(LFOFactory.sineLFO(1f,0.1f, 200));
+
+        List<SynthInfo> asd = new ArrayList<>();
+        asd.add(new SynthInfo("amonger", b));
+        asd.add(new SynthInfo("sas", c));
+        Configuration.synthesizer g = new Configuration.synthesizer();
+        try {
+            g.writeAll(asd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
