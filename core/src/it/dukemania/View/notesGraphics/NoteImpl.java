@@ -57,24 +57,18 @@ public class NoteImpl implements Note {
 		this.startNote = startNote;
 		this.duration = duration;
 		this.timeOfFall = 0;
-		//camera = new OrthographicCamera(this.dimensions.getSize().getX(),this.dimensions.getSize().getY());
-        //renderer.setProjectionMatrix(batch.getProjectionMatrix());
 	}
 
 	@Override
 	public void drawNote() {
 	    this.posyNote -= (this.speedNote * Gdx.graphics.getDeltaTime());
-	    Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY(), dimensions.getSize().getX(), -dimensions.getSize().getY() + 110);
-	    Rectangle clipBoundsup = new Rectangle(0, dimensions.getSize().getY(), dimensions.getSize().getX(), -80);
-	    Rectangle clipBoundsprova = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), dimensions.getSize().getY() - 190); //magic numbers
+	    Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), dimensions.getSize().getY() - 190); //magic numbers
 
 	    batchNote.flush();
-            //ScissorStack.pushScissors(clipBounds);
-            ScissorStack.pushScissors(clipBoundsprova);
+            ScissorStack.pushScissors(clipBounds);
             this.batchNote.draw(this.textureNote, this.posxNote, this.posyNote, this.xNote, this.yNote, 0, 1, 1, 0);
             batchNote.flush();
             ScissorStack.popScissors();
-            //ScissorStack.popScissors();
 
 	    /*renderer.begin(ShapeRenderer.ShapeType.Filled);
 	                renderer.setColor(Color.RED);
