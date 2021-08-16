@@ -1,26 +1,34 @@
 package it.dukemania.Model;
 
-public class TrackInfo {
-    final private String trackName;
-    final private String instrumentName;
-    final private int trackID;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import it.dukemania.Model.serializers.SongDeserializer;
+import it.dukemania.Model.serializers.SongSerializer;
+import it.dukemania.Model.serializers.TrackDeserializer;
+import it.dukemania.Model.serializers.TrackSerializer;
 
-    public TrackInfo(final int trackID, final String trackName, final String instrumentName) {
+@JsonDeserialize(using = TrackDeserializer.class)
+@JsonSerialize(using = TrackSerializer.class)
+public class TrackInfo {
+    private final String trackName;
+    private final Enum<InstrumentType> instrument;
+    private final int trackID;
+
+    public TrackInfo(final int channel, final String trackName, final Enum<InstrumentType> instrument) {
         this.trackName = trackName;
-        this.instrumentName = instrumentName;
-        this.trackID = trackID;
+        this.instrument = instrument;
+        this.trackID = channel;
     }
 
     public String getTrackName() {
         return trackName;
     }
 
-    public String getInstrumentName() {
-        return instrumentName;
+    public Enum<InstrumentType> getInstrument() {
+        return instrument;
     }
 
-
-    public int getTrackID() {
+    public int getChannel() {
         return trackID;
     }
 }

@@ -10,18 +10,18 @@ import java.util.List;
 
 @JsonDeserialize(using = SongDeserializer.class)
 @JsonSerialize(using = SongSerializer.class)
-public class SongConfiguration {
+public class SongInfo {
     private final String title;
     private final double  duration;
-    private final List<MyTrack> tracks;
+    private final List<TrackInfo> tracks;
     private final double bpm;
     private final String songHash;
 
-    public SongConfiguration(final String title, final String songHash, final double duration, final List<MyTrack> tracks, final double BPM) {
+    public SongInfo(final String title, final String songHash, final double duration, final List<TrackInfo> tracks, final double bpm) {
         this.title = title;
         this.duration = duration;
         this.tracks = tracks;
-        this.bpm = BPM;
+        this.bpm = bpm;
         this.songHash = songHash;
     }
 
@@ -34,7 +34,7 @@ public class SongConfiguration {
     public final double getDuration() {
         return duration;
     }
-    public final List<MyTrack> getTracks() {
+    public final List<TrackInfo> getTracks() {
         return tracks;
     }
     public final String getSongHash() {
