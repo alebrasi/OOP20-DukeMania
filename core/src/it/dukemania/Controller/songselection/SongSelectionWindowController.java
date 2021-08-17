@@ -1,6 +1,7 @@
 package it.dukemania.Controller.songselection;
 
-import it.dukemania.Model.TrackInfo;
+import it.dukemania.Model.serializers.song.TrackInfo;
+import it.dukemania.midi.InstrumentType;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public interface SongSelectionWindowController {
     */
     void openSong(String path);
     void setPlayTrack(int trackNumber);
+    void updateTracks(List<String> names, List<InstrumentType> instruments);
     List<TrackInfo> getTracks();
     String[] getAllInstruments();
 }
