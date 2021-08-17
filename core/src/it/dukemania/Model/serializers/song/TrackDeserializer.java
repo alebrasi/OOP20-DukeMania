@@ -1,4 +1,4 @@
-package it.dukemania.Model.serializers;
+package it.dukemania.Model.serializers.song;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import it.dukemania.Model.TrackInfo;
 import it.dukemania.midi.InstrumentType;
 
 import java.io.IOException;

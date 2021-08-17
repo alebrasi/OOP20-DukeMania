@@ -1,11 +1,7 @@
-package it.dukemania.Model;
+package it.dukemania.Model.serializers.song;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import it.dukemania.Model.serializers.SongDeserializer;
-import it.dukemania.Model.serializers.SongSerializer;
-import it.dukemania.Model.serializers.TrackDeserializer;
-import it.dukemania.Model.serializers.TrackSerializer;
 import it.dukemania.midi.InstrumentType;
 
 @JsonDeserialize(using = TrackDeserializer.class)
