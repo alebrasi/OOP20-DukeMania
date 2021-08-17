@@ -23,7 +23,7 @@ public class TestClass {
     }
 
     @Test
-    void drumSynthTest() {
+    public void drumSynthTest() {
         DrumSynth ds = new DrumSynth();
 
         // test if the synth registers the play drum input properly
@@ -50,7 +50,7 @@ public class TestClass {
     }
 
     @Test
-    void testBuilder() {
+    public void testBuilder() {
         SynthBuilderImpl builder = new SynthBuilderImpl();
 
         builder.setWavetables(new WaveTable[]{WaveTable.Saw});
@@ -75,7 +75,7 @@ public class TestClass {
     }
 
     @Test
-    void testKeyboardSynth() throws Exception {
+    public void testKeyboardSynth() throws Exception {
         final float atkVol = 0.8f;
         SynthBuilderImpl builder = new SynthBuilderImpl();
         Enveloper env = new Enveloper(100l, atkVol, 100l);
@@ -103,7 +103,7 @@ public class TestClass {
     }
 
     @Test
-    void testStraightLFO() {
+    public void testStraightLFO() {
         final float targetMult = 1.5f;
         final Function<Long, Float> lfo = LFOFactory.straightLineLFO(targetMult, 500);
         final long totalSamples = (long) (500 * Settings.SAMPLESPERMILLI);
@@ -114,7 +114,7 @@ public class TestClass {
     }
 
     @Test
-    void testSquareLFO() {
+    public void testSquareLFO() {
         final float multMax = 1.5f, multmin = 0.8f;
         final Function<Long, Float> lfo = LFOFactory.squareLFO(multMax, multmin, 1000);
         final long totalSamples = (long) (1000 * Settings.SAMPLESPERMILLI);
@@ -124,7 +124,7 @@ public class TestClass {
     }
 
     @Test
-    void testSineLFO() {
+    public void testSineLFO() {
         final float multMax = 2f, multMin = 1.5f;
         final Function<Long, Float> lfo = LFOFactory.sineLFO(multMax, multMin, 2000);
         final long totalSamples = (long) (2000 * Settings.SAMPLESPERMILLI);
@@ -137,7 +137,7 @@ public class TestClass {
     }
 
     @Test
-    void testIntervalLFO() {
+    public void testIntervalLFO() {
         final float int1 = 1f, int2 = 0.3f, int3 = 1f, int4 = 1.5f;
         final Function<Long, Float> lfo = LFOFactory.buildIntervals(new float [] {int1, int2, int3, int4}, 1000);
         final long totalSamples = (long) (1000 * Settings.SAMPLESPERMILLI);

@@ -9,10 +9,17 @@ import java.util.stream.LongStream;
 
 public class KeyboardSynth implements Synth {
 
-    private static BufferManager<Float> createNoteBuffer(final Enveloper env, final float freq, final long time, final WaveTable[]waves, final Function<Long, Float> noteLFO, final Function<Long, Float> volumeLFO, final double [] offsets) {
+    // create a bufferManager for a ceratin note in a certain track in a certain song
+    private static BufferManager<Float> createNoteBuffer(final Enveloper env,
+                                                         final float freq,
+                                                         final long time,
+                                                         final WaveTable[]waves,
+                                                         final Function<Long, Float> noteLFO,
+                                                         final Function<Long, Float> volumeLFO,
+                                                         final double [] offsets) {
         double[] steps = Arrays.stream(offsets).map(x -> ((Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE)).toArray();
         final double[] positions = new double[steps.length];
-        long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 100);
+        long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 1000);
         double [] buff = LongStream.range(0, total).mapToDouble(
             k -> {
                 float noteLfoVal = noteLFO.apply(k);

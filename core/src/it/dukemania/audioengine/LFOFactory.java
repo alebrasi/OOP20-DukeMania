@@ -2,13 +2,32 @@ package it.dukemania.audioengine;
 
 import java.util.function.Function;
 
-public class LFOFactory {
+public final class LFOFactory {
+
+    private LFOFactory() {
+
+    }
 
     /**
      * All the available LFO types.
      */
     public enum Types {
-        INTERVALS, STRAIGHT, SINE, SQUARE;
+        /**
+         * Divide a x ms window in k steps, at every step a multiplier value is assigned.
+         */
+        INTERVALS,
+        /**
+         * Pitch bend the note from its initial frequency/volume to a target frequency/volume in x ms.
+         */
+        STRAIGHT,
+        /**
+         * Oscillate the note frequency/volume between two values in x ms.
+         */
+        SINE,
+        /**
+         * Switch the note frequency/volume between two values every x ms.
+         */
+        SQUARE
     }
 
     public static Function<Long, Float> composedLFO(final Function<Long, Float> valueFunction, final Function<Long, Float> activateFunction) {

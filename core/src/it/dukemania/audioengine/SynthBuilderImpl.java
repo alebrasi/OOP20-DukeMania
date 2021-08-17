@@ -16,14 +16,26 @@ public class SynthBuilderImpl implements SynthBuilder {
     private Enveloper env;
     private WaveTable[] waves;
 
+    /**
+     * Returns the enveloper.
+     * @return the enveloper
+     */
     public Enveloper getEnv() {
         return env;
     }
 
+    /**
+     * Returns an array with the wave forms of the oscillators.
+     * @return the array
+     */
     public WaveTable[] getWaves() {
         return waves;
     }
 
+    /**
+     * Returns an array with the frequency offsets of the oscillators.
+     * @return the array
+     */
     public double[] getOffsets() {
         return offsets;
     }
