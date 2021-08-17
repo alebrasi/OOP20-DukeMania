@@ -29,12 +29,25 @@ public enum DrumSamples implements Iterator<Float> {
 
     private BufferManager<Float> sampleBuffer;
 
+    /**
+     * Replay the Buffer Manager with a very small ttl.
+     */
     public void refresh() {
         sampleBuffer.refresh(10);
     }
+
+    /**
+     * Checks if there can be played another sample.
+     * @return true if another sample can be played, false otherwise.
+     */
     public boolean hasNext() {
         return sampleBuffer.hasNext();
     }
+
+    /**
+     * Returns the next sample.
+     * @return the sample
+     */
     public Float next() {
         return sampleBuffer.next();
     }

@@ -1,6 +1,11 @@
 package it.dukemania.audioengine;
 
-public class Settings {
+public final class Settings {
+
+    private Settings() {
+
+    }
+
     /**
      * How many samples are played every seconds.
      */

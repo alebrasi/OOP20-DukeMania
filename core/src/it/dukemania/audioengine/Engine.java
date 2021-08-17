@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class Engine {
 
-    public final List<Synth> synthetizers = new ArrayList<>();
+    private final List<Synth> synthetizers = new ArrayList<>();
     private final AudioDevice ad = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
     private final float [] buffer = new float[Settings.BUFFER_LENGHT];
 
@@ -19,9 +19,15 @@ public class Engine {
     private int old = 0;
     private int att = 0;
 
-    public Engine() {
-
+    /**
+     * Returns a synthesizer from the synthesizer list a a give position.
+     * @param pos the specified position
+     * @return the synthesizer
+     */
+    public Synth getSynth(final int pos) {
+        return synthetizers.get(pos);
     }
+
     /**
      * Calculates and plays a bufffer to the LibGDX audio device.
      */
@@ -48,10 +54,17 @@ public class Engine {
 
     }
 
+    /**
+     * Add a drum synthesizer to the synthesizer list.
+     */
     public void addDrum() {
         synthetizers.add(new DrumSynth());
     }
 
+    /**
+     * Add a standard keyboard synthesizer to the synthesizer list.
+     * @param track the track that the synth will play
+     */
     public void addSynth(final MidiTrack track) {
         SynthBuilderImpl b = new SynthBuilderImpl();
         b.setEnveloper(new Enveloper(10l, 1f, 100l));
@@ -59,9 +72,7 @@ public class Engine {
         b.setOffsets(new double[]{1f});
 
         List<Pair<Float, Long>> notes = new ArrayList<>();
-        var actualTrack = (TrackImpl)track;
-
-
+        var actualTrack = (TrackImpl) track;
 
         final int NUM_A4 = 69;
         final int NUM_NOTE = 12;
@@ -69,7 +80,7 @@ public class Engine {
 
         actualTrack.getNotesMaxDuration().forEach((key, value) -> {
             float frequency = (float) (Math.pow(2, (double) (key - NUM_A4) / NUM_NOTE) * FREQ_A4);
-            notes.add(new Pair<>(frequency, value / 1000));
+            notes.add(new Pair<>(frequency, (value / 1000)));
         });
 
         try {
@@ -79,6 +90,11 @@ public class Engine {
         }
     }
 
+    /**
+     * calculate the volume multiplier.
+     * @param n the number of notes that are currently playing
+     * @return the volume multiplier
+     */
     public float calc(final int n) {
         switch (n) {
             case 1: return 0.3f;
