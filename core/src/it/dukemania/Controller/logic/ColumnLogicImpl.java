@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.MidiTrack;
-//import it.dukemania.Model.MyTrack;
 
 public class ColumnLogicImpl implements ColumnLogic {
 

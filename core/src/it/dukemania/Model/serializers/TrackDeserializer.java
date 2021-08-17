@@ -6,12 +6,10 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import it.dukemania.Model.InstrumentType;
-import it.dukemania.Model.MyTrack;
 import it.dukemania.Model.TrackInfo;
+import it.dukemania.midi.InstrumentType;
 
 import java.io.IOException;
-import java.util.Collections;
 
 public class TrackDeserializer extends StdDeserializer<TrackInfo> {
 
