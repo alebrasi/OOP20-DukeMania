@@ -14,9 +14,15 @@ public class Note extends AbstractNote {
     }
 
 
-
     public final double getFrequency() {
         return frequency;
+    }
+
+
+
+    @Override
+    public final Float getItem() {
+        return (float) frequency;
     }
 
 

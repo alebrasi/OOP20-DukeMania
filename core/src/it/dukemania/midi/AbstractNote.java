@@ -15,6 +15,8 @@ public abstract class AbstractNote {
         this.identifier = identifier;
     }
 
+    public abstract <X> X getItem();
+
     public final Optional<Long> getDuration() {
         return duration;
     }

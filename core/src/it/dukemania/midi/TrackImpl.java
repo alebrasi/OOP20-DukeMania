@@ -24,9 +24,9 @@ public class TrackImpl extends PercussionTrackImpl {
     }
 
     private Map<Integer, Long> calcMaxDuration() {
-        return notes.stream()
-                    .collect(Collectors.toMap(AbstractNote::getIdentifier,
-                            n -> n.getDuration().get(), (d1, d2) -> d1 > d2 ? d1 : d2));
+        return super.getNotes().stream()
+                                .collect(Collectors.toMap(AbstractNote::getIdentifier,
+                                        n -> n.getDuration().get(), (d1, d2) -> d1 > d2 ? d1 : d2));
     }
 
 }

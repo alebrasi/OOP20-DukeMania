@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-enum DrumSamples implements Iterator<Float> {
+public enum DrumSamples implements Iterator<Float> {
 
     /**
      * A standard Drum Kick.

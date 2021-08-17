@@ -3,7 +3,7 @@ package it.dukemania.midi;
 import java.util.List;
 
 public class PercussionTrackImpl implements MidiTrack {
-    protected final List<AbstractNote> notes;
+    private final List<AbstractNote> notes;
     private final int channel;
 
     public PercussionTrackImpl(final List<AbstractNote> notes, final int channel) {

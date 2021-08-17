@@ -1,5 +1,6 @@
 package it.dukemania.midi;
 
+import it.dukemania.audioengine.DrumSamples;
 import java.util.Optional;
 
 public class PercussionNote extends AbstractNote {
@@ -13,6 +14,11 @@ public class PercussionNote extends AbstractNote {
 
     public final Percussion getInstrument() {
         return instrument;
+    }
+
+    @Override
+    public final DrumSamples getItem() {
+        return instrument.getAssociated();
     }
 
 
