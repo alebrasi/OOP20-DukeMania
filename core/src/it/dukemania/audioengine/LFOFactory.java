@@ -7,8 +7,8 @@ public class LFOFactory {
     /**
      * All the available LFO types.
      */
-    enum types {
-        intervals, straigh, sine, square;
+    public enum Types {
+        INTERVALS, STRAIGHT, SINE, SQUARE;
     }
 
     public static Function<Long, Float> composedLFO(final Function<Long, Float> valueFunction, final Function<Long, Float> activateFunction) {
@@ -22,12 +22,12 @@ public class LFOFactory {
      * @param duration the duration of an lfo pulse
      * @return the lfo function
      */
-    public static Function<Long, Float> general(final types type, final float [] args, final int duration) {
+    public static Function<Long, Float> general(final Types type, final float [] args, final int duration) {
         switch (type) {
-            case intervals: return buildIntervals(args, duration);
-            case straigh: return straightLineLFO(args[0], duration);
-            case sine: return sineLFO(args[0], args[1], duration);
-            case square: return squareLFO(args[0], args[1], duration);
+            case INTERVALS: return buildIntervals(args, duration);
+            case STRAIGHT: return straightLineLFO(args[0], duration);
+            case SINE: return sineLFO(args[0], args[1], duration);
+            case SQUARE: return squareLFO(args[0], args[1], duration);
             default: return x -> 1f;
         }
     }
