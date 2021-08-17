@@ -1,5 +1,9 @@
 package it.dukemania.audioengine;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import it.dukemania.Model.serializers.synthesizer.EnveloperDeserializer;
+
+@JsonDeserialize(using = EnveloperDeserializer.class)
 public class Enveloper {
     private final float atkVol;
     private final float step1;
