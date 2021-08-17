@@ -7,8 +7,8 @@ import it.dukemania.midi.InstrumentType;
 @JsonDeserialize(using = TrackDeserializer.class)
 @JsonSerialize(using = TrackSerializer.class)
 public class TrackInfo {
-    private final String trackName;
-    private final InstrumentType instrument;
+    private String trackName;
+    private InstrumentType instrument;
     private final int trackID;
 
     public TrackInfo(final int channel, final String trackName, final InstrumentType instrument) {
@@ -21,8 +21,16 @@ public class TrackInfo {
         return trackName;
     }
 
+    public void setInstrument(final InstrumentType instrument) {
+        this.instrument = instrument;
+    }
+
     public Enum<InstrumentType> getInstrument() {
         return instrument;
+    }
+
+    public void setTrackName(final String trackName) {
+        this.trackName = trackName;
     }
 
     public int getChannel() {

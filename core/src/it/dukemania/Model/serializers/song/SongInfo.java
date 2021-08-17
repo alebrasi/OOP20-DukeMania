@@ -10,7 +10,7 @@ import java.util.List;
 public class SongInfo {
     private final String title;
     private final double  duration;
-    private final List<TrackInfo> tracks;
+    private List<TrackInfo> tracks;
     private final double bpm;
     private final String songHash;
 
