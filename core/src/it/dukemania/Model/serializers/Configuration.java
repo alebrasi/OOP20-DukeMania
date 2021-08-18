@@ -3,7 +3,7 @@ package it.dukemania.Model.serializers;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.dukemania.Model.SongInfo;
+import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.synthesizer.SynthInfo;
 import it.dukemania.util.storage.Storage;
 import it.dukemania.util.storage.StorageFactoryImpl;
@@ -13,12 +13,12 @@ import java.util.List;
 
 public class Configuration {
 
-    public static class song {
+    public static class Song {
 
         private final ObjectMapper mapper = new ObjectMapper();
         private final Storage configurationStorage = new StorageFactoryImpl().getConfigurationStorage();
 
-        private final String SONGS_CONFIGURATION_PATH = "configs/song_config.json";
+        private static final String SONGS_CONFIGURATION_PATH = "configs/song_config.json";
 
         public List<SongInfo> readAll() throws IOException {
             String json = configurationStorage.readFileAsString(SONGS_CONFIGURATION_PATH);
@@ -36,11 +36,11 @@ public class Configuration {
         }
     }
 
-    public static class synthesizer {
+    public static class Synthesizer {
 
         private final ObjectMapper mapper = new ObjectMapper();
         private final Storage configurationStorage = new StorageFactoryImpl().getConfigurationStorage();
-        private final String SYNTHESIZERS_CONFIGURATION_PATH = "configs/synthesizers_config.json";
+        private static final String SYNTHESIZERS_CONFIGURATION_PATH = "configs/synthesizers_config.json";
 
         public List<SynthInfo> readAll() throws IOException {
             String json = configurationStorage.readFileAsString(SYNTHESIZERS_CONFIGURATION_PATH);
