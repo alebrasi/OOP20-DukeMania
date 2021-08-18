@@ -5,5 +5,6 @@ public interface Window {
     void render();
     void dispose();
     void resize(int width, int height);
+    void receiveData(Object data);
     void setWindowListener(SwitchWindowNotifier listener);
 }

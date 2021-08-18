@@ -1,5 +1,5 @@
 package it.dukemania.windowmanager;
 
 public interface SwitchWindowNotifier {
-    void switchWindow(WindowState state);
+    void switchWindow(WindowState state, Object data);
 }

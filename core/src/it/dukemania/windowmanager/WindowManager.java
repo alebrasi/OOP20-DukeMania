@@ -18,12 +18,13 @@ public class WindowManager implements SwitchWindowNotifier {
         windows.put(associatedState.getStateValue(), window);
     }
 
-    public void switchWindow(final WindowState state) {
+    public void switchWindow(final WindowState state, final Object data) {
         /*
         if (currentWindow != null) {
             currentWindow.dispose();
         }*/
         currentWindow = windows.get(state.getStateValue());
+        currentWindow.receiveData(data);
         currentWindow.create();
     }
 

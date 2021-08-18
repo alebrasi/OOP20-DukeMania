@@ -1,5 +1,7 @@
 package it.dukemania.View;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,8 +23,11 @@ public abstract class AbstractView implements Window {
     protected Camera camera;
     protected Skin skin;
     protected Image backgroundImage;
+    protected Object data;
 
-    private Texture backgroundTexture;
+    private final Texture backgroundTexture;
+    private static final int VIEWPORT_WIDTH = 2560;
+    private static final int VIEWPORT_HEIGHT = 1440;
 
     public AbstractView(final String backgroundPath, final Skin skin) {
         backgroundTexture = new Texture(backgroundPath);
@@ -37,7 +42,8 @@ public abstract class AbstractView implements Window {
 
     private void setupCamera() {
         //TODO Change magic numbers
-        camera = new OrthographicCamera(2560, 1440);
+        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        camera = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         //Centers the camera to the viewport
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
     }
@@ -75,5 +81,10 @@ public abstract class AbstractView implements Window {
     @Override
     public void setWindowListener(final SwitchWindowNotifier notifier) {
         this.switchWindowNotifier = notifier;
+    }
+
+    @Override
+    public void receiveData(final Object data) {
+        this.data = data;
     }
 }
