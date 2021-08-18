@@ -1,48 +1,107 @@
 package it.dukemania.Controller.songselection;
 
+import it.dukemania.Controller.logic.*;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.Configuration;
 import it.dukemania.Model.serializers.song.TrackInfo;
 import it.dukemania.Model.serializers.synthesizer.SynthInfo;
 import it.dukemania.audioengine.*;
-import it.dukemania.midi.InstrumentType;
+import it.dukemania.midi.*;
 import it.dukemania.util.storage.Storage;
 import it.dukemania.util.storage.StorageFactoryImpl;
+import it.dukemania.windowmanager.WindowManager;
 
+import javax.sound.midi.InvalidMidiDataException;
+import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.stream.Collectors;
+
+
+/*
+TODO:
+    - Load song configs and save..
+    - Load synthesizers presets
+    - Check what to do for the digest try catch
+ */
 
 public class SongSelectionWindowControllerImpl implements SongSelectionWindowController {
 
     private final Storage storage = new StorageFactoryImpl().getExternalStorage();
-    private final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    private final List<SongInfo> songs = getSongsConfiguration();
-    private final List<SynthInfo> synthesizersPresets = readSynth();
+    private final List<SongInfo> songsConfigurations;
+    private final GameUtilities gameUtils = new GameUtilitiesImpl();
+    private final TrackFilter trackFilter = new TrackFilterImpl();
+    private final List<SynthInfo> synthesizersPresets;
     private SongInfo currentSong;
+    private static final int PERCUSSION_CHANNEL = 10;
+    private int selectedTrackChannel = 0;
 
     public SongSelectionWindowControllerImpl() throws NoSuchAlgorithmException {
-
+        synthesizersPresets = readSynthPresets();
+        songsConfigurations = getSongsConfiguration();
     }
 
     @Override
-    public void openSong(final String path) {
-        byte[] fileBytes = new byte[0];
-        try {
-            fileBytes = storage.readFileAsByte(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void openSong(final String path) throws InvalidMidiDataException, IOException {
+        selectedTrackChannel = 0;
+        byte[] fileBytes = storage.readFileAsByte(path);
         String hashedFile = getHashString(fileBytes);
-        Optional<SongInfo> song = songs.stream().filter(s -> s.getSongHash().equals(hashedFile)).findFirst();
-        song.ifPresent(songInfo -> currentSong = songInfo);
-        songs.remove(currentSong);
+
+        //Find the song configuration that matches the digest
+        Optional<SongInfo> song = songsConfigurations.stream().filter(s -> s.getSongHash().equals(hashedFile)).findFirst();
+        if (song.isPresent()) {
+            currentSong = song.get();
+            songsConfigurations.remove(currentSong);
+        } else {
+            createConfig(path);
+        }
     }
 
-    private String getHashString(final byte[] bytes) {
+    private void createConfig(final String path) throws InvalidMidiDataException, IOException {
+        MidiParser parser = new MidiParserImpl();
+        File songFile = storage.getAsFile(path);
+        Song s = parser.parseMidi(songFile);
+        String fileHash = getHashString(storage.readFileAsByte(path));
+
+        //Maps the difficulty level to the associated track channel
+        Map<Integer, DifficultyLevel> difficulties = gameUtils.generateTracksDifficulty(trackFilter.reduceTrack(s))
+                                                .entrySet()
+                                                .stream()
+                                                .map(t -> Map.entry(t.getKey().getChannel(), t.getValue()))
+                                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        //Generate a list of TrackInfo from the list of MidiTrack parsed by the MIDI parser
+        List<TrackInfo> tracks = s.getTracks()
+                                    .stream()
+                                    .map(t -> {
+                                        InstrumentType instrument = InstrumentType.APPLAUSE;
+                                        String trackName = "Percussion";
+                                        DifficultyLevel difficulty = DifficultyLevel.UNKNOWN;
+
+                                        if (t.getClass().equals(TrackImpl.class)) {
+                                            instrument = (InstrumentType) ((TrackImpl) t).getInstrument();
+                                            trackName = ((TrackImpl) t).getInstrument().toString();
+                                            difficulty = difficulties.get(t.getChannel());
+                                        }
+                                        return new TrackInfo(t.getChannel(),
+                                                            trackName,
+                                                            instrument,
+                                                            difficulty);
+                                    })
+                                    .collect(Collectors.toList());
+        this.currentSong = new SongInfo(s.getTitle(), fileHash, s.getDuration(), tracks, Math.round(s.getBPM()));
+    }
+
+    private String getHashString(final byte[] bytes)  {
         StringBuilder stringHash = new StringBuilder();
-        byte[] d = digest.digest(bytes);
+        byte[] d = new byte[0];
+        try {
+            d = MessageDigest.getInstance("SHA-256").digest(bytes);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         //Convert each byte to its relative hex value (in String format)
         for (byte b : d) {
             stringHash.append(String.format("%02x", b));
@@ -52,6 +111,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void setPlayTrack(final int trackNumber) {
+        selectedTrackChannel = trackNumber;
         System.out.println(trackNumber);
     }
 
@@ -62,23 +122,36 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
             tracks[i].setTrackName(names.get(i));
             tracks[i].setInstrument(instruments.get(i));
         }
-        songs.add(currentSong);
-        writeSongsConfiguration(songs);
+        songsConfigurations.add(currentSong);
+        writeSongsConfiguration(songsConfigurations);
     }
 
     @Override
-    public List<TrackInfo> getTracks() {
-        return currentSong.getTracks();
+    public void playSong() {
+
+    }
+
+    @Override
+    public SongInfo getSongInfo() {
+        currentSong.getTracks().forEach(t -> System.out.println(t.getDifficultyLevel().getEffectiveName()));
+        return new SongInfo(currentSong.getTitle(),
+                            "",
+                            currentSong.getDuration(),
+                            currentSong.getTracks()
+                                    .stream()
+                                    .filter(t -> t.getChannel() != PERCUSSION_CHANNEL)
+                                    .collect(Collectors.toList()),
+                            currentSong.getBPM());
     }
 
     @Override
     public String[] getAllInstruments() {
-        readSynth();
+        readSynthPresets();
         return Arrays.stream(InstrumentType.values()).map(Enum::toString).toArray(String[]::new);
     }
 
     private List<SongInfo> getSongsConfiguration() {
-        Configuration.song conf = new Configuration.song();
+        Configuration.Song conf = new Configuration.Song();
         List<SongInfo> songs = Collections.emptyList();
         try {
             songs = conf.readAll();
@@ -89,14 +162,16 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     private void writeSongsConfiguration(final List<SongInfo> songs) {
+        /*
         List<TrackInfo> tracks = new ArrayList<>();
         List<SongInfo> mySongs = new ArrayList<>();
         tracks.add(new TrackInfo(1, "Slap Bass", InstrumentType.ELECTRIC_GUITAR_C));
         tracks.add(new TrackInfo(2, "Guitar Solo", InstrumentType.ELECTRIC_GUITAR_C));
         mySongs.add(new SongInfo("This game", "8e155c5c5b4b0b2c2cbedbcdcc58d59859cf493aa67d6a26e8d079872d062f9b", 3, tracks, 160));
         mySongs.add(new SongInfo("Red Zone", "agdgggdgfg", 3, tracks, 180));
+        */
 
-        Configuration.song conf = new Configuration.song();
+        Configuration.Song conf = new Configuration.Song();
         try {
             conf.writeAll(songs);
         } catch (IOException e) {
@@ -119,11 +194,11 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         c.setVolumeLFO(LFOFactory.sineLFO(1f,0.1f, 200));
 
         List<SynthInfo> asd = new ArrayList<>();
-        asd.add(new SynthInfo("amonger", b));
-        asd.add(new SynthInfo("sas", c));
+        asd.add(new SynthInfo("amonger", b, List.of(InstrumentType.ACOUSTIC_GUITAR_S)));
+        asd.add(new SynthInfo("sas", c, List.of(InstrumentType.AGOGO)));
 
 
-        Configuration.synthesizer g = new Configuration.synthesizer();
+        Configuration.Synthesizer g = new Configuration.Synthesizer();
         try {
             g.writeAll(asd);
         } catch (IOException e) {
@@ -131,8 +206,8 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         }
     }
 
-    private List<SynthInfo> readSynth() {
-        Configuration.synthesizer conf = new Configuration.synthesizer();
+    private List<SynthInfo> readSynthPresets() {
+        Configuration.Synthesizer conf = new Configuration.Synthesizer();
         List<SynthInfo> synthesizers = Collections.emptyList();
         try {
             synthesizers = conf.readAll();
