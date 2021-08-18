@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import it.dukemania.Controller.logic.DifficultyLevel;
 import it.dukemania.midi.InstrumentType;
 
 import java.io.IOException;
@@ -29,6 +30,9 @@ public class TrackDeserializer extends StdDeserializer<TrackInfo> {
                                         .treeAsTokens(node.get("instrument"))
                                         .readValueAs(InstrumentType.class);
 
-        return new TrackInfo(node.get("channel").asInt(), node.get("trackName").asText(), instrument);
+        return new TrackInfo(node.get("channel").asInt(),
+                                node.get("trackName").asText(),
+                                instrument,
+                                DifficultyLevel.valueOf(node.get("difficultyLevel").asText()));
     }
 }

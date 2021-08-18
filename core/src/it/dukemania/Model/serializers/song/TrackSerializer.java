@@ -22,6 +22,7 @@ public class TrackSerializer extends StdSerializer<TrackInfo> {
         gen.writeObjectField("trackName", value.getTrackName());
         gen.writeObjectField("channel", value.getChannel());
         gen.writeObjectField("instrument", value.getInstrument());
+        gen.writeObjectField("difficultyLevel", value.getDifficultyLevel().toString());
         gen.writeEndObject();
     }
 }
