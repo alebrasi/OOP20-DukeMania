@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import it.dukemania.midi.AbstractNote;
@@ -20,6 +21,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     private static final int NOTE_TOLERANCE = 10;
     private static final int MAX_COMBO = 20;
     private static final int COMBO_POINT = 5;
+    static final int MAX_HEIGHT = 4;
     private int columnNumber;
     private List<NoteRange> noteRanges;
     private int combo;
@@ -79,6 +81,15 @@ public class ColumnLogicImpl implements ColumnLogic {
                 .get()
                 .getDuration();
     }
+    
+    //return an int between 1 and 4 based on the duration of the note and the max duration of a note in the current track
+    public static final int generateNoteHeight(final Optional<Long> noteDuration, final Optional<Long> maxDuration) {
+        return IntStream.iterate(1, i -> i + 1)
+        .limit(MAX_HEIGHT)
+        .filter(x -> noteDuration.orElse(0L) <= maxDuration.orElse(0L) / MAX_HEIGHT * x)
+        .findFirst()
+        .orElse(1);
+    }
 
     @Override
     public final List<List<LogicNoteImpl>> noteQueuing(final MidiTrack track) {
@@ -121,8 +132,8 @@ public class ColumnLogicImpl implements ColumnLogic {
                     Columns currentColumn = columnList.remove(0);
                     return x.stream()
                             .map(y -> 
-                            new LogicNoteImpl(y, currentColumn, GameUtilitiesImpl
-                                    .generateNoteHeight(y.getDuration(), getMaxDuration(track))))
+                            new LogicNoteImpl(y, currentColumn,
+                                    generateNoteHeight(y.getDuration(), getMaxDuration(track))))
                             .collect(Collectors.toList());
                 })
                 .collect(Collectors.toList());
