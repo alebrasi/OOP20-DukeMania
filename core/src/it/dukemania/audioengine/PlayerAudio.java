@@ -68,10 +68,10 @@ public class PlayerAudio {
             if (track.hasNext() && track.current().getStartTime() / 1000 < current) {
                 if (track.getChannel() == 10) {
                     DrumSynth syn = (DrumSynth) audioEngine.getSynth(tracks.indexOf(track));
-                    syn.playPercussion(track.current().getItem());
+                    syn.playPercussion((DrumSamples) track.current().getItem());
                 } else {
                     KeyboardSynth syn = (KeyboardSynth) audioEngine.getSynth(tracks.indexOf(track));
-                    syn.playTimedNote(track.current().getItem(), track.current().getDuration().orElse(1000L));
+                    syn.playTimedNote((Float) track.current().getItem(), track.current().getDuration().orElse(1000L));
                 }
                 track.increment();
             }
