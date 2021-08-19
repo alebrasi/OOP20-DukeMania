@@ -16,6 +16,10 @@ public enum Percussion {
         for (Percussion pp : Percussion.values()) {
             pp.associated = DrumSamples.Hat;
         }
+        BASS_DRUM_1.associated = DrumSamples.Kick;
+        LOW_FLOOR_TOM.associated = DrumSamples.Hat;
+        ELECTRIC_SNARE.associated = DrumSamples.Snare;
+        ACOUSTIC_SNARE.associated = DrumSamples.Snare;
     }
 
     public DrumSamples  getAssociated() {

@@ -45,10 +45,10 @@ public class KeyboardSynth implements Synth {
      */
     public KeyboardSynth(final Enveloper env, final WaveTable [] waves, final Function<Long, Float> nlfo, final Function<Long, Float> vlfo, final double [] offsets, final List<Pair<Integer, Long>> freqs) {
         freqs.forEach(x -> {
-            final int NUM_A4 = 69;
-            final int NUM_NOTE = 12;
-            final double FREQ_A4 = 440;
-            float freq = (float) (Math.pow(2, (double) (x.getX() - NUM_A4) / NUM_NOTE) * FREQ_A4);
+            final int numA4 = 69;
+            final int numNote = 12;
+            final double freqA4 = 440;
+            float freq = (float) (Math.pow(2, (double) (x.getX() - numA4) / numNote) * freqA4);
             keys.put(x.getX(), createNoteBuffer(env, freq, x.getY(), waves, nlfo, vlfo, offsets));
         });
     }

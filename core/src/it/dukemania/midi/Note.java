@@ -21,8 +21,8 @@ public class Note extends AbstractNote {
 
 
     @Override
-    public final Float getItem() {
-        return (float) frequency;
+    public final Integer getItem() {
+        return super.getIdentifier();
     }
 
 
