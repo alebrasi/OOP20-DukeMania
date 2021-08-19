@@ -8,7 +8,7 @@ public class PercussionFactoryImpl implements AbstractFactory {
     private static final int MAX = 81;
 
     @Override
-    public final PercussionNote createNote(final Optional<Long> duration, final long startTime, final int identifier) {
+    public final AbstractNote createNote(final Optional<Long> duration, final long startTime, final int identifier) {
         if (identifier >= MIN && identifier <= MAX) {
             return new PercussionNote(duration, startTime, identifier);
         } else {
@@ -18,7 +18,7 @@ public class PercussionFactoryImpl implements AbstractFactory {
     }
 
     @Override
-    public final PercussionTrackImpl createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes,
+    public final MidiTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes,
             final int channel) {
         return new PercussionTrackImpl(notes, channel);
     }
