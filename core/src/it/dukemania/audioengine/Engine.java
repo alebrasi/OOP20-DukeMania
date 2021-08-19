@@ -71,7 +71,7 @@ public class Engine {
         b.setWavetables(new WaveTable[]{WaveTable.Sine});
         b.setOffsets(new double[]{1f});
 
-        List<Pair<Float, Long>> notes = new ArrayList<>();
+        List<Pair<Integer, Long>> notes = new ArrayList<>();
         var actualTrack = (TrackImpl) track;
 
         final int NUM_A4 = 69;
@@ -79,8 +79,7 @@ public class Engine {
         final double FREQ_A4 = 440;
 
         actualTrack.getNotesMaxDuration().forEach((key, value) -> {
-            float frequency = (float) (Math.pow(2, (double) (key - NUM_A4) / NUM_NOTE) * FREQ_A4);
-            notes.add(new Pair<>(frequency, (value / 1000)));
+            notes.add(new Pair<>(key, (value / 1000)));
         });
 
         try {

@@ -88,9 +88,9 @@ class TestMidiParser {
         assertEquals(((PercussionNote) song1.getTracks().get(3).getNotes().get(0)).getInstrument(), Percussion.CLAVES);
         assertEquals(((PercussionNote) song1.getTracks().get(3).getNotes().get(1)).getInstrument(), Percussion.HIGH_TOM);
         assertEquals(tracks.get(1).getNotesMaxDuration(), new HashMap<>(Map.of(
-            ((Note) tracks.get(1).getNotes().get(1)).getFrequency(), tracks.get(1).getNotes().get(1).getDuration().get(),
-            ((Note) tracks.get(1).getNotes().get(2)).getFrequency(), tracks.get(1).getNotes().get(2).getDuration().get(),
-            ((Note) tracks.get(1).getNotes().get(3)).getFrequency(), tracks.get(1).getNotes().get(3).getDuration().get())
+            tracks.get(1).getNotes().get(1).getIdentifier(), tracks.get(1).getNotes().get(1).getDuration().get(),
+            tracks.get(1).getNotes().get(2).getIdentifier(), tracks.get(1).getNotes().get(2).getDuration().get(),
+            tracks.get(1).getNotes().get(3).getIdentifier(), tracks.get(1).getNotes().get(3).getDuration().get())
         ));
         final File file2 = createFile(1, 0);
         Song song2 = mp.parseMidi(file2);

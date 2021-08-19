@@ -85,7 +85,7 @@ public class SynthBuilderImpl implements SynthBuilder {
      * @return the Synthesizer
      * @throws Exception Some of the Builder fields were not set properly
      */
-    public KeyboardSynth build(final List<Pair<Float, Long>> freqs) throws Exception {
+    public KeyboardSynth build(final List<Pair<Integer, Long>> freqs) throws Exception {
         if (env == null || waves == null || offsets == null) {
             throw new Exception("offsets, enveloper or wavetables are null");
         }
