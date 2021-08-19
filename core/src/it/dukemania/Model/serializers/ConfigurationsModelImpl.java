@@ -1,8 +1,10 @@
 package it.dukemania.Model.serializers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.dukemania.Model.serializers.leaderboard.SongLeaderBoard;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.synthesizer.SynthInfo;
 import it.dukemania.util.storage.Storage;
@@ -10,11 +12,13 @@ import it.dukemania.util.storage.Storage;
 import java.io.IOException;
 import java.util.List;
 
+//TODO add generic method for reading and writing
 public class ConfigurationsModelImpl implements ConfigurationsModel {
     private final Storage storage;
     private final ObjectMapper mapper = new ObjectMapper();
     private static final String SONGS_CONFIGURATION_PATH = "configs/song_config.json";
     private static final String SYNTHESIZERS_CONFIGURATION_PATH = "configs/synthesizers_config.json";
+    private static final String SONGS_LEADERBOARDS_PATH = "configs/users_score.json";
 
     public ConfigurationsModelImpl(final Storage storage) {
         this.storage = storage;
@@ -45,5 +49,22 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
         });
 
         return mapper.readValue(json, listSynthInfoType);
+    }
+
+    @Override
+    public List<SongLeaderBoard> readLeaderBoards() throws IOException {
+        String json = storage.readFileAsString(SONGS_LEADERBOARDS_PATH);
+
+        JavaType listSongLeaderBoardType = mapper.constructType(new TypeReference<List<SongLeaderBoard>>() {
+        });
+
+        return mapper.readValue(json, listSongLeaderBoardType);
+    }
+
+    @Override
+    public void writeLeaderBoards(final List<SongLeaderBoard> leaderBoards) throws IOException {
+        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(leaderBoards);
+        storage.createFileIfNotExists(SONGS_LEADERBOARDS_PATH);
+        storage.writeStringOnFile(SONGS_LEADERBOARDS_PATH, json);
     }
 }

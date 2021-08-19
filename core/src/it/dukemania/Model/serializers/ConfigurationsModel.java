@@ -1,5 +1,7 @@
 package it.dukemania.Model.serializers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import it.dukemania.Model.serializers.leaderboard.SongLeaderBoard;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.synthesizer.SynthInfo;
 
@@ -12,4 +14,8 @@ public interface ConfigurationsModel {
     void writeSongsConfiguration(List<SongInfo> songs) throws IOException;
 
     List<SynthInfo> readSynthesizersConfiguration() throws IOException;
+
+    List<SongLeaderBoard> readLeaderBoards() throws IOException;
+
+    void writeLeaderBoards(List<SongLeaderBoard> leaderBoards) throws IOException;
 }
