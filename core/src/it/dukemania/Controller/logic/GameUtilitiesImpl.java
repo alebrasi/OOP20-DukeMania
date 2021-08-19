@@ -12,8 +12,6 @@ import it.dukemania.midi.MidiTrack;
 
 public class GameUtilitiesImpl implements GameUtilities {
 
-    static final int MAX_HEIGHT = 4;
-
     private List<DifficultyLevel> getDifficulties() {
         List<DifficultyLevel> difficulties = Arrays.stream(DifficultyLevel.values())
                 .collect(Collectors.toList());
@@ -35,12 +33,5 @@ public class GameUtilitiesImpl implements GameUtilities {
                             return difficulty.orElse(DifficultyLevel.UNKNOWN);
                         }));
     }
-    //return an int between 1 and 4 based on the duration of the note and the max duration of a note in the current track
-    public static final int generateNoteHeight(final Optional<Long> noteDuration, final Optional<Long> maxDuration) {
-        return IntStream.iterate(1, i -> i + 1)
-        .limit(MAX_HEIGHT)
-        .filter(x -> noteDuration.orElse(0L) <= maxDuration.orElse(0L) / MAX_HEIGHT * x)
-        .findFirst()
-        .orElse(1);
-    }
+
 }
