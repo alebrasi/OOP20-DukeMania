@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class TrackImpl extends PercussionTrackImpl {
 
     private final Enum<InstrumentType> instrument;
-    private final Map<Double, Long> notesMaxDuration;
+    private final Map<Integer, Long> notesMaxDuration;
 
     public TrackImpl(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
         super(notes, channel);
@@ -19,14 +19,13 @@ public class TrackImpl extends PercussionTrackImpl {
     public final Enum<InstrumentType> getInstrument() {
         return instrument;
     }
-    public final Map<Double, Long> getNotesMaxDuration() {
+    public final Map<Integer, Long> getNotesMaxDuration() {
         return notesMaxDuration;
     }
 
-    private Map<Double, Long> calcMaxDuration() {
+    private Map<Integer, Long> calcMaxDuration() {
         return super.getNotes().stream()
-                                .map(n -> (Note) n)
-                                .collect(Collectors.toMap(Note::getFrequency,
+                                .collect(Collectors.toMap(AbstractNote::getIdentifier,
                                         n -> n.getDuration().get(), (d1, d2) -> d1 > d2 ? d1 : d2));
     }
 

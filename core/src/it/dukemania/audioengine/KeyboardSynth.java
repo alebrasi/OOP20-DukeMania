@@ -32,7 +32,7 @@ public class KeyboardSynth implements Synth {
         return env.createBufferManager(buff);
     }
 
-    private final Map<Float, BufferManager<Float>> keys = new HashMap<>();
+    private final Map<Integer, BufferManager<Float>> keys = new HashMap<>();
 
     /**
      * costructor of KeyboardSynth, usually called by a builder.
@@ -43,8 +43,14 @@ public class KeyboardSynth implements Synth {
      * @param offsets the offsets of the oscilaltors
      * @param freqs a list of pairs, X is the note frequency, Y is the maxium duration for the note (in ms)
      */
-    public KeyboardSynth(final Enveloper env, final WaveTable [] waves, final Function<Long, Float> nlfo, final Function<Long, Float> vlfo, final double [] offsets, final List<Pair<Float, Long>> freqs) {
-        freqs.forEach(x -> keys.put(x.getX(), createNoteBuffer(env, x.getX(), x.getY(), waves, nlfo, vlfo, offsets)));
+    public KeyboardSynth(final Enveloper env, final WaveTable [] waves, final Function<Long, Float> nlfo, final Function<Long, Float> vlfo, final double [] offsets, final List<Pair<Integer, Long>> freqs) {
+        freqs.forEach(x -> {
+            final int NUM_A4 = 69;
+            final int NUM_NOTE = 12;
+            final double FREQ_A4 = 440;
+            float freq = (float) (Math.pow(2, (double) (x.getX() - NUM_A4) / NUM_NOTE) * FREQ_A4);
+            keys.put(x.getX(), createNoteBuffer(env, freq, x.getY(), waves, nlfo, vlfo, offsets));
+        });
     }
     /**
      * {@inheritDoc}
@@ -62,11 +68,11 @@ public class KeyboardSynth implements Synth {
     }
     /**
      * Given a certain frequency, play that note for a certain amount of time.
-     * @param freq the frequency of the note that wants to be played
+     * @param identifier the frequency of the note that wants to be played
      * @param micros how many microseconds we want the note to be played
      */
-    public void playTimedNote(final float freq, final Long micros) {
-        keys.get(freq).refresh(micros / 1000);
+    public void playTimedNote(final int identifier, final Long micros) {
+        keys.get(identifier).refresh(micros / 1000);
     }
 
 }
