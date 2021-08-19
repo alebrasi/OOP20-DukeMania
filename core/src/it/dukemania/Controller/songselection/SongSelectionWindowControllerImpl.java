@@ -2,14 +2,16 @@ package it.dukemania.Controller.songselection;
 
 import it.dukemania.Controller.logic.*;
 import it.dukemania.Model.serializers.song.SongInfo;
-import it.dukemania.Model.serializers.Configuration;
+import it.dukemania.Model.serializers.ConfigurationsModelImpl;
 import it.dukemania.Model.serializers.song.TrackInfo;
 import it.dukemania.Model.serializers.synthesizer.SynthInfo;
 import it.dukemania.audioengine.*;
 import it.dukemania.midi.*;
 import it.dukemania.util.storage.Storage;
+import it.dukemania.util.storage.StorageFactory;
 import it.dukemania.util.storage.StorageFactoryImpl;
-import it.dukemania.windowmanager.WindowManager;
+import it.dukemania.windowmanager.DukeManiaWindowState;
+import it.dukemania.windowmanager.SwitchWindowNotifier;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.File;
@@ -29,14 +31,21 @@ TODO:
 
 public class SongSelectionWindowControllerImpl implements SongSelectionWindowController {
 
-    private final Storage storage = new StorageFactoryImpl().getExternalStorage();
+    private final StorageFactory storageFactory = new StorageFactoryImpl();
+    private final Storage externalStorage = storageFactory.getExternalStorage();
+    private final Storage configurationStorage = storageFactory.getConfigurationStorage();
+
+    private SongInfo currentSong;
     private final List<SongInfo> songsConfigurations;
+    private final List<SynthInfo> synthesizersPresets;
+
     private final GameUtilities gameUtils = new GameUtilitiesImpl();
     private final TrackFilter trackFilter = new TrackFilterImpl();
-    private final List<SynthInfo> synthesizersPresets;
-    private SongInfo currentSong;
+
     private static final int PERCUSSION_CHANNEL = 10;
     private int selectedTrackChannel = 0;
+
+    private final ConfigurationsModelImpl configurationModel = new ConfigurationsModelImpl(configurationStorage);
 
     public SongSelectionWindowControllerImpl() throws NoSuchAlgorithmException {
         synthesizersPresets = readSynthPresets();
@@ -46,7 +55,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     @Override
     public void openSong(final String path) throws InvalidMidiDataException, IOException {
         selectedTrackChannel = 0;
-        byte[] fileBytes = storage.readFileAsByte(path);
+        byte[] fileBytes = externalStorage.readFileAsByte(path);
         String hashedFile = getHashString(fileBytes);
 
         //Find the song configuration that matches the digest
@@ -61,9 +70,9 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     private void createConfig(final String path) throws InvalidMidiDataException, IOException {
         MidiParser parser = new MidiParserImpl();
-        File songFile = storage.getAsFile(path);
+        File songFile = externalStorage.getAsFile(path);
         Song s = parser.parseMidi(songFile);
-        String fileHash = getHashString(storage.readFileAsByte(path));
+        String fileHash = getHashString(externalStorage.readFileAsByte(path));
 
         //Maps the difficulty level to the associated track channel
         Map<Integer, DifficultyLevel> difficulties = gameUtils.generateTracksDifficulty(trackFilter.reduceTrack(s))
@@ -127,8 +136,8 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     @Override
-    public void playSong() {
-
+    public void playSong(final SwitchWindowNotifier notifier) {
+        notifier.switchWindow(DukeManiaWindowState.PLAY, "Yooo");
     }
 
     @Override
@@ -151,10 +160,10 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     private List<SongInfo> getSongsConfiguration() {
-        Configuration.Song conf = new Configuration.Song();
+        //ConfigurationsModelImpl.Song conf = new ConfigurationsModelImpl.Song();
         List<SongInfo> songs = Collections.emptyList();
         try {
-            songs = conf.readAll();
+            songs = configurationModel.readSongsConfiguration();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -171,9 +180,8 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         mySongs.add(new SongInfo("Red Zone", "agdgggdgfg", 3, tracks, 180));
         */
 
-        Configuration.Song conf = new Configuration.Song();
         try {
-            conf.writeAll(songs);
+            configurationModel.writeSongsConfiguration(songs);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -197,20 +205,21 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         asd.add(new SynthInfo("amonger", b, List.of(InstrumentType.ACOUSTIC_GUITAR_S)));
         asd.add(new SynthInfo("sas", c, List.of(InstrumentType.AGOGO)));
 
-
-        Configuration.Synthesizer g = new Configuration.Synthesizer();
+        /*
+        ConfigurationsModelImpl.Synthesizer g = new ConfigurationsModelImpl.Synthesizer();
         try {
             g.writeAll(asd);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+         */
     }
 
     private List<SynthInfo> readSynthPresets() {
-        Configuration.Synthesizer conf = new Configuration.Synthesizer();
         List<SynthInfo> synthesizers = Collections.emptyList();
         try {
-            synthesizers = conf.readAll();
+            synthesizers = configurationModel.readSynthesizersConfiguration();
         } catch (IOException e) {
             e.printStackTrace();
         }

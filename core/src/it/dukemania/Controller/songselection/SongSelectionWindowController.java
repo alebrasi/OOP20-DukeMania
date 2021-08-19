@@ -3,6 +3,7 @@ package it.dukemania.Controller.songselection;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.song.TrackInfo;
 import it.dukemania.midi.InstrumentType;
+import it.dukemania.windowmanager.SwitchWindowNotifier;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public interface SongSelectionWindowController {
     void openSong(String path) throws InvalidMidiDataException, IOException;
     void setPlayTrack(int trackNumber);
     void updateTracks(List<String> names, List<InstrumentType> instruments);
-    void playSong();
+    void playSong(SwitchWindowNotifier notifier);
     SongInfo getSongInfo();
     String[] getAllInstruments();
 }
