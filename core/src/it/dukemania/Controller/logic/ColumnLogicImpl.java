@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import it.dukemania.audioengine.Pair;
 import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.MidiTrack;
 
@@ -41,9 +42,9 @@ public class ColumnLogicImpl implements ColumnLogic {
         this.columnNumber = columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP ? columnNumber : COLUMN_MIN_CAP;
     }
 
-    private List<AbstractNote> overlappingNotes(final List<AbstractNote> x2) {
+    private List<AbstractNote> overlappingNotes(final List<AbstractNote> notes) {
         //lo stream fatto da gian cambiato per far si che non prenda una MyTrack ma una List<Note>
-        return x2.stream().collect(Collectors.toMap(x -> x, x -> x2.stream()
+        return notes.stream().collect(Collectors.toMap(x -> x, x -> notes.stream()
                         .filter(y -> x != y && (x.getStartTime() == y.getStartTime()
                         || (x.getStartTime() < y.getStartTime() && (x.getStartTime() + x.getDuration().get()
                                         > y.getStartTime())))).collect(Collectors.toList()))).entrySet().stream()
@@ -93,38 +94,33 @@ public class ColumnLogicImpl implements ColumnLogic {
 
     @Override
     public final List<List<LogicNoteImpl>> noteQueuing(final MidiTrack track) {
+          
         //dice quante note ci sono per identifier
-        List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
-                        .collect(Collectors.groupingBy(AbstractNote::getIdentifier, Collectors.counting())).entrySet());
+        //List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
+        //                .collect(Collectors.groupingBy(AbstractNote::getIdentifier, Collectors.counting())).entrySet());
         //raggruppa le note per identifier
-        Map<Integer, List<AbstractNote>> notesForNoteType = track.getNotes().stream().collect(Collectors.groupingBy(
-                        AbstractNote::getIdentifier, Collectors.toList()));
+        List<Pair<Integer, List<AbstractNote>>> notesForNoteType = track.getNotes().stream()
+                .collect(Collectors.groupingBy(
+                        AbstractNote::getIdentifier, Collectors.toList()))
+                .entrySet()
+                .stream()
+                .map(x -> new Pair<Integer, List<AbstractNote>>(x.getKey(), x.getValue()))
+                .collect(Collectors.toList());
         //finch� non � minore del numero di colonne
-        while (numberOfNotesForNoteType.size() > columnNumber) {
-                //(dovrebbe) ordinare per numero di note dal minore al maggiore
-            numberOfNotesForNoteType.sort((e1, e2) -> e1.getValue().compareTo(e2.getValue())); //questo funziona
-                //System.out.println("current order");
-                //numberOfNotesForNoteType.forEach(t -> System.out.println(t.getKey().toString() +" "+ t.getValue().toString()));
-                //prendendo le prime 2 chiavi da sopra somma le due liste di note corrispondenti in una sola
-
-                //non so se sia accettabile come codice, spero di si; forse � il caso di farci un metodo a se?
-            notesForNoteType.put(numberOfNotesForNoteType.get(0).getKey(), 
-                    Stream.of(notesForNoteType.get(numberOfNotesForNoteType.get(0).getKey()),
-                    notesForNoteType.get(numberOfNotesForNoteType.get(1).getKey()))
-                    .flatMap(x -> x.stream())
-                    .collect(Collectors.toList()));
-                //rimuove l'altra chiave
-            notesForNoteType.remove(numberOfNotesForNoteType.get(1).getKey());
-                //somma i quantitativi di note delle 2 liste in una sola
-            numberOfNotesForNoteType.get(0).setValue(numberOfNotesForNoteType.get(0).getValue() 
-                    + numberOfNotesForNoteType.get(1).getValue());
-                //rimuove il secondo quantitativo
-            numberOfNotesForNoteType.remove(1);
+        
+        while (notesForNoteType.size() > columnNumber) {
+            //(dovrebbe) ordinare per numero di note dal minore al maggiore
+            notesForNoteType.sort(Comparator.comparingInt(e -> e.getY().size()));
+            // mette insieme i primi due elementi nel primo elemento ed elimina il secondo
+            notesForNoteType.set(0, new Pair<Integer, List<AbstractNote>>(notesForNoteType.get(0).getX(),
+                    Stream.concat(notesForNoteType.get(0).getY().stream(), notesForNoteType.remove(1).getY().stream())
+                    .collect(Collectors.toList())));
         }
 
 //teoricamente elimina le collisioni
         List<Columns> columnList = getColumnList();
-        return (generateNoteRanges(notesForNoteType.values().stream()
+        return (generateNoteRanges(notesForNoteType.stream()
+                .map(x -> x.getY())
                 .peek(x -> x.removeAll(overlappingNotes(x)))
                 .collect(Collectors.toList())))
                 .stream()
