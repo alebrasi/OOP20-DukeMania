@@ -76,16 +76,15 @@ public class TestClass {
 
     @Test
     public void testKeyboardSynth() throws Exception {
-        /*
         final float atkVol = 0.8f;
         SynthBuilderImpl builder = new SynthBuilderImpl();
         Enveloper env = new Enveloper(100l, atkVol, 100l);
         builder.setEnveloper(env);
         builder.setWavetables(new WaveTable[]{WaveTable.Saw});
         builder.setOffsets(new double[]{1});
-        List<Pair<Float, Long>> notes = new ArrayList<>();
-        notes.add(new Pair<>(100f, 10000l));
-        notes.add(new Pair<>(200f, 100000l));
+        List<Pair<Integer, Long>> notes = new ArrayList<>();
+        notes.add(new Pair<>(100, 10000l));
+        notes.add(new Pair<>(200, 100000l));
         KeyboardSynth ks = builder.build(notes);
 
         Assertions.assertEquals(0, ks.checkKeys());
@@ -101,8 +100,6 @@ public class TestClass {
 
         IntStream.range(0, 10000).forEach(x -> ks.getSample());
         Assertions.assertEquals(0, ks.checkKeys());
-
-         */
     }
 
     @Test
