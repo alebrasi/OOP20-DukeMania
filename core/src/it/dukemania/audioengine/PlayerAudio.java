@@ -57,6 +57,14 @@ public class PlayerAudio {
     }
 
     /**
+     * Tells if the song has finished to play.
+     * @return true if the song has ended, false otherwise
+     */
+    public boolean hasSongEnded() {
+        return tracks.stream().noneMatch(NoteIterator::hasNext);
+    }
+
+    /**
      * Checks and plays all the notes whose startTime is inferios than the total milliseconds that have passed from the total elapsed time,
      * then plays a buffer in the AudioEngine.
      */
@@ -71,7 +79,7 @@ public class PlayerAudio {
                     syn.playPercussion((DrumSamples) track.current().getItem());
                 } else {
                     KeyboardSynth syn = (KeyboardSynth) audioEngine.getSynth(tracks.indexOf(track));
-                    syn.playTimedNote((Float) track.current().getItem(), track.current().getDuration().orElse(1000L));
+                    syn.playTimedNote((Integer) track.current().getItem(), track.current().getDuration().orElse(1000L));
                 }
                 track.increment();
             }
