@@ -26,8 +26,7 @@ public class MidiParserImpl implements MidiParser {
 
 
     @Override
-    public final Song parseMidi(final String file) throws InvalidMidiDataException, IOException  {
-        final File myMidi = new File(file);
+    public final Song parseMidi(final File myMidi) throws InvalidMidiDataException, IOException  {
         final Sequence sequence = MidiSystem.getSequence(myMidi);
         final double microsecPerTick = sequence.getMicrosecondLength() / sequence.getTickLength();
 
