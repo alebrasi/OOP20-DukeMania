@@ -14,6 +14,7 @@ import it.dukemania.windowmanager.DukeManiaWindowState;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
 
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.Track;
 import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -142,7 +143,12 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     @Override
     public void playSong(final SwitchWindowNotifier notifier) throws InvalidMidiDataException, IOException {
         MidiParser parser = new MidiParserImpl();
-        notifier.switchWindow(DukeManiaWindowState.PLAY, new Object[]{parser.parseMidi(new File(path)), selectedTrackChannel});
+        Song song = parser.parseMidi(new File(path));
+        MidiTrack selectedTrack = trackFilter.reduceTrack(song)
+                                            .stream()
+                                            .filter(t -> t.getChannel() == selectedTrackChannel)
+                                            .findFirst().get();
+        notifier.switchWindow(DukeManiaWindowState.PLAY, new Object[]{song, selectedTrack});
     }
 
     @Override
