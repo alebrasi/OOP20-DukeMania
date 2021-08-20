@@ -48,6 +48,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     private final ConfigurationsModelImpl configurationModel = new ConfigurationsModelImpl(configurationStorage);
 
     private String path;
+    private Song selectedSong;
 
     public SongSelectionWindowControllerImpl() throws NoSuchAlgorithmException {
         synthesizersPresets = readSynthPresets();
@@ -123,7 +124,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void setPlayTrack(final int trackNumber) {
-        selectedTrackChannel = trackNumber;
+        selectedTrackChannel = trackNumber + 1;
         System.out.println(trackNumber);
     }
 
@@ -139,8 +140,9 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     @Override
-    public void playSong(final SwitchWindowNotifier notifier) {
-        notifier.switchWindow(DukeManiaWindowState.PLAY, new Object[]{new File(path), selectedTrackChannel});
+    public void playSong(final SwitchWindowNotifier notifier) throws InvalidMidiDataException, IOException {
+        MidiParser parser = new MidiParserImpl();
+        notifier.switchWindow(DukeManiaWindowState.PLAY, new Object[]{parser.parseMidi(new File(path)), selectedTrackChannel});
     }
 
     @Override

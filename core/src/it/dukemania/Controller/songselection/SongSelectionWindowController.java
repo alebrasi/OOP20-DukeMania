@@ -23,7 +23,7 @@ public interface SongSelectionWindowController {
     void openSong(String path) throws InvalidMidiDataException, IOException;
     void setPlayTrack(int trackNumber);
     void updateTracks(List<String> names, List<InstrumentType> instruments);
-    void playSong(SwitchWindowNotifier notifier);
+    void playSong(SwitchWindowNotifier notifier) throws InvalidMidiDataException, IOException;
     SongInfo getSongInfo();
     String[] getAllInstruments();
 }
