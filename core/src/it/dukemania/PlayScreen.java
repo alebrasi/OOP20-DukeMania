@@ -2,11 +2,9 @@ package it.dukemania;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -87,7 +85,7 @@ public class PlayScreen extends ApplicationAdapter {
     private List<Note> notes = new ArrayList<>(); 
     private List<NoteLogic> logicNotes = new ArrayList<>(); //per ora vuoto, poi array di rapo
     private List<Note> notesPlaying = new ArrayList<>(); 
-    private long timeStart = 0;
+    private long startTime = 0;
     private EventsFromKeyboard keyboard;
     private Key key;
     private ComputingShift shift = new ComputingShiftImpl();
@@ -132,8 +130,8 @@ public class PlayScreen extends ApplicationAdapter {
 
         this.note6uno = new NoteLogicImpl(1, 200, 1, Columns.COLUMN1, 200);
         this.note7uno = new NoteLogicImpl(2, 600, 2, Columns.COLUMN2, 200);
-        this.note8uno = new NoteLogicImpl(1, 1000, 3, Columns.COLUMN3, 200);
-        this.note9uno = new NoteLogicImpl(1, 1400, 4, Columns.COLUMN4, 200);
+        this.note8uno = new NoteLogicImpl(3, 1000, 3, Columns.COLUMN3, 200);
+        this.note9uno = new NoteLogicImpl(4, 1400, 4, Columns.COLUMN4, 200);
         this.note10uno = new NoteLogicImpl(2, 1600, 5, Columns.COLUMN2, 200);
 
         this.logicNotes.add(note6uno);
@@ -189,7 +187,7 @@ public class PlayScreen extends ApplicationAdapter {
 	
 	//this method associates the logical note to the corresponding graphic note
 	private Note associationNote(final NoteLogic noteLogic) {
-            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), posyBlue, posySparks, noteLogic.getHeight() * this.yNote, noteLogic.getTimeStart(), noteLogic.getDuration(), this.numberOfColumns);
+            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), posyBlue, noteLogic.getHeight() * this.yNote, noteLogic.getTimeStart(), noteLogic.getDuration(), this.numberOfColumns);
         }
 	
 	//this method returns the notes that are playing right now
@@ -217,12 +215,12 @@ public class PlayScreen extends ApplicationAdapter {
 	}
 	
 
-	private void drawNote(final int posxNote, final int posyNote) {
+	private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
 	    final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), dimensions.getSize().getY() - 190); //magic numbers
 
         this.batch.flush();
         ScissorStack.pushScissors(clipBounds);
-        this.batch.draw(this.textureNote, posxNote, posyNote, this.xNote, this.yNote, 0, 1, 1, 0);
+        this.batch.draw(this.textureNote, posxNote, posyNote, xNote, yNote, 0, 1, 1, 0);
         this.batch.flush();
         ScissorStack.popScissors();
 
@@ -244,15 +242,16 @@ public class PlayScreen extends ApplicationAdapter {
 	public void render() {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//ae.playBuffer();
-		if (this.timeStart == 0) {
-		    this.timeStart = Instant.now().toEpochMilli();
+		//set the start time
+		if (this.startTime == 0) {
+		    this.startTime = Instant.now().toEpochMilli();
 		}
 		this.stage.draw();
 		this.backgroundBatch.begin();
 		this.buttonsStage.draw();
 		this.batch.begin();
 
-
+		//draw the score and the scoreboard
 		layout.setText(fontScoreboard, this.text);
 		this.fontWidth = layout.width;
 		this.fontHeight = layout.height; 
@@ -264,14 +263,14 @@ public class PlayScreen extends ApplicationAdapter {
 		    b.setStyle(this.styleUp);
 		}
 
-        final long actualTime = Instant.now().toEpochMilli() - this.timeStart;
+        final long actualTime = Instant.now().toEpochMilli() - this.startTime;
 
         this.notesPlaying = getPlayingNotes(actualTime);
 
         //drawing of each note
         if (!this.notesPlaying.isEmpty()) {
             for (final Note n : this.notesPlaying) {
-                drawNote(n.getPosxNote(), n.getPosyNote());
+                drawNote(n.getPosxNote(), n.getPosyNote(), n.getxNote(), n.getyNote());
                 this.deltaTime = Gdx.graphics.getDeltaTime();
                 n.updateNote(this.deltaTime);
                 this.keyboard = new EventsFromKeyboardImpl(n);
@@ -323,6 +322,7 @@ public class PlayScreen extends ApplicationAdapter {
 	
 	@Override
 	public void dispose() {
+	    //release of all resources
 	    this.stage.dispose();
 		this.batch.dispose();
 		this.background.dispose();

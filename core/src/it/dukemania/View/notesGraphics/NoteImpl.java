@@ -22,7 +22,6 @@ public class NoteImpl implements Note {
     private int posyBlue;
     private static int FINISH_LINE = 108;
     private int posxSparks;
-    private int posySparks;
     private int xSparks;
     private int ySparks;
     private long startNote;
@@ -34,7 +33,7 @@ public class NoteImpl implements Note {
     //private ShapeRenderer renderer = new ShapeRenderer();
 	
 	
-	public NoteImpl(final int heightpos, final Columns letter, final int posyBlue, final int posySparks, final int height, final long startNote, final long duration, final int numberOfColumns) {
+	public NoteImpl(final int heightpos, final Columns letter, final int posyBlue, final int height, final long startNote, final long duration, final int numberOfColumns) {
 		this.xNote = 50;
 		this.yNote = height;
 		this.column = letter;
@@ -43,7 +42,6 @@ public class NoteImpl implements Note {
 		this.posyNote = heightpos;
 		this.speedNote = 200.0;
 		this.posyBlue = posyBlue;
-		this.posySparks = posySparks;
 		this.posxSparks = this.posxNote - 25;
 		this.xSparks = 100;
 		this.ySparks = 70;
@@ -119,6 +117,16 @@ public class NoteImpl implements Note {
     @Override
     public int getySpark() {
         return this.ySparks;
+    }
+
+    @Override
+    public int getyNote() {
+        return this.yNote;
+    }
+
+    @Override
+    public int getxNote() {
+        return this.xNote;
     }
 
 

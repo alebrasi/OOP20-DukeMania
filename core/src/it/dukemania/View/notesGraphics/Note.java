@@ -19,6 +19,10 @@ public interface Note {
 	
 	int getPosxNote();
 	
+	int getyNote();
+	
+	int getxNote();
+	
 	int getPosxSpark();
 	
 	int getxSpark();
