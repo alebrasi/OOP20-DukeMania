@@ -3,9 +3,9 @@ package it.dukemania.Controller.logic;
 import it.dukemania.midi.AbstractNote;
 
 public class LogicNoteImpl implements LogicNote {
-    private int height;
-    private AbstractNote note;
-    private Columns column;
+    private final int height;
+    private final AbstractNote note;
+    private final Columns column;
 
     public LogicNoteImpl(final AbstractNote note, final Columns column, final int height) {
        this.note = note;
@@ -18,10 +18,8 @@ public class LogicNoteImpl implements LogicNote {
         return height;
     }
 
-<<<<<<< HEAD
+
     @Override
-=======
->>>>>>> dbab2fce4144125a9c5e06d1393f04810d3bbde7
     public final Columns getColumn() {
         return column;
     }
@@ -38,8 +36,7 @@ public class LogicNoteImpl implements LogicNote {
 
 
 
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> dbab2fce4144125a9c5e06d1393f04810d3bbde7
+
+

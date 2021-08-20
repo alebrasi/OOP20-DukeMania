@@ -4,13 +4,13 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 public class SizeImpl implements Size {
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int widthGUI =  (int) screenSize.getWidth();
-    private int heightGUI = (int) screenSize.getHeight();
-    private int numberOfColumns = 8;
-    private int width = this.widthGUI / (this.numberOfColumns == 4 ? 4 : 2);
-    private int height = heightGUI * 2 / 3;
-    private Pair<Integer, Integer> windowsize = new Pair<>(width, height);
+    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private final int widthGUI =  (int) screenSize.getWidth();
+    private final int heightGUI = (int) screenSize.getHeight();
+    private final int numberOfColumns = 8;
+    private final int width = this.widthGUI / (this.numberOfColumns == 4 ? 4 : 2);
+    private final int height = heightGUI * 2 / 3;
+    private final Pair<Integer, Integer> windowsize = new Pair<>(width, height);
 
 
 

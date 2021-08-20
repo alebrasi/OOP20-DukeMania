@@ -72,7 +72,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private Song song;
     private MidiTrack selectedTrack;
     private long startTime = 0;
-    private List<Note> notes = new ArrayList<>(); 
+    private final List<Note> notes = new ArrayList<>(); 
+    private final ColumnLogic logic = new ColumnLogicImpl(this.dimensions.getNumberOfColumns());
     private EventsFromKeyboard keyboard;
     private Key key;
     private final ComputingShift shift = new ComputingShiftImpl();
@@ -103,8 +104,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	@Override
 	public void create() {
 	    //this.dimensions = new SizeImpl();
-	    receiveData();
-	    ColumnLogic logic = new ColumnLogicImpl(this.dimensions.getNumberOfColumns());
 
 	    final List<LogicNoteImpl> logicNotes = logic.noteQueuing(selectedTrack);
         player = new PlayerAudio(song);
