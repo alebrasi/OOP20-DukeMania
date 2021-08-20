@@ -69,33 +69,31 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private SpriteBatch backgroundBatch;
     private final int posySpark;
     private final int finishLine;
-    private Song song;
-    private MidiTrack selectedTrack;
+    private int score = 0;
     private long startTime = 0;
-    private final List<Note> notes = new ArrayList<>(); 
-    private final ColumnLogic logic = new ColumnLogicImpl(this.dimensions.getNumberOfColumns());
     private EventsFromKeyboard keyboard;
     private Key key;
     private final ComputingShift shift = new ComputingShiftImpl();
     private final OrthographicCamera camera = new OrthographicCamera();
     private final int numberOfColumns;
     private float deltaTime = 0;
-    private int buttonHeight;
     private final List<TextButton> buttons = new ArrayList<>();
+    private Song song;
+    private MidiTrack selectedTrack;
+    private final List<Note> notes = new ArrayList<>(); 
+    private final ColumnLogic logic = new ColumnLogicImpl(this.dimensions.getNumberOfColumns());
+    private PlayerAudio player;
+    private String songHash;
+    private SwitchWindowNotifier switchWindowNotifier;
     //constant
     private static final int BUTTON_DIM = 120;
     private static final int YNOTE = 80;
     private static final int FONT_SIZE = 40;
-    private PlayerAudio player;
-    private String songHash;
-
-    private SwitchWindowNotifier switchWindowNotifier;
 
         public PlayScreen() { 
             this.numberOfColumns = this.dimensions.getNumberOfColumns();
-            this.buttonHeight = PlayScreen.BUTTON_DIM;
-            this.posySpark = this.buttonHeight - this.shift.getNoteShift(); 
-            this.finishLine = this.buttonHeight;
+            this.posySpark = PlayScreen.BUTTON_DIM - this.shift.getNoteShift(); 
+            this.finishLine = PlayScreen.BUTTON_DIM;
             //notes = logic.getnotes();      //rapo
     }
 	
@@ -105,7 +103,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	public void create() {
 	    //this.dimensions = new SizeImpl();
 
-	    final List<LogicNoteImpl> logicNotes = logic.noteQueuing(selectedTrack);
+	    final List<LogicNote> logicNotes = logic.noteQueuing(selectedTrack);
         player = new PlayerAudio(song);
 	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
 	    final Image backgroundImage = new Image(this.background);
@@ -141,7 +139,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         final Skin skin = new Skin();
         final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("pinkAndBlueButtons.atlas"));
         skin.addRegions(atlas);
-        this.text = "700000";
 
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
         final FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -166,18 +163,19 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         for (int i = 0; i < this.numberOfColumns; i++) {
             this.buttons.add(new TextButton("", this.styleUp));
             this.buttons.get(i).setSize(PlayScreen.BUTTON_DIM, PlayScreen.BUTTON_DIM);  //set the size of the buttons
-            this.buttons.get(i).setPosition(i * this.dimensions.getSize().getX() / this.numberOfColumns + this.shift.calculateShifting(this.numberOfColumns) * i, 0);  //set the position of each button
+            this.buttons.get(i).setPosition(i * this.dimensions.getSize().getX() / this.numberOfColumns 
+                    + this.shift.calculateShifting(this.numberOfColumns) * i, 0);  //set the position of each button
             this.buttonsStage.addActor(this.buttons.get(i));
         }
 
-        for (final LogicNoteImpl noteLogic : logicNotes) {
+        for (final LogicNote noteLogic : logicNotes) {
             notes.add(associationNote(noteLogic));
         }
 
         //adding elements on the stage
         this.stage.addActor(backgroundImage);
         Gdx.graphics.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
-
+        Gdx.graphics.setResizable(false);
 	}
 	
 	
@@ -213,7 +211,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	
 
 	private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
-	    final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), dimensions.getSize().getY() - 190); //magic numbers
+	    final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), 
+	            dimensions.getSize().getY() - 190); //magic numbers
 
         this.batch.flush();
         ScissorStack.pushScissors(clipBounds);
@@ -249,11 +248,10 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 		this.batch.begin();
 
 		//draw the score and the scoreboard
-		this.layout.setText(fontScoreboard, this.text);
+		this.layout.setText(fontScoreboard, Integer.toString(this.score));
 	    final float fontWidth = this.layout.width;
 	    final float fontHeight = this.layout.height; 
-		this.fontScoreboard.draw(batch, text, this.dimensions.getSize().getX() / 2 - fontWidth / 2, 
-		        this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
+		this.fontScoreboard.draw(batch, Integer.toString(this.score), this.dimensions.getSize().getX() / 2 - fontWidth / 2, this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
 		this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - this.shift.getScoreboardHeight(),
 		        this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
 
@@ -280,24 +278,35 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                     isSparked(n);
                 }
 
-                /*//it returns the time when the user starts to press a key
-                if (this.keyboard.isColumnSelected() && !n.isPressed()) { 
+                
+                
+                
+                
+                //it returns the time when the user starts to press a key
+                if (this.keyboard.isColumnSelected(this.numberOfColumns) && !n.isPressed()) { 
                     n.setIsPressed(true);
                     this.key.startPressing();
-                }*/
+                }
 
-                /*//it returns the time when the user finishes to press a key
-                if (!this.keyboard.isColumnSelected() && n.isPressed()) {
+                //it returns the time when the user finishes to press a key
+                if (!this.keyboard.isColumnSelected(this.numberOfColumns) && n.isPressed()) {
                     n.setIsPressed(false);
                     this.key.finishPressing();
-                }*/
+                    this.score += this.logic.verifyNote(this.key.getColumn(), this.key.getInitialTime(), this.key.getFinalTime());
+                }
 
 
-                /*//tempo di caduta
+                //tempo di caduta
                 if (n.getTimeOfFall() > 0) {
                     System.out.println("nota " + n.getColumn().name() + "tempo di caduta " + n.getTimeOfFall());
-                }*/
+                }
 
+                
+                
+                
+                
+                
+                
                 //change the style of the buttons if they are clicked
                 for (int i = 0; i < this.numberOfColumns; i++) {
                     if (!this.keyboard.isButtonPressed(i + 1, this.numberOfColumns)) {
