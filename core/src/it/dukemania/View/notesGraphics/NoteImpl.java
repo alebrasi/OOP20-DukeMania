@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 
+import it.dukemania.Controller.logic.Columns;
+
 
 public class NoteImpl implements Note {
     private final int posxNote; //note's position
@@ -19,7 +21,7 @@ public class NoteImpl implements Note {
     private final int yNote; //texture's dimension
     private static final Double NOTE_SPEED = 200.0;
     private Columns column;
-    private int posyBlue;
+    private int finishLine;
     private static final int FINISH_LINE = 108;
     private int posxSparks;
     private int xSparks;
@@ -33,13 +35,13 @@ public class NoteImpl implements Note {
 
 	
 	
-	public NoteImpl(final int heightpos, final Columns letter, final int posyBlue, final int height, final long startNote, final long duration, final int numberOfColumns) {
+	public NoteImpl(final int heightpos, final Columns letter, final int finishLine, final int height, final long startNote, final long duration, final int numberOfColumns) {
 		this.yNote = height;
 		this.column = letter;
-		this.posxNote = (letter.getNumericvalue() - 1) * this.dimensions.getSize().getX() / numberOfColumns 
-		        + this.shift.calculateShifting(numberOfColumns) * letter.getNumericvalue() + this.shift.getNoteShift();
+		this.posxNote = (letter.getNumericValue() - 1) * this.dimensions.getSize().getX() / numberOfColumns 
+		        + this.shift.calculateShifting(numberOfColumns) * letter.getNumericValue() + this.shift.getNoteShift();
 		this.posyNote = heightpos;
-		this.posyBlue = posyBlue;
+		this.finishLine = finishLine;
 		this.posxSparks = this.posxNote - this.shift.getHorizontalSparkShift();
 		this.xSparks = 100;
 		this.ySparks = 70;

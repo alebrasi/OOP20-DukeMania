@@ -93,7 +93,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     @Override
-    public final List<List<LogicNoteImpl>> noteQueuing(final MidiTrack track) {
+    public final List<LogicNote> noteQueuing(final MidiTrack track) {
           
         //dice quante note ci sono per identifier
         //List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
@@ -132,6 +132,7 @@ public class ColumnLogicImpl implements ColumnLogic {
                                     generateNoteHeight(y.getDuration(), getMaxDuration(track))))
                             .collect(Collectors.toList());
                 })
+                .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
 

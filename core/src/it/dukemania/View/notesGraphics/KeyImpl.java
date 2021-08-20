@@ -2,6 +2,8 @@ package it.dukemania.View.notesGraphics;
 
 import java.time.Instant;
 
+import it.dukemania.Controller.logic.Columns;
+
 
 
 public class KeyImpl implements Key {

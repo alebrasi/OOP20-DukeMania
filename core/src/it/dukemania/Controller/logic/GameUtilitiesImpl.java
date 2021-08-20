@@ -19,7 +19,6 @@ public class GameUtilitiesImpl implements GameUtilities {
         return difficulties;
     }
 
-
     @Override
     public final Map<MidiTrack, DifficultyLevel> generateTracksDifficulty(final List<MidiTrack> tracks) {
         return tracks.stream()
