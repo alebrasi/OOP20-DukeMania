@@ -8,14 +8,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerAudio {
-
-    private interface NoteIterator<Note> {
-        Note current();
-        boolean hasNext();
-        void increment();
-        int getChannel();
-    }
+public class PlayerAudio implements Player {
 
     private final Engine audioEngine = new Engine();
     private final List<NoteIterator<AbstractNote>> tracks = new ArrayList<>();
@@ -57,17 +50,17 @@ public class PlayerAudio {
     }
 
     /**
-     * Tells if the song has finished to play.
-     * @return true if the song has ended, false otherwise
+     * {@inheritDoc}
      */
+    @Override
     public boolean hasSongEnded() {
         return tracks.stream().noneMatch(NoteIterator::hasNext);
     }
 
     /**
-     * Checks and plays all the notes whose startTime is inferios than the total milliseconds that have passed from the total elapsed time,
-     * then plays a buffer in the AudioEngine.
+     * {@inheritDoc}
      */
+    @Override
     public void playNotes() {
 
         this.startMillis = this.startMillis == 0 ? Instant.now().toEpochMilli() : this.startMillis;

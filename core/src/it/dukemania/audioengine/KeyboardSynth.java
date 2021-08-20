@@ -43,7 +43,12 @@ public class KeyboardSynth implements Synth {
      * @param offsets the offsets of the oscilaltors
      * @param freqs a list of pairs, X is the note frequency, Y is the maxium duration for the note (in ms)
      */
-    public KeyboardSynth(final Enveloper env, final WaveTable [] waves, final Function<Long, Float> nlfo, final Function<Long, Float> vlfo, final double [] offsets, final List<Pair<Integer, Long>> freqs) {
+    public KeyboardSynth(final Enveloper env,
+                         final WaveTable [] waves,
+                         final Function<Long, Float> nlfo,
+                         final Function<Long, Float> vlfo,
+                         final double [] offsets,
+                         final List<Pair<Integer, Long>> freqs) {
         freqs.forEach(x -> {
             final int numA4 = 69;
             final int numNote = 12;

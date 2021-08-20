@@ -7,7 +7,6 @@ import it.dukemania.midi.TrackImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Engine {
 
@@ -36,16 +35,13 @@ public class Engine {
         int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
         if (old > 0 && old != num) {
             att = 100;
-            step = ((calc(num)) - vol) / att;
+            step = ((regulateVolume(num)) - vol) / att;
         } else {
-            vol = calc(num);
+            vol = regulateVolume(num);
         }
 
         for (int i = 0; i < Settings.BUFFER_LENGHT; i++) {
-            if (att != 0) {
-                vol += step;
-                att--;
-            }
+            vol += --att > 0 ? step : 0;
             buffer[i] = (float) (synthetizers.stream().mapToDouble(Synth::getSample).sum()) * vol;
         }
 
@@ -67,16 +63,12 @@ public class Engine {
      */
     public void addSynth(final MidiTrack track) {
         SynthBuilderImpl b = new SynthBuilderImpl();
-        b.setEnveloper(new Enveloper(10l, 1f, 100l));
-        b.setWavetables(new WaveTable[]{WaveTable.Sine});
+        b.setEnveloper(new Enveloper(10l, 1.2f, 100l));
+        b.setWavetables(new WaveTable[]{WaveTable.Triangle});
         b.setOffsets(new double[]{1f});
 
         List<Pair<Integer, Long>> notes = new ArrayList<>();
         var actualTrack = (TrackImpl) track;
-
-        final int NUM_A4 = 69;
-        final int NUM_NOTE = 12;
-        final double FREQ_A4 = 440;
 
         actualTrack.getNotesMaxDuration().forEach((key, value) -> {
             notes.add(new Pair<>(key, (value / 1000)));
@@ -94,7 +86,7 @@ public class Engine {
      * @param n the number of notes that are currently playing
      * @return the volume multiplier
      */
-    public float calc(final int n) {
+    public float regulateVolume(final int n) {
         switch (n) {
             case 1: return 0.3f;
             case 2: return 0.25f;
