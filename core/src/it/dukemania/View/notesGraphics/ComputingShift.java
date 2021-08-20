@@ -11,4 +11,6 @@ public interface ComputingShift {
     int getScoreboardHeight();
 
     float getFontAccuracy();
+
+    int getHorizontalSparkShift();
 }

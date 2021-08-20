@@ -13,11 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 
 
 public class NoteImpl implements Note {
-    private int posxNote; //note's position
+    private final int posxNote; //note's position
     private int posyNote;
-    private int xNote;
-    private int yNote; //texture's dimension
-    private Double speedNote;
+    private static final int XNOTE = 50;
+    private final int yNote; //texture's dimension
+    private static final Double NOTE_SPEED = 200.0;
     private Columns column;
     private int posyBlue;
     private static final int FINISH_LINE = 108;
@@ -27,22 +27,20 @@ public class NoteImpl implements Note {
     private long startNote;
     private long duration;
     private Size dimensions = new SizeImpl();
-    private ComputingShift shift = new ComputingShiftImpl();
+    private final ComputingShift shift = new ComputingShiftImpl();
     private long timeOfFall;
     private boolean isPressed = false;
-    //private ShapeRenderer renderer = new ShapeRenderer();
+
 	
 	
 	public NoteImpl(final int heightpos, final Columns letter, final int posyBlue, final int height, final long startNote, final long duration, final int numberOfColumns) {
-		this.xNote = 50;
 		this.yNote = height;
 		this.column = letter;
 		this.posxNote = (letter.getNumericvalue() - 1) * this.dimensions.getSize().getX() / numberOfColumns 
 		        + this.shift.calculateShifting(numberOfColumns) * letter.getNumericvalue() + this.shift.getNoteShift();
 		this.posyNote = heightpos;
-		this.speedNote = 200.0;
 		this.posyBlue = posyBlue;
-		this.posxSparks = this.posxNote - 25;
+		this.posxSparks = this.posxNote - this.shift.getHorizontalSparkShift();
 		this.xSparks = 100;
 		this.ySparks = 70;
 		this.startNote = startNote;
@@ -52,9 +50,9 @@ public class NoteImpl implements Note {
 
 	@Override
 	public void updateNote(final float deltaTime) {
-	    this.posyNote -= this.speedNote * deltaTime;
+	    this.posyNote -= NoteImpl.NOTE_SPEED * deltaTime;
 
-	    if (this.posyNote == this.FINISH_LINE) {
+	    if (this.posyNote == NoteImpl.FINISH_LINE) {
 	        this.timeOfFall = Instant.now().toEpochMilli() - this.startNote;
 	    }
 
@@ -101,7 +99,7 @@ public class NoteImpl implements Note {
     @Override
     public void setIsPressed(final boolean isPressed) {
         this.isPressed = isPressed;
-        
+
     }
 
     @Override
@@ -126,7 +124,7 @@ public class NoteImpl implements Note {
 
     @Override
     public int getxNote() {
-        return this.xNote;
+        return NoteImpl.XNOTE;
     }
 
 
