@@ -22,6 +22,7 @@ public class SongLeaderBoard {
 
     public void setUserScore(final String playerName, final Integer score) {
         usersScore.computeIfPresent(playerName, (p, s) -> s < score ? score : s);
+        usersScore.computeIfAbsent(playerName, s -> score);
     }
 
     public Map<String, Integer> getUsersScore() {
