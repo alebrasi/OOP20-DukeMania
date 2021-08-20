@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import it.dukemania.View.notesGraphics.Columns;
+
 import it.dukemania.View.notesGraphics.ComputingShift;
 import it.dukemania.View.notesGraphics.ComputingShiftImpl;
 import it.dukemania.View.notesGraphics.EventsFromKeyboard;
@@ -37,7 +37,6 @@ import it.dukemania.View.notesGraphics.KeyImpl;
 import it.dukemania.View.notesGraphics.Note;
 import it.dukemania.View.notesGraphics.NoteImpl;
 import it.dukemania.View.notesGraphics.NoteLogic;
-import it.dukemania.View.notesGraphics.NoteLogicImpl;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
 import it.dukemania.audioengine.PlayerAudio;
@@ -80,10 +79,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private long startTime = 0;
     private EventsFromKeyboard keyboard;
     private Key key;
-    private ComputingShift shift = new ComputingShiftImpl();
+    private final ComputingShift shift = new ComputingShiftImpl();
     private final OrthographicCamera camera = new OrthographicCamera();
-    private Viewport buttonsViewport;
-    private Viewport stageViewport;
     private final int numberOfColumns;
     private float deltaTime = 0;
     private int buttonHeight;
@@ -121,12 +118,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	    this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	    this.batch = new SpriteBatch();
 	    this.backgroundBatch = new SpriteBatch();
-	    this.buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
-	    this.stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
+	    final Viewport buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
+	    final Viewport stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
 	    //ae = new Engine();
 
-	    this.buttonsStage = new Stage(this.buttonsViewport, this.batch);
-	    this.stage = new Stage(this.stageViewport, this.backgroundBatch);
+	    this.buttonsStage = new Stage(buttonsViewport, this.batch);
+	    this.stage = new Stage(stageViewport, this.backgroundBatch);
         Gdx.input.setInputProcessor(buttonsStage);
 /*
         this.note6uno = new NoteLogicImpl(1, 200, 1, Columns.COLUMN1, 200);
@@ -269,7 +266,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 		}
 
         final long actualTime = Instant.now().toEpochMilli() - this.startTime;
-        List<Note> notesPlaying = getPlayingNotes(actualTime);
+        final List<Note> notesPlaying = getPlayingNotes(actualTime);
 
         //drawing of each note
         if (!notesPlaying.isEmpty()) {
@@ -318,7 +315,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             notesPlaying.removeAll(notFinished(notesPlaying, actualTime));
             }
         player.playNotes();
-        if (song.getDuration()/1000 < (Instant.now().toEpochMilli() - startTime)) {
+        if (song.getDuration() / 1000 < (Instant.now().toEpochMilli() - startTime)) {
             switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, new Object[] {songHash, "Pluto", 69});
         }
 
