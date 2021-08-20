@@ -142,7 +142,11 @@ public class SongSelectionWindow extends AbstractView {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
                 controller.setPlayTrack(playableTracks.getCheckedIndex());
-                controller.playSong(switchWindowNotifier);
+                try {
+                    controller.playSong(switchWindowNotifier);
+                } catch (InvalidMidiDataException | IOException e) {
+                    e.printStackTrace();
+                }
                 //switchWindowNotifier.switchWindow(DukeManiaWindowState.PLAY);
             }
         });
