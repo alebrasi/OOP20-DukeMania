@@ -25,13 +25,14 @@ public abstract class AbstractView implements Window {
     protected Image backgroundImage;
     protected Object data;
 
-    private final Texture backgroundTexture;
+    private Texture backgroundTexture;
     private static final int VIEWPORT_WIDTH = 2560;
     private static final int VIEWPORT_HEIGHT = 1440;
+    private final String backgroundPath;
 
     public AbstractView(final String backgroundPath, final Skin skin) {
-        backgroundTexture = new Texture(backgroundPath);
         this.skin = skin;
+        this.backgroundPath = backgroundPath;
     }
 
     private void setupStages() {
@@ -50,6 +51,7 @@ public abstract class AbstractView implements Window {
 
     @Override
     public void create() {
+        backgroundTexture = new Texture(backgroundPath);
         setupCamera();
         setupStages();
         backgroundStage.addActor(backgroundImage);

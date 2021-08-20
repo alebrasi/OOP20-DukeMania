@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import it.dukemania.Controller.leaderboard.LeaderboardController;
 import it.dukemania.Controller.leaderboard.LeaderboardControllerImpl;
 import it.dukemania.View.AbstractView;
+import it.dukemania.windowmanager.DukeManiaWindowState;
 
 import java.util.Locale;
 
@@ -30,6 +31,7 @@ public class LeaderboardWindow extends AbstractView {
         Table table = new Table(skin);
         Table tblLeaderboard = new Table(skin);
         TextButton btnQuit = new TextButton("QUIT", skin);
+        TextButton btnPlayAgain = new TextButton("Play another song", skin);
 
         controller.getLeaderboard((String) d[1], (Integer) d[2], (String) d[0]).forEach(t -> {
             table.add(new Label(t.getX(), skin)).uniformX();
@@ -38,6 +40,14 @@ public class LeaderboardWindow extends AbstractView {
         });
 
         table.add(btnQuit);
+        table.add(btnPlayAgain);
+
+        btnPlayAgain.addListener(new ClickListener() {
+            @Override
+            public void clicked(final InputEvent event, final float x, final float y) {
+                switchWindowNotifier.switchWindow(DukeManiaWindowState.SONG_SELECTION, null);
+            }
+        });
 
         btnQuit.addListener(new ClickListener() {
             @Override

@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 /*
 TODO:
-    - Load song configs and save..
     - Load synthesizers presets
     - Check what to do for the digest try catch
  */
@@ -44,7 +43,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     private final TrackFilter trackFilter = new TrackFilterImpl();
 
     private static final int PERCUSSION_CHANNEL = 10;
-    private int selectedTrackChannel = 0;
+    private int selectedTrackChannel = 1;
 
     private final ConfigurationsModelImpl configurationModel = new ConfigurationsModelImpl(configurationStorage);
 
@@ -58,7 +57,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void openSong(final String path) throws InvalidMidiDataException, IOException {
-        selectedTrackChannel = 0;
+        selectedTrackChannel = 1;
         byte[] fileBytes = externalStorage.readFileAsByte(path);
         String hashedFile = getHashString(fileBytes);
 
@@ -95,9 +94,12 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                                         DifficultyLevel difficulty = DifficultyLevel.UNKNOWN;
 
                                         if (t.getClass().equals(TrackImpl.class)) {
-                                            instrument = (InstrumentType) ((TrackImpl) t).getInstrument();
-                                            trackName = ((TrackImpl) t).getInstrument().toString();
-                                            difficulty = difficulties.get(t.getChannel());
+                                            TrackImpl tmp = (TrackImpl) t;
+                                            Enum<InstrumentType> tmpIns = tmp.getInstrument();
+                                            instrument = tmpIns == null ? InstrumentType.ACOUSTIC_GRAND_PIANO
+                                                                            : (InstrumentType) tmpIns;
+                                            trackName = instrument.toString();
+                                            difficulty = difficulties.get(tmp.getChannel());
                                         }
                                         return new TrackInfo(t.getChannel(),
                                                             trackName,
@@ -125,7 +127,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void setPlayTrack(final int trackNumber) {
-        selectedTrackChannel = trackNumber + 1;
+        selectedTrackChannel = trackNumber;
         System.out.println(trackNumber);
     }
 

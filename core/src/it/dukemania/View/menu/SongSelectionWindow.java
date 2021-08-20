@@ -141,7 +141,7 @@ public class SongSelectionWindow extends AbstractView {
         btnPlayTrack.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                controller.setPlayTrack(playableTracks.getCheckedIndex());
+                controller.setPlayTrack(Integer.parseInt(playableTracks.getChecked().getText().toString()));
                 try {
                     controller.playSong(switchWindowNotifier);
                 } catch (InvalidMidiDataException | IOException e) {
@@ -172,10 +172,13 @@ public class SongSelectionWindow extends AbstractView {
 
         //Sets the layout of the song table configuration
         tblConfigSong.add(btnSongSelect);
-        tblConfigSong.add(lblFileName).expand().fillX();
+        tblConfigSong.add(lblFileName).colspan(4);
         tblConfigSong.row();
+        /*
         tblConfigSong.add(lblSongName).expand().fillX().colspan(4).padBottom(TABLE_PADDING);
         tblConfigSong.row();
+
+         */
         tblConfigSong.add(lblBPM).expand().fillX().colspan(4);
         tblConfigSong.row();
         tblConfigSong.add(lblConfig).colspan(4).expand().center().padBottom(TABLE_PADDING);

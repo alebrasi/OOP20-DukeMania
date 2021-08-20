@@ -12,7 +12,7 @@ public class StorageFactoryImpl implements StorageFactory {
 
     private static final String CONFIG_FOLDER_NAME = ".dukemania";
     private static final String USER_HOME_PATH = System.getProperty("user.home");
-    private static final String FILE_SEPARATOR = "/";
+    private static final String FILE_SEPARATOR = File.separator;
     private static final String CONFIGS_PATH = USER_HOME_PATH + FILE_SEPARATOR + CONFIG_FOLDER_NAME;
 
     private final Function<String, File> configurationMappingFunction = (path) -> new File(CONFIGS_PATH + FILE_SEPARATOR + path);
@@ -49,7 +49,7 @@ public class StorageFactoryImpl implements StorageFactory {
 
         @Override
         public void writeStringOnFile(final String filePath, final String content) throws IOException {
-            Files.writeString(fileMapping.apply(filePath).toPath(), content);
+            Files.write(fileMapping.apply(filePath).toPath(), content.getBytes());
         }
 
         @Override
@@ -74,8 +74,9 @@ public class StorageFactoryImpl implements StorageFactory {
 
         @Override
         public boolean createFileIfNotExists(final String path) {
-            String[] dirs = path.split(FILE_SEPARATOR);
-            String tmpPath = Arrays.stream(dirs).limit(dirs.length - 1).collect(Collectors.joining(FILE_SEPARATOR));
+            String tmpSeparator = FILE_SEPARATOR.equals("/") ? FILE_SEPARATOR : FILE_SEPARATOR + FILE_SEPARATOR;
+            String[] dirs = path.split(tmpSeparator);
+            String tmpPath = Arrays.stream(dirs).limit(dirs.length - 1).collect(Collectors.joining(tmpSeparator));
             createDirectoryRecursively(tmpPath);
             try {
                 return fileMapping.apply(path).createNewFile();
