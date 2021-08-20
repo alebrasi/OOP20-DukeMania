@@ -50,7 +50,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
     //sofi
     //private Logic logic = new LogicImpl();         //rapo
-    private final Size dimensions;
+    private Size dimensions = new SizeImpl();
     private Stage buttonsStage;
     private Stage stage;
     private TextureAtlas atlas;
@@ -101,7 +101,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private SwitchWindowNotifier switchWindowNotifier;
 
         public PlayScreen() { 
-            this.dimensions = new SizeImpl();
             this.numberOfColumns = this.dimensions.getNumberOfColumns();
             this.buttonHeight = PlayScreen.BUTTON_DIM;
             this.posySpark = this.buttonHeight - this.shift.getNoteShift(); 
@@ -113,6 +112,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 	@Override
 	public void create() {
+	    //this.dimensions = new SizeImpl();
 	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png")); 
 	    this.backgroundImage = new Image(this.background);
 	    this.textureNote = new Texture(Gdx.files.internal("Textures/blueNote.png"));
@@ -180,6 +180,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
         //adding elements on the stage
         this.stage.addActor(backgroundImage);
+        Gdx.graphics.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
 
 	}
 	
@@ -240,12 +241,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 	@Override
 	public void render() {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//ae.playBuffer();
 		//set the start time
 		if (this.startTime == 0) {
 		    this.startTime = Instant.now().toEpochMilli();
 		}
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		this.stage.draw();
 		this.backgroundBatch.begin();
 		this.buttonsStage.draw();

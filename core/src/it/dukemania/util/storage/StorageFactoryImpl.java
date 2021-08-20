@@ -12,7 +12,7 @@ public class StorageFactoryImpl implements StorageFactory {
 
     private static final String CONFIG_FOLDER_NAME = ".dukemania";
     private static final String USER_HOME_PATH = System.getProperty("user.home");
-    private static final String FILE_SEPARATOR = File.separator;
+    private static final String FILE_SEPARATOR = "/";
     private static final String CONFIGS_PATH = USER_HOME_PATH + FILE_SEPARATOR + CONFIG_FOLDER_NAME;
 
     private final Function<String, File> configurationMappingFunction = (path) -> new File(CONFIGS_PATH + FILE_SEPARATOR + path);

@@ -13,5 +13,6 @@ public class DesktopLauncher {
     public static void main(final String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         new Lwjgl3Application(new DukeManiaTest(), config);
+
     }
 }
