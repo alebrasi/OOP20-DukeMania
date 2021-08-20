@@ -40,8 +40,10 @@ import it.dukemania.View.notesGraphics.NoteLogic;
 import it.dukemania.View.notesGraphics.NoteLogicImpl;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
+import it.dukemania.audioengine.PlayerAudio;
 import it.dukemania.midi.MidiTrack;
 import it.dukemania.midi.Song;
+import it.dukemania.windowmanager.DukeManiaWindowState;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
 import it.dukemania.windowmanager.Window;
 
@@ -92,6 +94,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private static final int BUTTON_DIM = 120;
     private static final int YNOTE = 80;
     private static final int FONT_SIZE = 40;
+    private PlayerAudio player;
+    private String songHash;
 
     private SwitchWindowNotifier switchWindowNotifier;
 
@@ -108,6 +112,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	@Override
 	public void create() {
 	    //this.dimensions = new SizeImpl();
+        player = new PlayerAudio(song);
 	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
 	    final Image backgroundImage = new Image(this.background);
 	    this.textureNote = new Texture(Gdx.files.internal("Textures/blueNote.png"));
@@ -123,7 +128,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	    this.buttonsStage = new Stage(this.buttonsViewport, this.batch);
 	    this.stage = new Stage(this.stageViewport, this.backgroundBatch);
         Gdx.input.setInputProcessor(buttonsStage);
-
+/*
         this.note6uno = new NoteLogicImpl(1, 200, 1, Columns.COLUMN1, 200);
         this.note7uno = new NoteLogicImpl(2, 600, 2, Columns.COLUMN2, 200);
         this.note8uno = new NoteLogicImpl(3, 1000, 3, Columns.COLUMN3, 200);
@@ -135,6 +140,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         this.logicNotes.add(note8uno);
         this.logicNotes.add(note9uno); 
         this.logicNotes.add(note10uno);
+
+ */
 
         final BitmapFont font = new BitmapFont();
         final Skin skin = new Skin();
@@ -310,6 +317,10 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             //removal of notes that are terminated
             notesPlaying.removeAll(notFinished(notesPlaying, actualTime));
             }
+        player.playNotes();
+        if (song.getDuration()/1000 < (Instant.now().toEpochMilli() - startTime)) {
+            switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, new Object[] {songHash, "Pluto", 69});
+        }
 
         this.batch.end();
         this.backgroundBatch.end();
@@ -332,6 +343,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         final Object[] receivedData = (Object[]) data;
         this.song = (Song) receivedData[0];
         this.selectedTrack = (MidiTrack) receivedData[1];
+        this.songHash = (String) receivedData[2];
     }
 
     @Override
