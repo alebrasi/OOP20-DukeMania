@@ -61,7 +61,7 @@ public class DukeManiaTest extends ApplicationAdapter {
         Window titleScreen = new TitleWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
         Window optionScreen = new OptionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
         Window leaderBoardScreen = new LeaderboardWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
-        //Window playScreen = new PlayScreen();
+        Window playScreen = new PlayScreen();
         try {
             songSelectionScreen = new SongSelectionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
         } catch (NoSuchAlgorithmException e) {
@@ -75,12 +75,12 @@ public class DukeManiaTest extends ApplicationAdapter {
         wdm.addWindow(optionScreen, DukeManiaWindowState.OPTIONS);
         wdm.addWindow(songSelectionScreen, DukeManiaWindowState.SONG_SELECTION);
         wdm.addWindow(leaderBoardScreen, DukeManiaWindowState.LEADERBOARD);
-        //wdm.addWindow(playScreen, DukeManiaWindowState.PLAY);
+        wdm.addWindow(playScreen, DukeManiaWindowState.PLAY);
         wdm.switchWindow(DukeManiaWindowState.TITLE, null);
         titleScreen.setWindowListener(wdm);
         optionScreen.setWindowListener(wdm);
         songSelectionScreen.setWindowListener(wdm);
-        //playScreen.setWindowListener(wdm);
+        playScreen.setWindowListener(wdm);
         leaderBoardScreen.setWindowListener(wdm);
     }
 
