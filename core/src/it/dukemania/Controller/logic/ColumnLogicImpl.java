@@ -28,7 +28,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     private int combo;
 
     public ColumnLogicImpl(final int columnNumber) {
-        this.columnNumber = columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP
+        this.columnNumber = (columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP)
                         ? columnNumber : COLUMN_MIN_CAP;
         combo = 0;
     }
@@ -93,8 +93,8 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     @Override
-    public final List<LogicNoteImpl> noteQueuing(final MidiTrack track) {
-
+    public final List<LogicNote> noteQueuing(final MidiTrack track) {
+          
         //dice quante note ci sono per identifier
         //List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
         //                .collect(Collectors.groupingBy(AbstractNote::getIdentifier, Collectors.counting())).entrySet());
@@ -107,7 +107,7 @@ public class ColumnLogicImpl implements ColumnLogic {
                 .map(x -> new Pair<Integer, List<AbstractNote>>(x.getKey(), x.getValue()))
                 .collect(Collectors.toList());
         //finch� non � minore del numero di colonne
-
+        
         while (notesForNoteType.size() > columnNumber) {
             //(dovrebbe) ordinare per numero di note dal minore al maggiore
             notesForNoteType.sort(Comparator.comparingInt(e -> e.getY().size()));
