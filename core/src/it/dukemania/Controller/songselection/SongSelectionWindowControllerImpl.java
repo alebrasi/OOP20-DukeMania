@@ -47,6 +47,8 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     private final ConfigurationsModelImpl configurationModel = new ConfigurationsModelImpl(configurationStorage);
 
+    private String path;
+
     public SongSelectionWindowControllerImpl() throws NoSuchAlgorithmException {
         synthesizersPresets = readSynthPresets();
         songsConfigurations = getSongsConfiguration();
@@ -60,6 +62,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
         //Find the song configuration that matches the digest
         Optional<SongInfo> song = songsConfigurations.stream().filter(s -> s.getSongHash().equals(hashedFile)).findFirst();
+        this.path = path;
         if (song.isPresent()) {
             currentSong = song.get();
             songsConfigurations.remove(currentSong);
@@ -137,7 +140,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void playSong(final SwitchWindowNotifier notifier) {
-        notifier.switchWindow(DukeManiaWindowState.PLAY, "Yooo");
+        notifier.switchWindow(DukeManiaWindowState.PLAY, new Object[]{new File(path), selectedTrackChannel});
     }
 
     @Override
@@ -165,7 +168,8 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         try {
             songs = configurationModel.readSongsConfiguration();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            return new ArrayList<>();
         }
         return songs;
     }

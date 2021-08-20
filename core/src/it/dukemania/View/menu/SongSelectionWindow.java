@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class SongSelectionWindow extends AbstractView {
 
-    private final SongSelectionWindowController controller = new SongSelectionWindowControllerImpl();;
+    private final SongSelectionWindowController controller = new SongSelectionWindowControllerImpl();
     private static final int FILE_DIALOG_SIZE = 800;
     private static final int TABLE_CONFIGS_OFFSET_Y = -300;
     private static final int TABLE_PADDING = 30;
@@ -67,6 +67,7 @@ public class SongSelectionWindow extends AbstractView {
         scrollTableTracks.setScrollingDisabled(true, false);
 
         FileDialog fd = new FileDialog("Select song", skin);
+        fd.setFilter("\\\\*.mid");
         ButtonGroup<CheckBox> playableTracks = new ButtonGroup<>();
 
         //TODO Fix layout
