@@ -40,8 +40,6 @@ public class TitleWindow extends AbstractView {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
                 if (switchWindowNotifier != null) {
-                    System.out.println("Play");
-
                     switchWindowNotifier.switchWindow(DukeManiaWindowState.SONG_SELECTION, null);
                 }
             }
@@ -49,30 +47,21 @@ public class TitleWindow extends AbstractView {
 
         btnOptions.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Options");
+            public void clicked(final InputEvent event, final float x, final float y) {
+                if(switchWindowNotifier != null) {
+                    switchWindowNotifier.switchWindow(DukeManiaWindowState.OPTIONS, null);
+                }
             }
         });
 
         btnQuit.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Quit");
+            public void clicked(final InputEvent event, final float x, final float y) {
                 Gdx.app.exit();
                 dispose();
                 System.exit(0);
             }
         });
-
-		/*
-		lblStyle.font = skin.getFont("title");
-		lblStyle.fontColor = Color.BLACK;
-
-		Label nameLabel = new Label("", lblStyle);
-		TextField nameText = new TextField("", skin);
-		Label addressLabel = new Label("Address:", skin);
-		TextField addressText = new TextField("", skin);
-		*/
 
         Container<Table> mainMenuContainer = new Container<>();
         Table table = new Table(skin);
