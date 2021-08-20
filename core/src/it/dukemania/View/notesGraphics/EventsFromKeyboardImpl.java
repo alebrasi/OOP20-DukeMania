@@ -10,8 +10,8 @@ import com.badlogic.gdx.Input;
 
 
 public class EventsFromKeyboardImpl implements EventsFromKeyboard {
-    private Note note;
-    private List<Integer> keys = Arrays.asList(Input.Keys.D, Input.Keys.F, Input.Keys.J, 
+    private final Note note;
+    private final List<Integer> keys = Arrays.asList(Input.Keys.D, Input.Keys.F, Input.Keys.J, 
             Input.Keys.K, Input.Keys.S, Input.Keys.L, Input.Keys.A, Input.Keys.P);
 
 

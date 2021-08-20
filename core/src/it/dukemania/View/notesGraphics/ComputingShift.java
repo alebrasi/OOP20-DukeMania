@@ -13,4 +13,6 @@ public interface ComputingShift {
     float getFontAccuracy();
 
     int getHorizontalSparkShift();
+
+    int getySpark();
 }

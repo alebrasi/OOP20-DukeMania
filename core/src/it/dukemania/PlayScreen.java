@@ -58,7 +58,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private final GlyphLayout layout = new GlyphLayout(); 
     private BitmapFont fontScoreboard;
     private FreeTypeFontGenerator generator;
-    private String text;
     private TextButtonStyle styleDown;
     private TextButtonStyle styleUp;
     private Texture background;
@@ -68,7 +67,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private SpriteBatch batch;
     private SpriteBatch backgroundBatch;
     private final int posySpark;
-    private final int finishLine;
     private int score = 0;
     private long startTime = 0;
     private EventsFromKeyboard keyboard;
@@ -93,8 +91,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         public PlayScreen() { 
             this.numberOfColumns = this.dimensions.getNumberOfColumns();
             this.posySpark = PlayScreen.BUTTON_DIM - this.shift.getNoteShift(); 
-            this.finishLine = PlayScreen.BUTTON_DIM;
-            //notes = logic.getnotes();      //rapo
+
     }
 	
 
@@ -181,7 +178,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	
 	//this method associates the logical note to the corresponding graphic note
 	private Note associationNote(final LogicNote noteLogic) {
-            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), this.finishLine, 
+            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), 
                     noteLogic.getHeight() * PlayScreen.YNOTE, noteLogic.getNoteStarts(), noteLogic.getNoteDuration(), this.numberOfColumns);
         }
 	
@@ -229,7 +226,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	}
 	
 	private void isSparked(final Note n) {
-	    if (n.getPosyNote() <= this.finishLine && n.getPosyNote() >= this.finishLine - this.shift.getSparksHeight()) {
+	    if (n.getPosyNote() <= PlayScreen.BUTTON_DIM && n.getPosyNote() >= PlayScreen.BUTTON_DIM - this.shift.getSparksHeight()) {
             this.batch.draw(this.textureSparks, n.getPosxSpark(), this.posySpark, n.getxSpark(), n.getySpark(), 0, 1, 1, 0);
         }
 	}
@@ -270,7 +267,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                 this.deltaTime = Gdx.graphics.getDeltaTime();
                 n.updateNote(this.deltaTime);
                 this.keyboard = new EventsFromKeyboardImpl(n);
-                this.key = new KeyImpl(n, actualTime);
+                this.key = new KeyImpl(n);
 
 
                 //set the sparks
@@ -278,10 +275,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                     isSparked(n);
                 }
 
-                
-                
-                
-                
+
                 //it returns the time when the user starts to press a key
                 if (this.keyboard.isColumnSelected(this.numberOfColumns) && !n.isPressed()) { 
                     n.setIsPressed(true);
@@ -301,12 +295,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                     System.out.println("nota " + n.getColumn().name() + "tempo di caduta " + n.getTimeOfFall());
                 }
 
-                
-                
-                
-                
-                
-                
+
                 //change the style of the buttons if they are clicked
                 for (int i = 0; i < this.numberOfColumns; i++) {
                     if (!this.keyboard.isButtonPressed(i + 1, this.numberOfColumns)) {

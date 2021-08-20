@@ -12,17 +12,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 
 public final class AssetManager {
-    private static AssetManager instance = null;
-    private String value;
-    private static boolean areLoaded = false;
+    private static AssetManager instance;
+    //private String value;
+    private static boolean areLoaded;
 
-    private AssetManager(final String value) {
-        this.value = value;
+    private AssetManager() {
+        //this.value = value;
     }
 
-    public static AssetManager getInstance(final String value) {
+    public static AssetManager getInstance() {
         if (instance == null) {
-            instance = new AssetManager(value);
+            instance = new AssetManager();
         }
         return instance;
     }

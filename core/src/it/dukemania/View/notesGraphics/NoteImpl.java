@@ -20,31 +20,29 @@ public class NoteImpl implements Note {
     private static final int XNOTE = 50;
     private final int yNote; //texture's dimension
     private static final Double NOTE_SPEED = 200.0;
-    private Columns column;
-    private int finishLine;
+    private final Columns column;
     private static final int FINISH_LINE = 108;
-    private int posxSparks;
-    private int xSparks;
-    private int ySparks;
-    private long startNote;
-    private long duration;
-    private Size dimensions = new SizeImpl();
+    private final int posxSparks;
+    private final int xSparks;
+    private final int ySparks;
+    private final long startNote;
+    private final long duration;
+    private final Size dimensions = new SizeImpl();
     private final ComputingShift shift = new ComputingShiftImpl();
     private long timeOfFall;
-    private boolean isPressed = false;
+    private boolean isPressed;
 
 	
 	
-	public NoteImpl(final int heightpos, final Columns letter, final int finishLine, final int height, final long startNote, final long duration, final int numberOfColumns) {
+	public NoteImpl(final int heightpos, final Columns letter, final int height, final long startNote, final long duration, final int numberOfColumns) {
 		this.yNote = height;
 		this.column = letter;
 		this.posxNote = (letter.getNumericValue() - 1) * this.dimensions.getSize().getX() / numberOfColumns 
 		        + this.shift.calculateShifting(numberOfColumns) * letter.getNumericValue() + this.shift.getNoteShift();
 		this.posyNote = heightpos;
-		this.finishLine = finishLine;
 		this.posxSparks = this.posxNote - this.shift.getHorizontalSparkShift();
 		this.xSparks = 100;
-		this.ySparks = 70;
+		this.ySparks = this.shift.getSparksHeight();
 		this.startNote = startNote;
 		this.duration = duration;
 		this.timeOfFall = 0;
