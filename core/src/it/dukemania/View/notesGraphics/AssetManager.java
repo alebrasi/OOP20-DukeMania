@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public final class AssetManager {
     private static AssetManager instance = null;
     private String value;
+    private static boolean areLoaded = false;
 
     private AssetManager(final String value) {
         this.value = value;
@@ -97,9 +98,12 @@ public final class AssetManager {
     }
 
     public static void loadAll() {
-        TextureFiles.load();
-        SkinFiles.load();
-        FontFiles.load();
+        if (!areLoaded) {
+            TextureFiles.load();
+            SkinFiles.load();
+            FontFiles.load();
+            areLoaded = true;
+        }
     }
 
 }

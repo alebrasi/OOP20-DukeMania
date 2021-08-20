@@ -5,9 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface Note {
 	
-	void drawNote();
-	
-	void isSparked(Columns type, SpriteBatch batch);
+	void updateNote(float deltaTime);
 	
 	long getStartTime();
 	
@@ -18,6 +16,18 @@ public interface Note {
 	Columns getColumn();
 	
 	int getPosyNote();
+	
+	int getPosxNote();
+	
+	int getyNote();
+	
+	int getxNote();
+	
+	int getPosxSpark();
+	
+	int getxSpark();
+	
+	int getySpark();
 	
 	boolean isPressed();
 	
