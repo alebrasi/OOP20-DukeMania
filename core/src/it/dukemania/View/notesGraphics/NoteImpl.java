@@ -20,7 +20,7 @@ public class NoteImpl implements Note {
     private Double speedNote;
     private Columns column;
     private int posyBlue;
-    private static int FINISH_LINE = 108;
+    private static final int FINISH_LINE = 108;
     private int posxSparks;
     private int xSparks;
     private int ySparks;

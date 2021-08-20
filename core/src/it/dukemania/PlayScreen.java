@@ -45,19 +45,17 @@ import it.dukemania.View.notesGraphics.SizeImpl;
 
 public class PlayScreen extends ApplicationAdapter {
     //Engine ae = null;
-    //cambiare la texture della scoreboard e il testo
 
     //sofi
     //private Logic logic = new LogicImpl();         //rapo
     private final Size dimensions;
-    private Pair<Integer, Integer> scoreboardSize;
     private Stage buttonsStage;
     private Stage stage;
     private TextureAtlas atlas;
     private Skin skin;
+    private GlyphLayout layout = new GlyphLayout(); 
     private BitmapFont font;
     private BitmapFont fontScoreboard;
-    private GlyphLayout layout = new GlyphLayout(); 
     private float fontWidth;
     private float fontHeight;
     private FreeTypeFontGenerator generator;
@@ -70,13 +68,10 @@ public class PlayScreen extends ApplicationAdapter {
     private Texture textureNote;
     private Texture textureSparks;
     private Image backgroundImage;
-    private int buttonHeight;
     private SpriteBatch batch;
     private SpriteBatch backgroundBatch;
-    private int xNote;
-    private int yNote;
-    private int posySparks;
-    private int posyBlue;
+    private int posySpark;
+    private int finishLine;
     private NoteLogic note6uno; //nell'attesa dell'array di rapo
     private NoteLogic note7uno;
     private NoteLogic note8uno;
@@ -89,22 +84,24 @@ public class PlayScreen extends ApplicationAdapter {
     private EventsFromKeyboard keyboard;
     private Key key;
     private ComputingShift shift = new ComputingShiftImpl();
-    private OrthographicCamera camera = new OrthographicCamera();
+    private final OrthographicCamera camera = new OrthographicCamera();
     private Viewport buttonsViewport;
     private Viewport stageViewport;
     private final int numberOfColumns;
     private float deltaTime = 0;
-    private List<TextButton> buttons = new ArrayList<>();
-    private static final int BUTTONDIM = 120;
+    private int buttonHeight;
+    private final List<TextButton> buttons = new ArrayList<>();
+    //constant
+    private static final int BUTTON_DIM = 120;
+    private static final int YNOTE = 80;
+    private static final int FONT_SIZE = 40;
 
         public PlayScreen() { 
-            this.xNote = 50;
-            this.yNote = 80;
             this.dimensions = new SizeImpl();
             this.numberOfColumns = this.dimensions.getNumberOfColumns();
-            this.buttonHeight = this.BUTTONDIM;
-            this.posySparks = this.buttonHeight - 35; //15
-            this.posyBlue = this.buttonHeight;   //20
+            this.buttonHeight = PlayScreen.BUTTON_DIM;
+            this.posySpark = this.buttonHeight - this.shift.getNoteShift(); 
+            this.finishLine = this.buttonHeight;
             //notes = logic.getnotes();      //rapo
     }
 	
@@ -121,7 +118,7 @@ public class PlayScreen extends ApplicationAdapter {
 	    this.batch = new SpriteBatch();
 	    this.backgroundBatch = new SpriteBatch();
 	    this.buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
-	    this.stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera); //backgroundimage.width
+	    this.stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
 	    //ae = new Engine();
 
 	    this.buttonsStage = new Stage(this.buttonsViewport, this.batch);
@@ -148,7 +145,7 @@ public class PlayScreen extends ApplicationAdapter {
 
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
         this.parameter = new FreeTypeFontParameter();
-        this.parameter.size = 40;
+        this.parameter.size = PlayScreen.FONT_SIZE;
         this.parameter.color = Color.WHITE;
         this.parameter.shadowColor = Color.BLACK;
         this.parameter.shadowOffsetX = 2;
@@ -168,10 +165,8 @@ public class PlayScreen extends ApplicationAdapter {
         //placement of the buttons 
         for (int i = 0; i < this.numberOfColumns; i++) {
             this.buttons.add(new TextButton("", this.styleUp));
-            this.buttons.get(i).setSize(this.BUTTONDIM, this.BUTTONDIM);  //set the size of the buttons
+            this.buttons.get(i).setSize(PlayScreen.BUTTON_DIM, PlayScreen.BUTTON_DIM);  //set the size of the buttons
             this.buttons.get(i).setPosition(i * this.dimensions.getSize().getX() / this.numberOfColumns + this.shift.calculateShifting(this.numberOfColumns) * i, 0);  //set the position of each button
-            //this.buttons.get(i).setTransform(true);
-            //this.buttons.get(i).setScale(0.6f);
             this.buttonsStage.addActor(this.buttons.get(i));
         }
 
@@ -187,7 +182,8 @@ public class PlayScreen extends ApplicationAdapter {
 	
 	//this method associates the logical note to the corresponding graphic note
 	private Note associationNote(final NoteLogic noteLogic) {
-            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), posyBlue, noteLogic.getHeight() * this.yNote, noteLogic.getTimeStart(), noteLogic.getDuration(), this.numberOfColumns);
+            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), this.finishLine, 
+                    noteLogic.getHeight() * PlayScreen.YNOTE, noteLogic.getTimeStart(), noteLogic.getDuration(), this.numberOfColumns);
         }
 	
 	//this method returns the notes that are playing right now
@@ -233,8 +229,8 @@ public class PlayScreen extends ApplicationAdapter {
 	}
 	
 	private void isSparked(final Note n) {
-	    if (n.getPosyNote() <= this.posyBlue && n.getPosyNote() >= this.posyBlue - 40) {
-            this.batch.draw(this.textureSparks, n.getPosxSpark(), this.posySparks, n.getxSpark(), n.getySpark(), 0, 1, 1, 0);
+	    if (n.getPosyNote() <= this.finishLine && n.getPosyNote() >= this.finishLine - this.shift.getSparksHeight()) {
+            this.batch.draw(this.textureSparks, n.getPosxSpark(), this.posySpark, n.getxSpark(), n.getySpark(), 0, 1, 1, 0);
         }
 	}
 
@@ -252,11 +248,13 @@ public class PlayScreen extends ApplicationAdapter {
 		this.batch.begin();
 
 		//draw the score and the scoreboard
-		layout.setText(fontScoreboard, this.text);
-		this.fontWidth = layout.width;
-		this.fontHeight = layout.height; 
-		this.fontScoreboard.draw(batch, text, this.dimensions.getSize().getX() / 2 - this.fontWidth / 2, this.dimensions.getSize().getY() - this.fontHeight * 0.75f);
-		this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - 80, this.dimensions.getSize().getX(), 80);
+		this.layout.setText(fontScoreboard, this.text);
+		this.fontWidth = this.layout.width;
+		this.fontHeight = this.layout.height; 
+		this.fontScoreboard.draw(batch, text, this.dimensions.getSize().getX() / 2 - this.fontWidth / 2, 
+		        this.dimensions.getSize().getY() - this.fontHeight * this.shift.getFontAccuracy());
+		this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - this.shift.getScoreboardHeight(),
+		        this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
 
 		//set the style of the buttons
 		for (final TextButton b : this.buttons) {
