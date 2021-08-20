@@ -1,9 +1,7 @@
 package it.dukemania.View.notesGraphics;
 
-
-
-
 import java.time.Instant;
+
 
 
 public class KeyImpl implements Key {
@@ -20,7 +18,7 @@ public class KeyImpl implements Key {
         this.time = actualTime;
         this.note = note;
         this.column = this.note.getColumn();
-        this.keyboard = new FromEventToInput(note);
+        this.keyboard = new EventsFromKeyboardImpl(note);
     }
 
 

@@ -2,17 +2,13 @@ package it.dukemania;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-
-
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -22,12 +18,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -38,7 +31,7 @@ import it.dukemania.View.notesGraphics.Columns;
 import it.dukemania.View.notesGraphics.ComputingShift;
 import it.dukemania.View.notesGraphics.ComputingShiftImpl;
 import it.dukemania.View.notesGraphics.EventsFromKeyboard;
-import it.dukemania.View.notesGraphics.FromEventToInput;
+import it.dukemania.View.notesGraphics.EventsFromKeyboardImpl;
 import it.dukemania.View.notesGraphics.Key;
 import it.dukemania.View.notesGraphics.KeyImpl;
 import it.dukemania.View.notesGraphics.Note;
@@ -98,6 +91,7 @@ public class PlayScreen extends ApplicationAdapter {
     private Viewport buttonsViewport;
     private Viewport stageViewport;
     private final int numberOfColumns;
+    private float deltaTime = 0;
     private List<TextButton> buttons = new ArrayList<>();
     private static final int BUTTONDIM = 120;
 
@@ -116,27 +110,25 @@ public class PlayScreen extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-	    this.background = new Texture(Gdx.files.internal("blue shade.png")); 
+	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png")); 
 	    this.backgroundImage = new Image(this.background);
-	    this.scoreboard = new Texture(Gdx.files.internal("transparent scoreboard.png"), true);
+	    this.scoreboard = new Texture(Gdx.files.internal("Textures/scoreboard.png"), true);
 	    this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-	    //this.scoreboardSize = new Pair<>(this.scoreboard.getWidth(), this.scoreboard.getHeight());//edit
 	    this.batch = new SpriteBatch();
 	    this.backgroundBatch = new SpriteBatch();
 	    this.buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
 	    this.stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera); //backgroundimage.width
 	    //ae = new Engine();
 
-	    //sofi
 	    this.buttonsStage = new Stage(this.buttonsViewport, this.batch);
 	    this.stage = new Stage(this.stageViewport, this.backgroundBatch);
         Gdx.input.setInputProcessor(buttonsStage);
-        this.timeStart = Instant.now().toEpochMilli();
-        this.note6uno = new NoteLogicImpl(3, 200, 1, Columns.COLUMN1, 200);
+
+        this.note6uno = new NoteLogicImpl(1, 200, 1, Columns.COLUMN1, 200);
         this.note7uno = new NoteLogicImpl(2, 600, 2, Columns.COLUMN2, 200);
         this.note8uno = new NoteLogicImpl(1, 1000, 3, Columns.COLUMN3, 200);
-        this.note9uno = new NoteLogicImpl(4, 1400, 4, Columns.COLUMN4, 200);
-        this.note10uno = new NoteLogicImpl(5, 1600, 5, Columns.COLUMN2, 200);
+        this.note9uno = new NoteLogicImpl(1, 1400, 4, Columns.COLUMN4, 200);
+        this.note10uno = new NoteLogicImpl(2, 1600, 5, Columns.COLUMN2, 200);
 
         this.logicNotes.add(note6uno);
         this.logicNotes.add(note7uno);
@@ -146,28 +138,28 @@ public class PlayScreen extends ApplicationAdapter {
 
         this.font = new BitmapFont();
         this.skin = new Skin();
-        this.atlas = new TextureAtlas(Gdx.files.internal("pink and blue buttons.atlas"));
+        this.atlas = new TextureAtlas(Gdx.files.internal("pinkAndBlueButtons.atlas"));
         this.skin.addRegions(atlas);
         this.text = "700000";
 
-        this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.ttf"));
+        this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
         this.parameter = new FreeTypeFontParameter();
         this.parameter.size = 40;
         this.parameter.color = Color.WHITE;
         this.parameter.shadowColor = Color.BLACK;
         this.parameter.shadowOffsetX = 2;
         this.fontScoreboard = generator.generateFont(this.parameter);
-        fontScoreboard.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        this.fontScoreboard.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 
         this.styleDown = new TextButtonStyle();
         this.styleDown.font = font;
-        this.styleDown.up = this.skin.getDrawable("button down");
-        this.styleDown.down = this.skin.getDrawable("button up");
+        this.styleDown.up = this.skin.getDrawable("buttonDown");
+        this.styleDown.down = this.skin.getDrawable("buttonUp");
         this.styleUp = new TextButtonStyle();
         this.styleUp.font = font;
-        this.styleUp.up = this.skin.getDrawable("button up");
-        this.styleUp.down = this.skin.getDrawable("button down");
+        this.styleUp.up = this.skin.getDrawable("buttonUp");
+        this.styleUp.down = this.skin.getDrawable("buttonDown");
 
         //placement of the buttons 
         for (int i = 0; i < this.numberOfColumns; i++) {
@@ -217,19 +209,27 @@ public class PlayScreen extends ApplicationAdapter {
             return finished;
 
 	}
+	
+
+//	private void createNote() {
+//	    
+//	}
+	
+	
 
 	@Override
 	public void render() {
-	    //Gdx.gl.glClearColor(.25f, .25f, .25f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//ae.playBuffer();
+		if (this.timeStart == 0) {
+		    this.timeStart = Instant.now().toEpochMilli();
+		}
 		this.stage.draw();
 		this.backgroundBatch.begin();
 		this.buttonsStage.draw();
 		this.batch.begin();
 
 
-		//sofi
 		layout.setText(fontScoreboard, this.text);
 		this.fontWidth = layout.width;
 		this.fontHeight = layout.height; 
@@ -248,12 +248,14 @@ public class PlayScreen extends ApplicationAdapter {
         //drawing of each note
         if (!this.notesPlaying.isEmpty()) {
             for (final Note n : this.notesPlaying) {
-                n.drawNote();
-                this.keyboard = new FromEventToInput(n);
+                this.deltaTime = Gdx.graphics.getDeltaTime();
+                n.updateNote(this.deltaTime);
+                this.keyboard = new EventsFromKeyboardImpl(n);
                 this.key = new KeyImpl(n, actualTime);
 
+
                 //set the sparks
-                if (this.keyboard.isColumnSelected()) {
+                if (this.keyboard.isColumnSelected(this.numberOfColumns)) {
                     n.isSparked(n.getColumn(), this.batch);
                 }
 
@@ -277,7 +279,7 @@ public class PlayScreen extends ApplicationAdapter {
 
                 //change the style of the buttons if they are clicked
                 for (int i = 0; i < this.numberOfColumns; i++) {
-                    if (!this.keyboard.isButtonPressed(i + 1)) {
+                    if (!this.keyboard.isButtonPressed(i + 1, this.numberOfColumns)) {
                         this.buttons.get(i).setStyle(this.styleUp);
                     } else {
                         this.buttons.get(i).setStyle(this.styleDown);

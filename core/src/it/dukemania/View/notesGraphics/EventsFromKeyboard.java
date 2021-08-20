@@ -1,13 +1,15 @@
 package it.dukemania.View.notesGraphics;
 
+import java.util.Optional;
 
 public interface EventsFromKeyboard {
 
-    boolean isColumnSelected();
+    boolean isColumnSelected(int max);
 
-    boolean isButtonPressed(int numberOfColumn);
+    boolean isButtonPressed(int numberOfColumn, int max);
 
-    int associationKeyNumber(int numberOfColumn);
+    int associationKeyColumn(int numberOfColumn, int max);
+
 
 }
 

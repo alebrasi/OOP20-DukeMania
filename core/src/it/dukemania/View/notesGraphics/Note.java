@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface Note {
 	
-	void drawNote();
+	void updateNote(float deltaTime);
 	
 	void isSparked(Columns type, SpriteBatch batch);
 	
