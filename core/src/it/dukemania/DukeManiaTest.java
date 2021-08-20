@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import it.dukemania.View.menu.LeaderboardWindow;
+import it.dukemania.View.menu.OptionWindow;
 import it.dukemania.View.menu.SongSelectionWindow;
 import it.dukemania.View.menu.TitleWindow;
 import it.dukemania.windowmanager.DukeManiaWindowState;
@@ -55,22 +57,31 @@ public class DukeManiaTest extends ApplicationAdapter {
     @Override
     public void create() {
         Skin skin = createSkin();
-        Window playScreen = null;
+        Window songSelectionScreen = null;
         Window titleScreen = new TitleWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        Window optionScreen = new OptionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        Window leaderBoardScreen = new LeaderboardWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        //Window playScreen = new PlayScreen();
         try {
-            playScreen = new SongSelectionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+            songSelectionScreen = new SongSelectionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             Gdx.app.exit();
             System.exit(1);
         }
 
-        titleScreen.setWindowListener(wdm);
 
         wdm.addWindow(titleScreen, DukeManiaWindowState.TITLE);
-        wdm.addWindow(playScreen, DukeManiaWindowState.SONG_SELECTION);
-        playScreen.setWindowListener(wdm);
-        wdm.switchWindow(DukeManiaWindowState.TITLE);
+        wdm.addWindow(optionScreen, DukeManiaWindowState.OPTIONS);
+        wdm.addWindow(songSelectionScreen, DukeManiaWindowState.SONG_SELECTION);
+        wdm.addWindow(leaderBoardScreen, DukeManiaWindowState.LEADERBOARD);
+        //wdm.addWindow(playScreen, DukeManiaWindowState.PLAY);
+        wdm.switchWindow(DukeManiaWindowState.TITLE, null);
+        titleScreen.setWindowListener(wdm);
+        optionScreen.setWindowListener(wdm);
+        songSelectionScreen.setWindowListener(wdm);
+        //playScreen.setWindowListener(wdm);
+        leaderBoardScreen.setWindowListener(wdm);
     }
 
     /*
