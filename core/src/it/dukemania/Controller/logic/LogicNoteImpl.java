@@ -1,17 +1,14 @@
 package it.dukemania.Controller.logic;
 
 import it.dukemania.midi.AbstractNote;
-import it.dukemania.midi.Note;
 
 public class LogicNoteImpl implements LogicNote {
     private int height;
-    private long noteStrarts;
-    private long duration;
+    private AbstractNote note;
     private Columns column;
 
-    public LogicNoteImpl(final AbstractNote y, final Columns column, final int height) {
-       this.noteStrarts = y.getStartTime();
-       this.duration = Math.round(y.getDuration().get());
+    public LogicNoteImpl(final AbstractNote note, final Columns column, final int height) {
+       this.note = note;
        this.column = column;
        this.height = height;
     }
@@ -20,16 +17,20 @@ public class LogicNoteImpl implements LogicNote {
         return height;
     }
 
-    public final long getNoteStrarts() {
-        return noteStrarts;
-    }
-
-    public final long getDuration() {
-        return duration;
-    }
-
     public final Columns getColumn() {
         return column;
     }
+
+    @Override
+    public final long getNoteStarts() {
+        return this.note.getStartTime();
+    }
+
+    @Override
+    public final long getNoteDuration() {
+        return Math.round(this.note.getDuration().get());
+    }
+
+
 
 }
