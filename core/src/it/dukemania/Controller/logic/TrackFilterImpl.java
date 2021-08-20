@@ -19,10 +19,10 @@ public class TrackFilterImpl implements TrackFilter {
     @Override
     public final List<MidiTrack> reduceTrack(final Song song) {
         return song.getTracks().stream().filter(x -> x.getChannel() != 10).map(x -> {
-           int numberOfNotes = x.getNotes().size();
-           List<AbstractNote> notePos = x.getNotes();
+           final int numberOfNotes = x.getNotes().size();
+           final List<AbstractNote> notePos = x.getNotes();
            return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
-                   x.getNotes().stream().filter(y -> (notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0))
+                   x.getNotes().stream().filter(y -> notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0)
                    .collect(Collectors.toList()), x.getChannel());
         })
                 .sorted(Comparator.comparing(e -> e.getNotes().size()))

@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface Note {
 	
+    /***
+     * 
+     * @param deltaTime
+     */
 	void updateNote(float deltaTime);
 	
 	long getStartTime();

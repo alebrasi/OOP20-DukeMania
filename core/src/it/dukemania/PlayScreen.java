@@ -38,9 +38,10 @@ import it.dukemania.View.notesGraphics.Note;
 import it.dukemania.View.notesGraphics.NoteImpl;
 import it.dukemania.View.notesGraphics.NoteLogic;
 import it.dukemania.View.notesGraphics.NoteLogicImpl;
-import it.dukemania.View.notesGraphics.Pair;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
+import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.Song;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
 import it.dukemania.windowmanager.Window;
 
@@ -50,18 +51,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
     //sofi
     //private Logic logic = new LogicImpl();         //rapo
-    private Size dimensions = new SizeImpl();
+    private final Size dimensions = new SizeImpl();
     private Stage buttonsStage;
     private Stage stage;
-    private TextureAtlas atlas;
-    private Skin skin;
-    private GlyphLayout layout = new GlyphLayout(); 
-    private BitmapFont font;
+    private final GlyphLayout layout = new GlyphLayout(); 
     private BitmapFont fontScoreboard;
-    private float fontWidth;
-    private float fontHeight;
     private FreeTypeFontGenerator generator;
-    private FreeTypeFontParameter parameter;
     private String text;
     private TextButtonStyle styleDown;
     private TextButtonStyle styleUp;
@@ -69,19 +64,17 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private Texture scoreboard;
     private Texture textureNote;
     private Texture textureSparks;
-    private Image backgroundImage;
     private SpriteBatch batch;
     private SpriteBatch backgroundBatch;
-    private int posySpark;
-    private int finishLine;
+    private final int posySpark;
+    private final int finishLine;
     private NoteLogic note6uno; //nell'attesa dell'array di rapo
     private NoteLogic note7uno;
     private NoteLogic note8uno;
     private NoteLogic note9uno;
     private NoteLogic note10uno;
-    private List<Note> notes = new ArrayList<>(); 
-    private List<NoteLogic> logicNotes = new ArrayList<>(); //per ora vuoto, poi array di rapo
-    private List<Note> notesPlaying = new ArrayList<>(); 
+    private final List<Note> notes = new ArrayList<>(); 
+    private final List<NoteLogic> logicNotes = new ArrayList<>(); //per ora vuoto, poi array di rapo 
     private long startTime = 0;
     private EventsFromKeyboard keyboard;
     private Key key;
@@ -93,6 +86,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private float deltaTime = 0;
     private int buttonHeight;
     private final List<TextButton> buttons = new ArrayList<>();
+    private Song song;
+    private MidiTrack selectedTrack;
     //constant
     private static final int BUTTON_DIM = 120;
     private static final int YNOTE = 80;
@@ -113,8 +108,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	@Override
 	public void create() {
 	    //this.dimensions = new SizeImpl();
-	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png")); 
-	    this.backgroundImage = new Image(this.background);
+	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
+	    final Image backgroundImage = new Image(this.background);
 	    this.textureNote = new Texture(Gdx.files.internal("Textures/blueNote.png"));
 	    this.textureSparks = new Texture(Gdx.files.internal("Textures/blueSpark.png"));
 	    this.scoreboard = new Texture(Gdx.files.internal("Textures/scoreboard.png"), true);
@@ -141,30 +136,30 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         this.logicNotes.add(note9uno); 
         this.logicNotes.add(note10uno);
 
-        this.font = new BitmapFont();
-        this.skin = new Skin();
-        this.atlas = new TextureAtlas(Gdx.files.internal("pinkAndBlueButtons.atlas"));
-        this.skin.addRegions(atlas);
+        final BitmapFont font = new BitmapFont();
+        final Skin skin = new Skin();
+        final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("pinkAndBlueButtons.atlas"));
+        skin.addRegions(atlas);
         this.text = "700000";
 
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
-        this.parameter = new FreeTypeFontParameter();
-        this.parameter.size = PlayScreen.FONT_SIZE;
-        this.parameter.color = Color.WHITE;
-        this.parameter.shadowColor = Color.BLACK;
-        this.parameter.shadowOffsetX = 2;
-        this.fontScoreboard = generator.generateFont(this.parameter);
-        this.fontScoreboard.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        final FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        parameter.size = PlayScreen.FONT_SIZE;
+        parameter.color = Color.WHITE;
+        parameter.shadowColor = Color.BLACK;
+        parameter.shadowOffsetX = 2;
+        fontScoreboard = generator.generateFont(parameter);
+        fontScoreboard.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 
         this.styleDown = new TextButtonStyle();
         this.styleDown.font = font;
-        this.styleDown.up = this.skin.getDrawable("buttonDown");
-        this.styleDown.down = this.skin.getDrawable("buttonUp");
+        this.styleDown.up = skin.getDrawable("buttonDown");
+        this.styleDown.down = skin.getDrawable("buttonUp");
         this.styleUp = new TextButtonStyle();
         this.styleUp.font = font;
-        this.styleUp.up = this.skin.getDrawable("buttonUp");
-        this.styleUp.down = this.skin.getDrawable("buttonDown");
+        this.styleUp.up = skin.getDrawable("buttonUp");
+        this.styleUp.down = skin.getDrawable("buttonDown");
 
         //placement of the buttons 
         for (int i = 0; i < this.numberOfColumns; i++) {
@@ -254,10 +249,10 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 		//draw the score and the scoreboard
 		this.layout.setText(fontScoreboard, this.text);
-		this.fontWidth = this.layout.width;
-		this.fontHeight = this.layout.height; 
-		this.fontScoreboard.draw(batch, text, this.dimensions.getSize().getX() / 2 - this.fontWidth / 2, 
-		        this.dimensions.getSize().getY() - this.fontHeight * this.shift.getFontAccuracy());
+	    final float fontWidth = this.layout.width;
+	    final float fontHeight = this.layout.height; 
+		this.fontScoreboard.draw(batch, text, this.dimensions.getSize().getX() / 2 - fontWidth / 2, 
+		        this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
 		this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - this.shift.getScoreboardHeight(),
 		        this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
 
@@ -267,12 +262,11 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 		}
 
         final long actualTime = Instant.now().toEpochMilli() - this.startTime;
-
-        this.notesPlaying = getPlayingNotes(actualTime);
+        List<Note> notesPlaying = getPlayingNotes(actualTime);
 
         //drawing of each note
-        if (!this.notesPlaying.isEmpty()) {
-            for (final Note n : this.notesPlaying) {
+        if (!notesPlaying.isEmpty()) {
+            for (final Note n : notesPlaying) {
                 drawNote(n.getPosxNote(), n.getPosyNote(), n.getxNote(), n.getyNote());
                 this.deltaTime = Gdx.graphics.getDeltaTime();
                 n.updateNote(this.deltaTime);
@@ -314,7 +308,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
             }
             //removal of notes that are terminated
-            this.notesPlaying.removeAll(notFinished(this.notesPlaying, actualTime));
+            notesPlaying.removeAll(notFinished(notesPlaying, actualTime));
             }
 
         this.batch.end();
@@ -335,7 +329,9 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
     @Override
     public void receiveData(final Object data) {
-
+        final Object[] receivedData = (Object[]) data;
+        this.song = (Song) receivedData[0];
+        this.selectedTrack = (MidiTrack) receivedData[1];
     }
 
     @Override
