@@ -41,9 +41,11 @@ import it.dukemania.View.notesGraphics.NoteLogicImpl;
 import it.dukemania.View.notesGraphics.Pair;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
+import it.dukemania.windowmanager.SwitchWindowNotifier;
+import it.dukemania.windowmanager.Window;
 
 
-public class PlayScreen extends ApplicationAdapter {
+public class PlayScreen extends ApplicationAdapter implements Window {
     //Engine ae = null;
 
     //sofi
@@ -95,6 +97,8 @@ public class PlayScreen extends ApplicationAdapter {
     private static final int BUTTON_DIM = 120;
     private static final int YNOTE = 80;
     private static final int FONT_SIZE = 40;
+
+    private SwitchWindowNotifier switchWindowNotifier;
 
         public PlayScreen() { 
             this.dimensions = new SizeImpl();
@@ -327,6 +331,16 @@ public class PlayScreen extends ApplicationAdapter {
 		this.backgroundBatch.dispose();
 		this.generator.dispose();
 	}
-	
-	
+
+    @Override
+    public void receiveData(final Object data) {
+
+    }
+
+    @Override
+    public void setWindowListener(final SwitchWindowNotifier listener) {
+        this.switchWindowNotifier = listener;
+    }
+
+
 }
