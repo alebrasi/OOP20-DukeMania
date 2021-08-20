@@ -2,7 +2,6 @@ package it.dukemania.midi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 
 import java.io.File;
@@ -12,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -77,7 +75,7 @@ class TestMidiParser {
         tracks.forEach(t -> t.getNotes().forEach(n -> assertTrue(n instanceof Note)));
         assertTrue(((Note) tracks.get(1).getNotes().get(0)).getFrequency() > 466 &&
                 ((Note) tracks.get(1).getNotes().get(0)).getFrequency() < 467);
-        tracks.get(0).getNotes().forEach(n -> assertEquals(n.getItem(), Float.valueOf((float) 440.0)));
+        tracks.get(0).getNotes().forEach(n -> assertEquals(n.getItem(), 69));
         assertEquals(tracks.get(1).getNotes().get(0).getDuration(), tracks.get(1).getNotes().get(1).getDuration());
         assertEquals(tracks.get(1).getNotes().get(2).getStartTime(), tracks.get(1).getNotes().get(1).getDuration().get() 
                 + tracks.get(1).getNotes().get(1).getStartTime(), 0.00001);
