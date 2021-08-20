@@ -27,7 +27,10 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
+import it.dukemania.Controller.logic.ColumnLogic;
+import it.dukemania.Controller.logic.ColumnLogicImpl;
+import it.dukemania.Controller.logic.LogicNote;
+import it.dukemania.Controller.logic.LogicNoteImpl;
 import it.dukemania.View.notesGraphics.ComputingShift;
 import it.dukemania.View.notesGraphics.ComputingShiftImpl;
 import it.dukemania.View.notesGraphics.EventsFromKeyboard;
@@ -36,7 +39,6 @@ import it.dukemania.View.notesGraphics.Key;
 import it.dukemania.View.notesGraphics.KeyImpl;
 import it.dukemania.View.notesGraphics.Note;
 import it.dukemania.View.notesGraphics.NoteImpl;
-import it.dukemania.View.notesGraphics.NoteLogic;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
 import it.dukemania.audioengine.PlayerAudio;
@@ -50,8 +52,6 @@ import it.dukemania.windowmanager.Window;
 public class PlayScreen extends ApplicationAdapter implements Window {
     //Engine ae = null;
 
-    //sofi
-    //private Logic logic = new LogicImpl();         //rapo
     private final Size dimensions = new SizeImpl();
     private Stage buttonsStage;
     private Stage stage;
@@ -69,14 +69,10 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private SpriteBatch backgroundBatch;
     private final int posySpark;
     private final int finishLine;
-    private NoteLogic note6uno; //nell'attesa dell'array di rapo
-    private NoteLogic note7uno;
-    private NoteLogic note8uno;
-    private NoteLogic note9uno;
-    private NoteLogic note10uno;
-    private final List<Note> notes = new ArrayList<>(); 
-    private final List<NoteLogic> logicNotes = new ArrayList<>(); //per ora vuoto, poi array di rapo 
+    private Song song;
+    private MidiTrack selectedTrack;
     private long startTime = 0;
+    private List<Note> notes = new ArrayList<>(); 
     private EventsFromKeyboard keyboard;
     private Key key;
     private final ComputingShift shift = new ComputingShiftImpl();
@@ -85,8 +81,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private float deltaTime = 0;
     private int buttonHeight;
     private final List<TextButton> buttons = new ArrayList<>();
-    private Song song;
-    private MidiTrack selectedTrack;
     //constant
     private static final int BUTTON_DIM = 120;
     private static final int YNOTE = 80;
@@ -109,6 +103,10 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	@Override
 	public void create() {
 	    //this.dimensions = new SizeImpl();
+	    receiveData();
+	    ColumnLogic logic = new ColumnLogicImpl(this.dimensions.getNumberOfColumns());
+
+	    final List<LogicNoteImpl> logicNotes = logic.noteQueuing(selectedTrack);
         player = new PlayerAudio(song);
 	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
 	    final Image backgroundImage = new Image(this.background);
@@ -173,8 +171,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             this.buttonsStage.addActor(this.buttons.get(i));
         }
 
-        for (final NoteLogic noteLogic : logicNotes) {
-            this.notes.add(associationNote(noteLogic));
+        for (final LogicNoteImpl noteLogic : logicNotes) {
+            notes.add(associationNote(noteLogic));
         }
 
         //adding elements on the stage
@@ -185,9 +183,9 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 	
 	
 	//this method associates the logical note to the corresponding graphic note
-	private Note associationNote(final NoteLogic noteLogic) {
+	private Note associationNote(final LogicNote noteLogic) {
             return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), this.finishLine, 
-                    noteLogic.getHeight() * PlayScreen.YNOTE, noteLogic.getTimeStart(), noteLogic.getDuration(), this.numberOfColumns);
+                    noteLogic.getHeight() * PlayScreen.YNOTE, noteLogic.getNoteStarts(), noteLogic.getNoteDuration(), this.numberOfColumns);
         }
 	
 	//this method returns the notes that are playing right now

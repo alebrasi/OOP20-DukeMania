@@ -10,7 +10,7 @@ public interface ColumnLogic {
 
     void setColumnNumber(int columnNumber);
 
-    List<List<LogicNoteImpl>> noteQueuing(MidiTrack track);
+    List<LogicNoteImpl> noteQueuing(MidiTrack track);
 
     int verifyNote(Columns column, long start, long end);
 }

@@ -1,18 +1,12 @@
 package it.dukemania.View.notesGraphics;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Keys;
+
 
 
 public class EventsFromKeyboardImpl implements EventsFromKeyboard {
@@ -30,7 +24,7 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
 
     @Override
     public boolean isColumnSelected(final int max) {
-        return Gdx.input.isKeyPressed(this.associationKeyColumn(this.note.getColumn().getNumericvalue(), max));
+        return Gdx.input.isKeyPressed(this.associationKeyColumn(this.note.getColumn().getNumericValue(), max));
     }
 
 

@@ -5,6 +5,7 @@ public enum Columns {
     COLUMN_5(5), COLUMN_6(6), COLUMN_7(7), COLUMN_8(8);
 
     private int numericValue;
+
     Columns(final int numericValue) {
         this.numericValue = numericValue;
     }
