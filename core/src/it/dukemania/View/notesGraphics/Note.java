@@ -7,8 +7,6 @@ public interface Note {
 	
 	void updateNote(float deltaTime);
 	
-	void isSparked(Columns type, SpriteBatch batch);
-	
 	long getStartTime();
 	
 	long getDuration();
@@ -18,6 +16,14 @@ public interface Note {
 	Columns getColumn();
 	
 	int getPosyNote();
+	
+	int getPosxNote();
+	
+	int getPosxSpark();
+	
+	int getxSpark();
+	
+	int getySpark();
 	
 	boolean isPressed();
 	

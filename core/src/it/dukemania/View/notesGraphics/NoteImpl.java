@@ -13,9 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 
 
 public class NoteImpl implements Note {
-    private SpriteBatch batchNote;
-    private Texture textureNote;
-    private Texture textureSparks;
     private int posxNote; //note's position
     private int posyNote;
     private int xNote;
@@ -32,16 +29,12 @@ public class NoteImpl implements Note {
     private long duration;
     private Size dimensions = new SizeImpl();
     private ComputingShift shift = new ComputingShiftImpl();
-    private OrthographicCamera camera;
     private long timeOfFall;
     private boolean isPressed = false;
     //private ShapeRenderer renderer = new ShapeRenderer();
 	
 	
-	public NoteImpl(final int heightpos, final int width, final Columns letter, final SpriteBatch batch, final int posyBlue, final int posySparks, final int height, final long startNote, final long duration, final int numberOfColumns) {
-		this.batchNote = batch;
-		this.textureNote = new Texture(Gdx.files.internal("Textures/blueNote.png"));
-		this.textureSparks = new Texture(Gdx.files.internal("Textures/blueSpark.png"));
+	public NoteImpl(final int heightpos, final Columns letter, final int posyBlue, final int posySparks, final int height, final long startNote, final long duration, final int numberOfColumns) {
 		this.xNote = 50;
 		this.yNote = height;
 		this.column = letter;
@@ -62,33 +55,11 @@ public class NoteImpl implements Note {
 	@Override
 	public void updateNote(final float deltaTime) {
 	    this.posyNote -= this.speedNote * deltaTime;
-	    final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), dimensions.getSize().getY() - 190); //magic numbers
 
-	    batchNote.flush();
-	    ScissorStack.pushScissors(clipBounds);
-	    this.batchNote.draw(this.textureNote, this.posxNote, this.posyNote, this.xNote, this.yNote, 0, 1, 1, 0);
-	    batchNote.flush();
-	    ScissorStack.popScissors();
+	    if (this.posyNote == this.FINISH_LINE) {
+	        this.timeOfFall = Instant.now().toEpochMilli() - this.startNote;
+	    }
 
-	    /*renderer.begin(ShapeRenderer.ShapeType.Filled);
-	                renderer.setColor(Color.RED);
-	                renderer.rect(clipBoundsprova.x, clipBoundsprova.y, clipBoundsprova.width, clipBoundsprova.height);
-	                renderer.circle(30, clipBounds.y, 3);
-	                renderer.end();*/
-
-
-            if (this.posyNote == this.FINISH_LINE) {
-                this.timeOfFall = Instant.now().toEpochMilli() - this.startNote;
-            }
-
-
-	}
-
-	@Override
-	public void isSparked(final Columns type, final SpriteBatch sparks) {
-		if (this.posyNote <= this.posyBlue && this.posyNote >= this.posyBlue - 40){
-			sparks.draw(this.textureSparks, this.posxSparks, this.posySparks, this.xSparks, this.ySparks, 0, 1, 1, 0);
-		}
 
 	}
 
@@ -117,6 +88,12 @@ public class NoteImpl implements Note {
 	public int getPosyNote() {
 		return this.posyNote;
 	}
+	
+	@Override
+	public int getPosxNote() {
+	    return this.posxNote;
+	}
+	
 
     @Override
     public boolean isPressed() {
@@ -128,6 +105,24 @@ public class NoteImpl implements Note {
         this.isPressed = isPressed;
         
     }
+
+    @Override
+    public int getPosxSpark() {
+        return this.posxSparks;
+    }
+
+    @Override
+    public int getxSpark() {
+        return this.xSparks;
+    }
+
+    @Override
+    public int getySpark() {
+        return this.ySparks;
+    }
+
+
+
 
 
 

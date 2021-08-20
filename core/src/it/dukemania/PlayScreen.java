@@ -18,11 +18,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -67,6 +69,8 @@ public class PlayScreen extends ApplicationAdapter {
     private TextButtonStyle styleUp;
     private Texture background;
     private Texture scoreboard;
+    private Texture textureNote;
+    private Texture textureSparks;
     private Image backgroundImage;
     private int buttonHeight;
     private SpriteBatch batch;
@@ -112,6 +116,8 @@ public class PlayScreen extends ApplicationAdapter {
 	public void create() {
 	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png")); 
 	    this.backgroundImage = new Image(this.background);
+	    this.textureNote = new Texture(Gdx.files.internal("Textures/blueNote.png"));
+	    this.textureSparks = new Texture(Gdx.files.internal("Textures/blueSpark.png"));
 	    this.scoreboard = new Texture(Gdx.files.internal("Textures/scoreboard.png"), true);
 	    this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	    this.batch = new SpriteBatch();
@@ -183,7 +189,7 @@ public class PlayScreen extends ApplicationAdapter {
 	
 	//this method associates the logical note to the corresponding graphic note
 	private Note associationNote(final NoteLogic noteLogic) {
-            return new NoteImpl(this.dimensions.getSize().getY(), this.dimensions.getSize().getX(), noteLogic.getColumn(), this.batch, posyBlue, posySparks, noteLogic.getHeight() * this.yNote, noteLogic.getTimeStart(), noteLogic.getDuration(), this.numberOfColumns);
+            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), posyBlue, posySparks, noteLogic.getHeight() * this.yNote, noteLogic.getTimeStart(), noteLogic.getDuration(), this.numberOfColumns);
         }
 	
 	//this method returns the notes that are playing right now
@@ -211,11 +217,28 @@ public class PlayScreen extends ApplicationAdapter {
 	}
 	
 
-//	private void createNote() {
-//	    
-//	}
+	private void drawNote(final int posxNote, final int posyNote) {
+	    final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), dimensions.getSize().getY() - 190); //magic numbers
+
+        this.batch.flush();
+        ScissorStack.pushScissors(clipBounds);
+        this.batch.draw(this.textureNote, posxNote, posyNote, this.xNote, this.yNote, 0, 1, 1, 0);
+        this.batch.flush();
+        ScissorStack.popScissors();
+
+        /*renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(Color.RED);
+        renderer.rect(clipBoundsprova.x, clipBoundsprova.y, clipBoundsprova.width, clipBoundsprova.height);
+        renderer.circle(30, clipBounds.y, 3);
+        renderer.end();*/
+
+	}
 	
-	
+	private void isSparked(final Note n) {
+	    if (n.getPosyNote() <= this.posyBlue && n.getPosyNote() >= this.posyBlue - 40) {
+            this.batch.draw(this.textureSparks, n.getPosxSpark(), this.posySparks, n.getxSpark(), n.getySpark(), 0, 1, 1, 0);
+        }
+	}
 
 	@Override
 	public void render() {
@@ -248,6 +271,7 @@ public class PlayScreen extends ApplicationAdapter {
         //drawing of each note
         if (!this.notesPlaying.isEmpty()) {
             for (final Note n : this.notesPlaying) {
+                drawNote(n.getPosxNote(), n.getPosyNote());
                 this.deltaTime = Gdx.graphics.getDeltaTime();
                 n.updateNote(this.deltaTime);
                 this.keyboard = new EventsFromKeyboardImpl(n);
@@ -256,7 +280,7 @@ public class PlayScreen extends ApplicationAdapter {
 
                 //set the sparks
                 if (this.keyboard.isColumnSelected(this.numberOfColumns)) {
-                    n.isSparked(n.getColumn(), this.batch);
+                    isSparked(n);
                 }
 
                 /*//it returns the time when the user starts to press a key
