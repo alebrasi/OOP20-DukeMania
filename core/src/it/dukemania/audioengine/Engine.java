@@ -52,6 +52,7 @@ public class Engine {
 
     /**
      * Add a drum synthesizer to the synthesizer list.
+     * @return the drum synthesizer added
      */
     public Synth addDrum() {
         var asd = new DrumSynth();
@@ -99,7 +100,7 @@ public class Engine {
             case 3: return 0.22f;
             case 4: return 0.16f;
             case 5: return 0.15f;
-            default: return 1f / (float)n; //0.16f-
+            default: return 1f / (float) n; //0.16f-
         }
     }
 }

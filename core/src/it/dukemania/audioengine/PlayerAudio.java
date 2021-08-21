@@ -1,13 +1,10 @@
 package it.dukemania.audioengine;
 
-import com.badlogic.gdx.Gdx;
 import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.Song;
 
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,14 +30,15 @@ public class PlayerAudio implements Player {
             public boolean hasNext() {
                 return noteIterable.hasNext();
             }
-            
+
             @Override
             public void update(final long millis) {
                 if (actual.getStartTime() / 1000 < millis) {
                     if (synthesizer instanceof DrumSynth) {
                         ((DrumSynth) synthesizer).playPercussion((DrumSamples) actual.getItem());
                     } else {
-                        ((KeyboardSynth) synthesizer).playTimedNote((Integer) actual.getItem(), actual.getDuration().orElse(1000L));
+                        ((KeyboardSynth) synthesizer).playTimedNote((Integer) actual.getItem(), actual.getDuration()
+                                .orElse(1000L));
                     }
                     actual = noteIterable.next();
                 }
@@ -54,7 +52,9 @@ public class PlayerAudio implements Player {
     @Override
     public void playNotes() {
         this.startMillis = this.startMillis == 0 ? Instant.now().toEpochMilli() : this.startMillis;
-        trak.stream().filter(PlayableTrack::hasNext).forEach(x -> x.update(Instant.now().toEpochMilli() - this.startMillis));        
+        trak.stream()
+        .filter(PlayableTrack::hasNext)
+        .forEach(x -> x.update(Instant.now().toEpochMilli() - this.startMillis));
         audioEngine.playBuffer();
 
     }
