@@ -5,13 +5,16 @@ import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.Song;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerAudio implements Player {
 
     private final Engine audioEngine = new Engine();
-    private final List<NoteIterator<AbstractNote>> tracks = new ArrayList<>();
+    private final List<PlayableTrack<AbstractNote>> trak = new ArrayList<>();
     private long startMillis;
 
     /**
@@ -20,41 +23,29 @@ public class PlayerAudio implements Player {
      */
     public PlayerAudio(final Song canzone) {
 
-        canzone.getTracks().forEach(track -> {
-            if (track.getChannel() == 10) {
-                audioEngine.addDrum();
-            } else {
-                audioEngine.addSynth(track);
+        canzone.getTracks().forEach(track -> trak.add(new PlayableTrack<>() {
+
+            private final Iterator<AbstractNote> noteIterable = track.getNotes().iterator();
+            private final Synth synthesizer = track.getChannel() == 10 ? audioEngine.addDrum() : audioEngine.addSynth(track);
+            private AbstractNote actual = noteIterable.next();
+
+            @Override
+            public boolean hasNext() {
+                return noteIterable.hasNext();
             }
-            tracks.add(new NoteIterator<>() {
-                private int index = 0;
-                @Override
-                public AbstractNote current() {
-                    return track.getNotes().get(index);
+            
+            @Override
+            public void update(final long millis) {
+                if (actual.getStartTime() / 1000 < millis) {
+                    if (synthesizer instanceof DrumSynth) {
+                        ((DrumSynth) synthesizer).playPercussion((DrumSamples) actual.getItem());
+                    } else {
+                        ((KeyboardSynth) synthesizer).playTimedNote((Integer) actual.getItem(), actual.getDuration().orElse(1000L));
+                    }
+                    actual = noteIterable.next();
                 }
-                @Override
-                public boolean hasNext() {
-                    return index < track.getNotes().size();
-                }
-                @Override
-                public void increment() {
-                    index++;
-                }
-                @Override
-                public int getChannel() {
-                    return track.getChannel();
-                }
-            });
-        });
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean hasSongEnded() {
-        return tracks.stream().noneMatch(NoteIterator::hasNext);
+            }
+        }));
     }
 
     /**
@@ -62,21 +53,8 @@ public class PlayerAudio implements Player {
      */
     @Override
     public void playNotes() {
-
         this.startMillis = this.startMillis == 0 ? Instant.now().toEpochMilli() : this.startMillis;
-        long current = Instant.now().toEpochMilli() - this.startMillis;
-        tracks.stream().filter(NoteIterator::hasNext).forEach(track -> {
-            if (track.hasNext() && track.current().getStartTime() / 1000 < current) {
-                if (track.getChannel() == 10) {
-                    DrumSynth syn = (DrumSynth) audioEngine.getSynth(tracks.indexOf(track));
-                    syn.playPercussion((DrumSamples) track.current().getItem());
-                } else {
-                    KeyboardSynth syn = (KeyboardSynth) audioEngine.getSynth(tracks.indexOf(track));
-                    syn.playTimedNote((Integer) track.current().getItem(), track.current().getDuration().orElse(1000L));
-                }
-                track.increment();
-            }
-        });
+        trak.stream().filter(PlayableTrack::hasNext).forEach(x -> x.update(Instant.now().toEpochMilli() - this.startMillis));        
         audioEngine.playBuffer();
 
     }

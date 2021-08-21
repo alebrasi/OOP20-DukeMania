@@ -53,15 +53,17 @@ public class Engine {
     /**
      * Add a drum synthesizer to the synthesizer list.
      */
-    public void addDrum() {
-        synthetizers.add(new DrumSynth());
+    public Synth addDrum() {
+        var asd = new DrumSynth();
+        synthetizers.add(asd);
+        return asd;
     }
 
     /**
      * Add a standard keyboard synthesizer to the synthesizer list.
      * @param track the track that the synth will play
      */
-    public void addSynth(final MidiTrack track) {
+    public Synth addSynth(final MidiTrack track) {
         SynthBuilderImpl b = new SynthBuilderImpl();
         b.setEnveloper(new Enveloper(10l, 1.2f, 100l));
         b.setWavetables(new WaveTable[]{WaveTable.Triangle});
@@ -75,10 +77,14 @@ public class Engine {
         });
 
         try {
-            synthetizers.add(b.build(notes));
+            var asd = b.build(notes);
+            synthetizers.add(asd);
+            return asd;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
     /**

@@ -8,23 +8,10 @@ import java.util.Iterator;
 
 public interface Player {
 
-    /**
-     * A NoteIterator rapresents a track as an Iterator, with the methods to get the current note waiting to be played
-     * and to skip ti the next note.
-     * @param <Note> We use Note because we want to see when a note has to be played.
-     */
-    interface NoteIterator<Note> {
-        Note current();
+    interface PlayableTrack<AbstractNote> {
         boolean hasNext();
-        void increment();
-        int getChannel();
+        void update(long millis);
     }
-
-    /**
-     * Tells if the song has finished to play.
-     * @return true if the song has ended, false otherwise
-     */
-    boolean hasSongEnded();
 
     /**
      * Checks and plays all the notes whose startTime is inferios than the total milliseconds that have passed from the total elapsed time,
