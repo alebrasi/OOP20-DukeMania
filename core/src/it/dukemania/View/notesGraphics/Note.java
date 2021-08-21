@@ -1,7 +1,5 @@
 package it.dukemania.View.notesGraphics;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import it.dukemania.Controller.logic.Columns;
 
 

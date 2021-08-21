@@ -7,20 +7,18 @@ import it.dukemania.Controller.logic.Columns;
 
 
 public class KeyImpl implements Key {
-    private long time;
     private long initialTime;
     private long finalTime;
-    private Columns column;
-    private EventsFromKeyboard keyboard;
-    private Note note;
+    private final Columns column;
+    //private EventsFromKeyboard keyboard;
+    private final Note note;
 
-    public KeyImpl(final Note note, final long actualTime) {
+    public KeyImpl(final Note note) {
         this.initialTime = 0;
         this.finalTime = 0;
-        this.time = actualTime;
         this.note = note;
         this.column = this.note.getColumn();
-        this.keyboard = new EventsFromKeyboardImpl(note);
+        //this.keyboard = new EventsFromKeyboardImpl(note);
     }
 
 
