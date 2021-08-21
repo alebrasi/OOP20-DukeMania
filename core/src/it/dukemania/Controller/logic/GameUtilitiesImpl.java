@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import it.dukemania.midi.MidiTrack;
 
 
@@ -29,7 +28,7 @@ public class GameUtilitiesImpl implements GameUtilities {
                                     .filter(y -> 
                                     x.getNotes().size() <= TrackFilterImpl.MAX_NOTE / numberOfDifficulties * y.getNumericValue())
                                     .findFirst();
-                            return difficulty.orElse(DifficultyLevel.UNKNOWN);
+                            return difficulty.orElse(DifficultyLevel.UNKNOWN); //debug value
                         }));
     }
 
