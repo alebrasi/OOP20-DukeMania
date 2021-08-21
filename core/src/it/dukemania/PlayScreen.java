@@ -238,17 +238,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 	}
 	
-	//this method returns the notes that have already finished playing
-	private List<Note> notFinished(final List<Note> playing, final long actualTime) {
-	    final List<Note> finished = new ArrayList<>();
-	    for (final Note n : playing) {
-	        if (n.getStartTime() + n.getDuration() * (long) Math.pow(10, 3) >= actualTime) {
-	            finished.add(n);
-	        }
-	    }
-            return finished;
-
-	}
 	
 
 	private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
@@ -361,7 +350,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             }
             //removal of notes that are terminated
             notesPlaying.removeIf(x -> x.getStartTime() + x.getDuration() * (long) Math.pow(10, 3) >= actualTime);
-            //notesPlaying.removeAll(notFinished(notesPlaying, actualTime));
             }
         //player.playNotes();
         if ((song.getDuration() / 1000) + 1000 < (Instant.now().toEpochMilli() - startTime)) {
