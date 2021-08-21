@@ -11,12 +11,17 @@ import java.util.List;
 public class Engine {
 
     private final List<Synth> synthetizers = new ArrayList<>();
-    private final AudioDevice ad = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
+    //private AudioDevice ad;
     private final float [] buffer = new float[Settings.BUFFER_LENGHT];
 
     private float step = 0, vol = 0;
     private int old = 0;
     private int att = 0;
+
+
+    public void dispose() {
+        //ad.dispose();
+    }
 
     /**
      * Returns a synthesizer from the synthesizer list a a give position.
@@ -45,7 +50,7 @@ public class Engine {
             buffer[i] = (float) (synthetizers.stream().mapToDouble(Synth::getSample).sum()) * vol;
         }
 
-        ad.writeSamples(buffer, 0, buffer.length);
+        //ad.writeSamples(buffer, 0, buffer.length);
         old = num;
 
     }

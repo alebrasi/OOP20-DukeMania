@@ -44,7 +44,6 @@ public abstract class AbstractView implements Window {
     private void setupCamera() {
         //TODO Change magic numbers
         //Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-        Gdx.graphics.setWindowedMode(1920, 1080);
         camera = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         //Centers the camera to the viewport
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);

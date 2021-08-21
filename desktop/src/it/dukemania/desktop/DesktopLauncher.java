@@ -8,6 +8,7 @@ import it.dukemania.DukeManiaTest;
 import it.dukemania.PlayScreen;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
+import it.dukemania.audioengine.Settings;
 
 public class DesktopLauncher {
     public static void main(final String[] arg) {

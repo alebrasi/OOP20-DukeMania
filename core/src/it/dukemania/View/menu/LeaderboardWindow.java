@@ -23,6 +23,9 @@ public class LeaderboardWindow extends AbstractView {
 
     @Override
     public void create() {
+
+        Gdx.graphics.setResizable(true);
+
         super.create();
         //"dffsfdsf", "Duke", 69420
         Object[] d = (Object[]) data;
@@ -63,4 +66,5 @@ public class LeaderboardWindow extends AbstractView {
         mainStage.addActor(mainMenuContainer);
         Gdx.input.setInputProcessor(mainStage);
     }
+
 }
