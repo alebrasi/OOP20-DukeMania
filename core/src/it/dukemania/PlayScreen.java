@@ -3,6 +3,8 @@ package it.dukemania;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -29,6 +31,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import it.dukemania.Controller.logic.ColumnLogic;
 import it.dukemania.Controller.logic.ColumnLogicImpl;
+import it.dukemania.Controller.logic.Columns;
 import it.dukemania.Controller.logic.LogicNote;
 import it.dukemania.Controller.logic.LogicNoteImpl;
 import it.dukemania.View.notesGraphics.ComputingShift;
@@ -41,6 +44,7 @@ import it.dukemania.View.notesGraphics.Note;
 import it.dukemania.View.notesGraphics.NoteImpl;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
+import it.dukemania.audioengine.Engine;
 import it.dukemania.audioengine.PlayerAudio;
 import it.dukemania.midi.MidiTrack;
 import it.dukemania.midi.Song;
@@ -50,14 +54,17 @@ import it.dukemania.windowmanager.Window;
 
 
 public class PlayScreen extends ApplicationAdapter implements Window {
-    //Engine ae = null;
 
-    private final Size dimensions = new SizeImpl();
+    // functional fields
+    private final Size dimensions;
     private Stage buttonsStage;
     private Stage stage;
-    private final GlyphLayout layout = new GlyphLayout(); 
+    private GlyphLayout layout;
     private BitmapFont fontScoreboard;
     private FreeTypeFontGenerator generator;
+
+
+    // widnow fields
     private TextButtonStyle styleDown;
     private TextButtonStyle styleUp;
     private Texture background;
@@ -66,21 +73,25 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private Texture textureSparks;
     private SpriteBatch batch;
     private SpriteBatch backgroundBatch;
+
+
+    private String text;
     private final int posySpark;
+    private final int finishLine;
     private int score = 0;
     private long startTime = 0;
     private EventsFromKeyboard keyboard;
     private Key key;
-    private final ComputingShift shift = new ComputingShiftImpl();
-    private final OrthographicCamera camera = new OrthographicCamera();
+    private final ComputingShift shift;
+    private OrthographicCamera camera;
     private final int numberOfColumns;
     private float deltaTime = 0;
-    private final List<TextButton> buttons = new ArrayList<>();
+    private List<TextButton> buttons;
     private Song song;
     private MidiTrack selectedTrack;
-    private final List<Note> notes = new ArrayList<>(); 
-    private final ColumnLogic logic = new ColumnLogicImpl(this.dimensions.getNumberOfColumns());
-    private PlayerAudio player;
+    private List<Note> notes;
+    private final ColumnLogic logic;
+    //private PlayerAudio player;
     private String songHash;
     private SwitchWindowNotifier switchWindowNotifier;
     //constant
@@ -88,37 +99,51 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private static final int YNOTE = 80;
     private static final int FONT_SIZE = 40;
 
-        public PlayScreen() { 
-            this.numberOfColumns = this.dimensions.getNumberOfColumns();
-            this.posySpark = PlayScreen.BUTTON_DIM - this.shift.getNoteShift(); 
+    private PlayerAudio player;
+
+    @Override
+    public void dispose() {
+        buttonsStage.dispose();
+        stage.dispose();
+        fontScoreboard.dispose();
+        generator.dispose();
+        background.dispose();
+        scoreboard.dispose();
+        textureNote.dispose();
+        textureSparks.dispose();
+        batch.dispose();
+        backgroundBatch.dispose();
+        this.startTime = 0;
+        super.dispose();
+    }
+
+    public PlayScreen() {
+        dimensions = new SizeImpl();
+        notes = new ArrayList<>();
+        buttons = new ArrayList<>();
+        shift = new ComputingShiftImpl();
+        numberOfColumns = this.dimensions.getNumberOfColumns();
+        posySpark = PlayScreen.BUTTON_DIM - this.shift.getNoteShift();
+        finishLine = PlayScreen.BUTTON_DIM;
+        logic = new ColumnLogicImpl(this.dimensions.getNumberOfColumns());
 
     }
-	
 
+    private BitmapFont font;
+    private Skin skin;
+    private TextureAtlas atlas;
 
-	@Override
-	public void create() {
-	    //this.dimensions = new SizeImpl();
+    @Override
+    public void create() {
 
-	    final List<LogicNote> logicNotes = logic.noteQueuing(selectedTrack);
-        player = new PlayerAudio(song);
-	    this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
-	    final Image backgroundImage = new Image(this.background);
-	    this.textureNote = new Texture(Gdx.files.internal("Textures/blueNote.png"));
-	    this.textureSparks = new Texture(Gdx.files.internal("Textures/blueSpark.png"));
-	    this.scoreboard = new Texture(Gdx.files.internal("Textures/scoreboard.png"), true);
-	    this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-	    this.batch = new SpriteBatch();
-	    this.backgroundBatch = new SpriteBatch();
-	    final Viewport buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
-	    final Viewport stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
-	    //ae = new Engine();
+        notes = new ArrayList<>();
+        buttons = new ArrayList<>();
+        layout = new GlyphLayout();
+        camera = new OrthographicCamera();
 
-	    this.buttonsStage = new Stage(buttonsViewport, this.batch);
-	    this.stage = new Stage(stageViewport, this.backgroundBatch);
-        Gdx.input.setInputProcessor(buttonsStage);
-/*
-        this.note6uno = new NoteLogicImpl(1, 200, 1, Columns.COLUMN1, 200);
+        final List<LogicNote> logicNotes = logic.noteQueuing(selectedTrack);
+        
+        /*LogicNote note6uno = new LogicNoteImpl(new Abstr, Columns.COLUMN_1, 2);
         this.note7uno = new NoteLogicImpl(2, 600, 2, Columns.COLUMN2, 200);
         this.note8uno = new NoteLogicImpl(3, 1000, 3, Columns.COLUMN3, 200);
         this.note9uno = new NoteLogicImpl(4, 1400, 4, Columns.COLUMN4, 200);
@@ -128,13 +153,31 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         this.logicNotes.add(note7uno);
         this.logicNotes.add(note8uno);
         this.logicNotes.add(note9uno); 
-        this.logicNotes.add(note10uno);
+        this.logicNotes.add(note10uno);*/
 
- */
+        this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
+        final Image backgroundImage = new Image(this.background);
+        this.textureNote = new Texture(Gdx.files.internal("Textures/blueNote.png"));
+        this.textureSparks = new Texture(Gdx.files.internal("Textures/blueSpark.png"));
+        this.scoreboard = new Texture(Gdx.files.internal("Textures/scoreboard.png"), true);
+        this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        this.batch = new SpriteBatch();
+        this.backgroundBatch = new SpriteBatch();
+        final Viewport buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
+        final Viewport stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
 
-        final BitmapFont font = new BitmapFont();
-        final Skin skin = new Skin();
-        final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("pinkAndBlueButtons.atlas"));
+        player = new PlayerAudio(song);
+
+        this.buttonsStage = new Stage(buttonsViewport, this.batch);
+        this.stage = new Stage(stageViewport, this.backgroundBatch);
+        Gdx.input.setInputProcessor(buttonsStage);
+
+
+        BitmapFont font = new BitmapFont();
+        Skin skin = new Skin();
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("pinkAndBlueButtons.atlas"));
+
+
         skin.addRegions(atlas);
 
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
@@ -171,45 +214,35 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
         //adding elements on the stage
         this.stage.addActor(backgroundImage);
+
         Gdx.graphics.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
         Gdx.graphics.setResizable(false);
-	}
-	
-	
-	//this method associates the logical note to the corresponding graphic note
-	private Note associationNote(final LogicNote noteLogic) {
-            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), 
-                    noteLogic.getHeight() * PlayScreen.YNOTE, noteLogic.getNoteStarts(), noteLogic.getNoteDuration(), this.numberOfColumns);
+    }
+    
+    
+    //this method associates the logical note to the corresponding graphic note
+    private Note associationNote(final LogicNote noteLogic) {
+            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), this.finishLine, 
+                    noteLogic.getHeight() * PlayScreen.YNOTE, noteLogic.getNoteStarts(), this.numberOfColumns);
         }
-	
-	//this method returns the notes that are playing right now
-	private List<Note> getPlayingNotes(final long actualTime) {
-	    final List<Note> playing = new ArrayList<>();
+    
+    //this method returns the notes that are playing right now
+    private List<Note> getPlayingNotes(final long actualTime) {
+        final List<Note> playing = new ArrayList<>();
             for (final Note n : this.notes) {
-                if (n.getStartTime() <= actualTime) {
+                if (n.getStartTime() / 1000 <= actualTime) {
                     playing.add(n);
                 }
             }
-	    return playing;
+        return playing;
 
-	}
-	
-	//this method returns the notes that have already finished playing
-	private List<Note> notFinished(final List<Note> playing, final long actualTime) {
-	    final List<Note> finished = new ArrayList<>();
-	    for (final Note n : playing) {
-	        if (n.getStartTime() + n.getDuration() * (long) Math.pow(10, 3) >= actualTime) {
-	            finished.add(n);
-	        }
-	    }
-            return finished;
+    }
+    
+    
 
-	}
-	
-
-	private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
-	    final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), 
-	            dimensions.getSize().getY() - 190); //magic numbers
+    private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
+        final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), 
+                dimensions.getSize().getY() - 190); //magic numbers
 
         this.batch.flush();
         ScissorStack.pushScissors(clipBounds);
@@ -223,39 +256,40 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         renderer.circle(30, clipBounds.y, 3);
         renderer.end();*/
 
-	}
-	
-	private void isSparked(final Note n) {
-	    if (n.getPosyNote() <= PlayScreen.BUTTON_DIM && n.getPosyNote() >= PlayScreen.BUTTON_DIM - this.shift.getSparksHeight()) {
+    }
+    
+    private void isSparked(final Note n) {
+        if (n.getPosyNote() <= this.finishLine && n.getPosyNote() >= this.finishLine - this.shift.getSparksHeight()) {
             this.batch.draw(this.textureSparks, n.getPosxSpark(), this.posySpark, n.getxSpark(), n.getySpark(), 0, 1, 1, 0);
         }
-	}
+    }
 
-	@Override
-	public void render() {
-		//ae.playBuffer();
-		//set the start time
-		if (this.startTime == 0) {
-		    this.startTime = Instant.now().toEpochMilli();
-		}
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		this.stage.draw();
-		this.backgroundBatch.begin();
-		this.buttonsStage.draw();
-		this.batch.begin();
+    @Override
+    public void render() {
+        //ae.playBuffer();
+        //set the start time
+        if (this.startTime == 0) {
+            this.startTime = Instant.now().toEpochMilli();
+        }
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        this.stage.draw();
+        this.stage.act();
+        this.backgroundBatch.begin();
+        this.buttonsStage.draw();
+        this.batch.begin();
 
-		//draw the score and the scoreboard
-		this.layout.setText(fontScoreboard, Integer.toString(this.score));
-	    final float fontWidth = this.layout.width;
-	    final float fontHeight = this.layout.height; 
-		this.fontScoreboard.draw(batch, Integer.toString(this.score), this.dimensions.getSize().getX() / 2 - fontWidth / 2, this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
-		this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - this.shift.getScoreboardHeight(),
-		        this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
+        //draw the score and the scoreboard
+        this.layout.setText(fontScoreboard, Integer.toString(this.score));
+        final float fontWidth = this.layout.width;
+        final float fontHeight = this.layout.height; 
+        this.fontScoreboard.draw(batch, Integer.toString(this.score), this.dimensions.getSize().getX() / 2 - fontWidth / 2, this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
+        this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - this.shift.getScoreboardHeight(),
+                this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
 
-		//set the style of the buttons
-		for (final TextButton b : this.buttons) {
-		    b.setStyle(this.styleUp);
-		}
+        //set the style of the buttons
+        for (final TextButton b : this.buttons) {
+            b.setStyle(this.styleUp);
+        }
 
         final long actualTime = Instant.now().toEpochMilli() - this.startTime;
         final List<Note> notesPlaying = getPlayingNotes(actualTime);
@@ -275,7 +309,10 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                     isSparked(n);
                 }
 
-
+                
+                
+                
+                
                 //it returns the time when the user starts to press a key
                 if (this.keyboard.isColumnSelected(this.numberOfColumns) && !n.isPressed()) { 
                     n.setIsPressed(true);
@@ -295,7 +332,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                     System.out.println("nota " + n.getColumn().name() + "tempo di caduta " + n.getTimeOfFall());
                 }
 
-
+                
+                
+                
+                
+                
+                
                 //change the style of the buttons if they are clicked
                 for (int i = 0; i < this.numberOfColumns; i++) {
                     if (!this.keyboard.isButtonPressed(i + 1, this.numberOfColumns)) {
@@ -307,28 +349,24 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
             }
             //removal of notes that are terminated
-            notesPlaying.removeAll(notFinished(notesPlaying, actualTime));
+            notesPlaying.removeIf(x -> x.getStartTime() + x.getDuration() * (long) Math.pow(10, 3) >= actualTime);
             }
-        player.playNotes();
-        if (song.getDuration() / 1000 < (Instant.now().toEpochMilli() - startTime)) {
+        //player.playNotes();
+        if ((song.getDuration() / 1000) + 1000 < (Instant.now().toEpochMilli() - startTime)) {
             switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, new Object[] {songHash, "Pluto", 69});
+        } else {
+            player.playNotes();
         }
+
+
 
         this.batch.end();
         this.backgroundBatch.end();
 
 
-	}
-	
-	@Override
-	public void dispose() {
-	    //release of all resources
-	    this.stage.dispose();
-		this.batch.dispose();
-		this.background.dispose();
-		this.backgroundBatch.dispose();
-		this.generator.dispose();
-	}
+    }
+    
+
 
     @Override
     public void receiveData(final Object data) {
