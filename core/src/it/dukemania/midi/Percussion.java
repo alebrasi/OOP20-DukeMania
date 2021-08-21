@@ -15,6 +15,13 @@ public enum Percussion {
     static {
         for (Percussion pp : Percussion.values()) {
             pp.associated = DrumSamples.Hat;
+            if (pp.name().contains("KICK")) {
+                pp.associated = DrumSamples.Kick;
+            } else if (pp.name().contains("SNARE")) {
+                pp.associated = DrumSamples.Snare;
+            } else if (pp.name().contains("TOM")) {
+                pp.associated = DrumSamples.Tom;
+            }
         }
         BASS_DRUM_1.associated = DrumSamples.Kick;
         LOW_FLOOR_TOM.associated = DrumSamples.Hat;

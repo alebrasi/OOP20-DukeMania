@@ -2,7 +2,7 @@ package it.dukemania.midi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +72,11 @@ class TestMidiParser {
         assertEquals(tracks.get(0).getInstrument(), InstrumentType.HONKY_TONK_PIANO);
         assertEquals(tracks.get(1).getInstrument(), InstrumentType.ELECTRIC_PIANO_1);
         assertEquals(tracks.get(2).getInstrument(), InstrumentType.ELECTRIC_PIANO_2);
+        assertEquals(new Instrument((InstrumentType) tracks.get(2).getInstrument()).getInstrument(),
+                InstrumentType.ELECTRIC_PIANO_2);
+        assertNotNull(new Instrument((InstrumentType) tracks.get(2).getInstrument()).getSynthetizer());
+        assertNotNull(new Instrument((InstrumentType) tracks.get(2).getInstrument()).getAssociatesInstrumentType());
+        assertNotNull(new Instrument((InstrumentType) tracks.get(2).getInstrument()).getName());
         tracks.forEach(t -> t.getNotes().forEach(n -> assertTrue(n instanceof Note)));
         assertTrue(((Note) tracks.get(1).getNotes().get(0)).getFrequency() > 466 &&
                 ((Note) tracks.get(1).getNotes().get(0)).getFrequency() < 467);
