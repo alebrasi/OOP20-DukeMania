@@ -20,6 +20,10 @@ public final class AssetManager {
         //this.value = value;
     }
 
+    /***
+     * 
+     * @return a AssetManager. An instance is created if it does not already exist
+     */
     public static AssetManager getInstance() {
         if (instance == null) {
             instance = new AssetManager();
@@ -32,7 +36,11 @@ public final class AssetManager {
 
         private static Map<String, Texture> textureAssociations = new HashMap<>();
 
-
+        /***
+         * 
+         * @param textureStr
+         * @return a specific texture
+         */
         public static Texture get(final String textureStr) {
             if (textureAssociations.isEmpty()) {
                 load();
@@ -40,6 +48,9 @@ public final class AssetManager {
             return textureAssociations.get(textureStr);
         }
 
+        /***
+         * load all the textures.
+         */
         public static void load() {
             textureAssociations.put("galaxy.png", new Texture(Gdx.files.internal("galaxy.png")));
         }
@@ -50,7 +61,11 @@ public final class AssetManager {
 
         private static Map<String, Skin> skinAssociations = new HashMap<>();
 
-
+        /***
+         * 
+         * @param skinStr
+         * @return a specific skin
+         */
         public static Skin get(final String skinStr) {
             if (skinAssociations.isEmpty()) {
                 load();
@@ -58,6 +73,8 @@ public final class AssetManager {
             return skinAssociations.get(skinStr);
         }
 
+        /***load all the skins.
+         * */
         public static void load() {
            //skinAssociations.put("Configure Song", skin);
         }
@@ -67,7 +84,11 @@ public final class AssetManager {
 
         private static Map<String, BitmapFont> fontAssociations = new HashMap<>();
 
-
+        /***
+         * 
+         * @param fontStr
+         * @return a specific BitmapFont
+         */
         public static BitmapFont get(final String fontStr) {
             if (fontAssociations.isEmpty()) {
                 load();
@@ -75,6 +96,8 @@ public final class AssetManager {
             return fontAssociations.get(fontStr);
         }
 
+        /***load all the BitmapFonts.
+         * */
         public static void load() {
             //fontAssociations.put("fonts/agency-fb.ttf", );
         }
@@ -84,7 +107,11 @@ public final class AssetManager {
 
         private static Map<String, TextureAtlas> textureAtlasAssociations = new HashMap<>();
 
-
+        /***
+         * 
+         * @param textureStr
+         * @return a specific textureAtlas
+         */
         public static TextureAtlas get(final String textureStr) {
             if (textureAtlasAssociations.isEmpty()) {
                 load();
@@ -92,11 +119,15 @@ public final class AssetManager {
             return textureAtlasAssociations.get(textureStr);
         }
 
+        /***load all the TextureAtlas.
+         * */
         public static void load() {
             textureAtlasAssociations.put("pink and blue button.atlas", new TextureAtlas(Gdx.files.internal("pink and blue button.atlas")));
         }
     }
 
+    /***load all the resources.
+     * */
     public static void loadAll() {
         if (!areLoaded) {
             TextureFiles.load();

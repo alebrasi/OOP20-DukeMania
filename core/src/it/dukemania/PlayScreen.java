@@ -100,6 +100,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private static final int FONT_SIZE = 40;
 
     private PlayerAudio player;
+    
 
     @Override
     public void dispose() {
@@ -142,18 +143,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         camera = new OrthographicCamera();
 
         final List<LogicNote> logicNotes = logic.noteQueuing(selectedTrack);
-        
-        /*LogicNote note6uno = new LogicNoteImpl(new Abstr, Columns.COLUMN_1, 2);
-        this.note7uno = new NoteLogicImpl(2, 600, 2, Columns.COLUMN2, 200);
-        this.note8uno = new NoteLogicImpl(3, 1000, 3, Columns.COLUMN3, 200);
-        this.note9uno = new NoteLogicImpl(4, 1400, 4, Columns.COLUMN4, 200);
-        this.note10uno = new NoteLogicImpl(2, 1600, 5, Columns.COLUMN2, 200);
-
-        this.logicNotes.add(note6uno);
-        this.logicNotes.add(note7uno);
-        this.logicNotes.add(note8uno);
-        this.logicNotes.add(note9uno); 
-        this.logicNotes.add(note10uno);*/
 
         this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
         final Image backgroundImage = new Image(this.background);
