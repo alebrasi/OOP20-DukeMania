@@ -140,7 +140,7 @@ public class TestClass {
     public void testIntervalLFO() {
         final float int1 = 1f, int2 = 0.3f, int3 = 1f, int4 = 1.5f;
         final Function<Long, Float> lfo = LFOFactory.buildIntervals(new float [] {int1, int2, int3, int4}, 1000);
-        final long totalSamples = (long) (1000 * Settings.SAMPLESPERMILLI);
+        final long totalSamples = (long) Settings.SAMPLE_RATE;
         final List<Double> arrIntervals = LongStream.range(0, totalSamples).mapToDouble(lfo::apply).boxed().collect(Collectors.toList());
         Assertions.assertEquals(int1, arrIntervals.get(0));
         Assertions.assertEquals(int2, arrIntervals.get((int) (totalSamples / 4)));
