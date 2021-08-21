@@ -1,5 +1,6 @@
 package it.dukemania.Controller.logic;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -21,7 +22,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     private static final int NOTE_TOLERANCE = 10;
     private static final int MAX_COMBO = 20;
     private static final int COMBO_POINT = 5;
-    static final int MAX_HEIGHT = 4;
+    private static final int MAX_HEIGHT = 4;
     private int columnNumber;
     private List<NoteRange> noteRanges;
     private int combo;
@@ -30,6 +31,7 @@ public class ColumnLogicImpl implements ColumnLogic {
         this.columnNumber = (columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP)
                         ? columnNumber : COLUMN_MIN_CAP;
         combo = 0;
+        this.noteRanges = new ArrayList<>();
     }
 
     @Override
@@ -40,6 +42,11 @@ public class ColumnLogicImpl implements ColumnLogic {
     @Override
     public final void setColumnNumber(final int columnNumber) {
         this.columnNumber = columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP ? columnNumber : COLUMN_MIN_CAP;
+    }
+
+    @Override
+    public final void addNoteRanges(final Columns column, final long start, final long end) {
+        this.noteRanges.add(new NoteRange(column, start, end));
     }
 
     private List<AbstractNote> overlappingNotes(final List<AbstractNote> notes) {
@@ -64,7 +71,6 @@ public class ColumnLogicImpl implements ColumnLogic {
         List<Columns> columnList = getColumnList();
         noteRanges = list.stream().map(t -> {
                 Columns column = columnList.remove(0);
-                System.out.println(column);
                 return t.stream().map(r -> {
                         return new NoteRange(column, r.getStartTime(), r.getStartTime()
                         + r.getDuration().get().intValue());
@@ -131,19 +137,20 @@ public class ColumnLogicImpl implements ColumnLogic {
     public final int verifyNote(final Columns column, final long start, final long end) {
         NoteRange currentRange = noteRanges.stream()
                 .filter(x -> x.getColumn().equals(column))
-                .filter(x -> x.getStart() < end) //the player started pressing before the end of the note
+                .filter(x -> start < x.getEnd() && end > x.getStart()) 
+                //the player started pressing before the end of the note and ended pressing after the start of the note
                 .sorted(Comparator.comparingLong(NoteRange::getStart))
                 .findFirst() //take the first range of the compatible with the pressed note
-                .orElse(noteRanges.get(0));
-        int normalPoint = (int) ((end - start - Math.abs(currentRange.getEnd() - end)
-                - Math.abs(currentRange.getStart() - start)) / (end - start)  * NOTE_POINT); 
+                .orElse(new NoteRange(column, 0, 1));
+        noteRanges.remove(currentRange);
+        int normalPoint = (int) ((double) (end - start - Math.abs(currentRange.getEnd() - end)
+                - Math.abs(currentRange.getStart() - start)) / (end - start)  * NOTE_POINT);
         // NOTE_POINT multiplied by the percentage of match between the note and the range
         this.combo = normalPoint >= NOTE_POINT - NOTE_TOLERANCE ? (this.combo < MAX_COMBO ? this.combo + 1 : this.combo) : 0;
         //combo increase if you played a perfect note (100 - NOTE_TOLERANCE)%
         return ((normalPoint >= NOTE_POINT - NOTE_TOLERANCE 
                 ? NOTE_POINT : (normalPoint + NOTE_TOLERANCE < 0 ? 0 
                         : normalPoint + NOTE_TOLERANCE)) + COMBO_POINT * combo) * columnNumber;
-
     }
 
 }

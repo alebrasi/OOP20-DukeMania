@@ -19,6 +19,8 @@ public interface ColumnLogic {
      */
     void setColumnNumber(int columnNumber);
 
+    void addNoteRanges(Columns column, long start, long end);
+
     /**
      * 
      * @param track the track to play
@@ -34,4 +36,7 @@ public interface ColumnLogic {
      * @return a score for the note pressed
      */
     int verifyNote(Columns column, long start, long end);
+
+
+
 }
