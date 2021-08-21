@@ -10,21 +10,24 @@ import it.dukemania.midi.MidiTrack;
 import it.dukemania.midi.Song;
 import it.dukemania.midi.TrackImpl;
 
-
-
 public class TrackFilterImpl implements TrackFilter {
 
     static final int MAX_NOTE = 600;
+    static final int SAFE_CHANNEL = 10;
 
     @Override
     public final List<MidiTrack> reduceTrack(final Song song) {
-        return song.getTracks().stream().filter(x -> x.getChannel() != 10).map(x -> {
-           final int numberOfNotes = x.getNotes().size();
-           final List<AbstractNote> notePos = x.getNotes();
-           return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
-                   x.getNotes().stream().filter(y -> notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0)
-                   .collect(Collectors.toList()), x.getChannel());
-        })
+        return song.getTracks().stream()
+                .filter(x -> x.getChannel() != SAFE_CHANNEL)//remove unplayable tracks
+                .map(x -> {
+                    final int numberOfNotes = x.getNotes().size();
+                    final List<AbstractNote> notePos = x.getNotes();
+                    return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
+                            x.getNotes().stream()
+                            .filter(y -> notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0) 
+                            //remove extra note
+                            .collect(Collectors.toList()), x.getChannel());
+                    })
                 .sorted(Comparator.comparing(e -> e.getNotes().size()))
                 .collect(Collectors.toList());
     }

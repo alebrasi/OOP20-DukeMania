@@ -1,6 +1,5 @@
 package it.dukemania.Controller.logic;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -38,12 +37,12 @@ public class ColumnLogicImpl implements ColumnLogic {
         return columnNumber;
     }
 
+    @Override
     public final void setColumnNumber(final int columnNumber) {
         this.columnNumber = columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP ? columnNumber : COLUMN_MIN_CAP;
     }
 
     private List<AbstractNote> overlappingNotes(final List<AbstractNote> notes) {
-        //lo stream fatto da gian cambiato per far si che non prenda una MyTrack ma una List<Note>
         return notes.stream().collect(Collectors.toMap(x -> x, x -> notes.stream()
                         .filter(y -> x != y && (x.getStartTime() == y.getStartTime()
                         || (x.getStartTime() < y.getStartTime() && (x.getStartTime() + x.getDuration().get()
@@ -51,7 +50,7 @@ public class ColumnLogicImpl implements ColumnLogic {
                         .filter(x -> x.getValue().size() != 0)
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).values().stream()
                         .flatMap(List::stream)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toList()); //list of all the notes that need to be removed
     }
 
     private List<Columns> getColumnList() {
@@ -61,6 +60,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     private List<List<AbstractNote>> generateNoteRanges(final List<List<AbstractNote>> list) {
+        // used to verify the pressed notes during gameplay
         List<Columns> columnList = getColumnList();
         noteRanges = list.stream().map(t -> {
                 Columns column = columnList.remove(0);
@@ -75,16 +75,16 @@ public class ColumnLogicImpl implements ColumnLogic {
         return list;
     }
 
-    //return the max duration of a note in a track
     private Optional<Long> getMaxDuration(final MidiTrack track) {
+        //return the max duration of a note in a track
         return track.getNotes().stream()
                 .max((e1, e2) -> e1.getDuration().get().compareTo(e2.getDuration().get()))
                 .get()
                 .getDuration();
     }
-    
-    //return an int between 1 and 4 based on the duration of the note and the max duration of a note in the current track
+
     public static final int generateNoteHeight(final Optional<Long> noteDuration, final Optional<Long> maxDuration) {
+      //return an int between 1 and 4 based on the duration of the note and the max duration of a note in the current track
         return IntStream.iterate(1, i -> i + 1)
         .limit(MAX_HEIGHT)
         .filter(x -> noteDuration.orElse(0L) <= maxDuration.orElse(0L) / MAX_HEIGHT * x)
@@ -94,35 +94,26 @@ public class ColumnLogicImpl implements ColumnLogic {
 
     @Override
     public final List<LogicNote> noteQueuing(final MidiTrack track) {
-          
-        //dice quante note ci sono per identifier
-        //List<Map.Entry<Integer, Long>> numberOfNotesForNoteType = new ArrayList<>(track.getNotes().stream()
-        //                .collect(Collectors.groupingBy(AbstractNote::getIdentifier, Collectors.counting())).entrySet());
-        //raggruppa le note per identifier
         List<Pair<Integer, List<AbstractNote>>> notesForNoteType = track.getNotes().stream()
                 .collect(Collectors.groupingBy(
                         AbstractNote::getIdentifier, Collectors.toList()))
                 .entrySet()
                 .stream()
                 .map(x -> new Pair<Integer, List<AbstractNote>>(x.getKey(), x.getValue()))
-                .collect(Collectors.toList());
-        //finch� non � minore del numero di colonne
-        
-        while (notesForNoteType.size() > columnNumber) {
-            //(dovrebbe) ordinare per numero di note dal minore al maggiore
-            notesForNoteType.sort(Comparator.comparingInt(e -> e.getY().size()));
-            // mette insieme i primi due elementi nel primo elemento ed elimina il secondo
+                .collect(Collectors.toList()); // notes grouped by identifier
+
+        while (notesForNoteType.size() > columnNumber) { //until the groups of notes are less than the number of columns
+            notesForNoteType.sort(Comparator.comparingInt(e -> e.getY().size())); //smaller groups first
             notesForNoteType.set(0, new Pair<Integer, List<AbstractNote>>(notesForNoteType.get(0).getX(),
                     Stream.concat(notesForNoteType.get(0).getY().stream(), notesForNoteType.remove(1).getY().stream())
-                    .collect(Collectors.toList())));
+                    .collect(Collectors.toList()))); //add the first 2 groups in the first removing the second
         }
 
-//teoricamente elimina le collisioni
         List<Columns> columnList = getColumnList();
         return (generateNoteRanges(notesForNoteType.stream()
                 .map(x -> x.getY())
-                .peek(x -> x.removeAll(overlappingNotes(x)))
-                .collect(Collectors.toList())))
+                .peek(x -> x.removeAll(overlappingNotes(x))) // remove all overlapping notes
+                .collect(Collectors.toList()))) // create the ranges for the gameplay
                 .stream()
                 .map(x -> {
                     Columns currentColumn = columnList.remove(0);
@@ -140,13 +131,15 @@ public class ColumnLogicImpl implements ColumnLogic {
     public final int verifyNote(final Columns column, final long start, final long end) {
         NoteRange currentRange = noteRanges.stream()
                 .filter(x -> x.getColumn().equals(column))
-                .filter(x -> x.getStart() < end)
+                .filter(x -> x.getStart() < end) //the player started pressing before the end of the note
                 .sorted(Comparator.comparingLong(NoteRange::getStart))
-                .findFirst()
+                .findFirst() //take the first range of the compatible with the pressed note
                 .orElse(noteRanges.get(0));
         int normalPoint = (int) ((end - start - Math.abs(currentRange.getEnd() - end)
-                - Math.abs(currentRange.getStart() - start)) / (end - start)  * NOTE_POINT);
+                - Math.abs(currentRange.getStart() - start)) / (end - start)  * NOTE_POINT); 
+        // NOTE_POINT multiplied by the percentage of match between the note and the range
         this.combo = normalPoint >= NOTE_POINT - NOTE_TOLERANCE ? (this.combo < MAX_COMBO ? this.combo + 1 : this.combo) : 0;
+        //combo increase if you played a perfect note (100 - NOTE_TOLERANCE)%
         return ((normalPoint >= NOTE_POINT - NOTE_TOLERANCE 
                 ? NOTE_POINT : (normalPoint + NOTE_TOLERANCE < 0 ? 0 
                         : normalPoint + NOTE_TOLERANCE)) + COMBO_POINT * combo) * columnNumber;

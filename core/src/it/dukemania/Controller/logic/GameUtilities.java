@@ -9,6 +9,11 @@ import it.dukemania.midi.MidiTrack;
 
 public interface GameUtilities {
 
-    Map<MidiTrack, DifficultyLevel> generateTracksDifficulty(List<MidiTrack> testTracksDiff);
+    /**
+     * 
+     * @param tracks a list of track 
+     * @return a map of track and its DifficultyLevel
+     */
+    Map<MidiTrack, DifficultyLevel> generateTracksDifficulty(List<MidiTrack> tracks);
 
 }

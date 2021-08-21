@@ -32,7 +32,7 @@ public class TestLogic {
         return testNotes;
     }
 
-    private List<List<LogicNote>> LogicNoteGrouping (List<LogicNote> notes) {
+    private List<List<LogicNote>> logicNoteGrouping(final List<LogicNote> notes) {
         return notes.stream()
                 .collect(Collectors.groupingBy(LogicNote::getColumn, Collectors.toList()))
                 .values()
@@ -107,7 +107,7 @@ public class TestLogic {
         //test with only a note
         testNotes.add(FactoryConfigurator.getFactory(1).createNote(Optional.of(2L), 1, 0));
         MidiTrack testTrack = FactoryConfigurator.getFactory(1).createTrack(null, testNotes, 0);
-        List<List<LogicNote>> queuedNotes = LogicNoteGrouping(this.columnLogic.noteQueuing(testTrack));
+        List<List<LogicNote>> queuedNotes = logicNoteGrouping(this.columnLogic.noteQueuing(testTrack));
         assertTrue(queuedNotes.size() == 1);
         assertTrue(queuedNotes.get(0).size() == 1);
         //test with 5 notes with different identifier and 4 columns
@@ -116,16 +116,16 @@ public class TestLogic {
         testNotes.add(FactoryConfigurator.getFactory(1).createNote(Optional.of(3L), 30, 3));
         testNotes.add(FactoryConfigurator.getFactory(1).createNote(Optional.of(4L), 40, 4));
         testTrack = FactoryConfigurator.getFactory(1).createTrack(null, testNotes, 0);
-        queuedNotes = LogicNoteGrouping(this.columnLogic.noteQueuing(testTrack));
+        queuedNotes = logicNoteGrouping(this.columnLogic.noteQueuing(testTrack));
         assertTrue(queuedNotes.size() == 4);
         assertTrue(queuedNotes.stream().mapToInt(t -> t.size()).sum() == 5);
         //test with 5 notes with different identifier and 5 columns
         this.columnLogic.setColumnNumber(5);
-        queuedNotes = LogicNoteGrouping(this.columnLogic.noteQueuing(testTrack));
+        queuedNotes = logicNoteGrouping(this.columnLogic.noteQueuing(testTrack));
         assertTrue(queuedNotes.size() == 5);
         //test with multiple overlapped notes
         testNotes.addAll(createNotes(10));
-        queuedNotes = LogicNoteGrouping(this.columnLogic.noteQueuing(testTrack));
+        queuedNotes = logicNoteGrouping(this.columnLogic.noteQueuing(testTrack));
         assertTrue(queuedNotes.stream().mapToInt(t -> t.size()).sum() == 5);
     }
 
