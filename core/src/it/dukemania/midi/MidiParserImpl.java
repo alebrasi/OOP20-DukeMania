@@ -28,7 +28,7 @@ public class MidiParserImpl implements MidiParser {
     @Override
     public final Song parseMidi(final File myMidi) throws InvalidMidiDataException, IOException  {
         final Sequence sequence = MidiSystem.getSequence(myMidi);
-        final double microsecPerTick = sequence.getMicrosecondLength() / sequence.getTickLength();
+        final double microsecPerTick = (double) sequence.getMicrosecondLength() / sequence.getTickLength();
 
         final List<MidiTrack> myTracks = new ArrayList<>();
         final Map<Integer, Pair<Enum<InstrumentType>, List<AbstractNote>>> channelMap = new HashMap<>();
@@ -71,6 +71,7 @@ public class MidiParserImpl implements MidiParser {
 
 
     private long calcTime(final long tick, final double microsecPerTick) {
+        //System.out.println(tick + " " + microsecPerTick + " " + tick * microsecPerTick + " " + (long) (tick * microsecPerTick));
         return  (long) (tick * microsecPerTick);
     }
 

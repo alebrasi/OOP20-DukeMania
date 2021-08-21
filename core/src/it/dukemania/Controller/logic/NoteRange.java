@@ -6,11 +6,11 @@ public class NoteRange {
     private long start;
     private long end;
 
-    public NoteRange(final Columns column, final long l, final long m) {
+    public NoteRange(final Columns column, final long start, final long end) {
         super();
         this.column = column;
-        this.start = l;
-        this.end = m;
+        this.start = start;
+        this.end = end;
     }
 
     public final Columns getColumn() {
