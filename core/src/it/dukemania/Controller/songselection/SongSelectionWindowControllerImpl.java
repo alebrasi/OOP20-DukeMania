@@ -150,6 +150,12 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                                             .stream()
                                             .filter(t -> t.getChannel() == selectedTrackChannel)
                                             .findFirst().get();
+        currentSong.getTracks().forEach(x -> {
+            if (x.getChannel() != 10) {
+                TrackImpl track = (TrackImpl) song.getTracks().stream().filter(trk -> trk.getChannel() == x.getChannel()).findFirst().get();
+                track.setInstrument((InstrumentType) x.getInstrument());
+            }
+        });
         notifier.switchWindow(DukeManiaWindowState.PLAY, new Object[]{song, selectedTrack, currentSong.getSongHash()});
     }
 

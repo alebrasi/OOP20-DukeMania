@@ -26,7 +26,7 @@ public class KeyboardSynth implements Synth {
                 return IntStream.range(0, steps.length).mapToDouble(x -> {
                     positions[x] = positions[x] + steps[x] * noteLfoVal;
                     return waves[x].getAt((int) (positions[x] % Settings.WAVETABLE_SIZE));
-                }).sum() / steps.length * volumeLFO.apply(k);
+                }).sum() / steps.length * volumeLFO.apply(k) / waves.length;
             }
         ).toArray();
         return env.createBufferManager(buff);

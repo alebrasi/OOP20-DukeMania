@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class TrackImpl extends PercussionTrackImpl {
 
-    private final Enum<InstrumentType> instrument;
+    private Enum<InstrumentType> instrument;
     private final Map<Integer, Long> notesMaxDuration;
 
     public TrackImpl(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
@@ -18,6 +18,9 @@ public class TrackImpl extends PercussionTrackImpl {
 
     public final Enum<InstrumentType> getInstrument() {
         return instrument;
+    }
+    public void setInstrument(final InstrumentType inst) {
+        instrument = inst;
     }
     public final Map<Integer, Long> getNotesMaxDuration() {
         return notesMaxDuration;

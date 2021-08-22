@@ -2,6 +2,8 @@ package it.dukemania.audioengine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.AudioDevice;
+import it.dukemania.midi.Instrument;
+import it.dukemania.midi.InstrumentType;
 import it.dukemania.midi.MidiTrack;
 import it.dukemania.midi.TrackImpl;
 
@@ -51,6 +53,31 @@ public class Engine {
     }
 
     /**
+     * Add a standard keyboard synthesizer to the synthesizer list.
+     * @param track the track that the synth will play
+     */
+
+    public Synth addSynth(final MidiTrack track) {
+        var actualTrack = (TrackImpl) track;
+        List<Pair<Integer, Long>> notes = new ArrayList<>();
+        actualTrack.getNotesMaxDuration().forEach((key, value) -> {
+            notes.add(new Pair<>(key, (value / 1000)));
+        });
+
+        Instrument serializedInstrument = new Instrument((InstrumentType) actualTrack.getInstrument());
+
+        try {
+            var synth = serializedInstrument.getSynthetizer().build(notes);
+            synthetizers.add(synth);
+            return synth;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
      * Add a drum synthesizer to the synthesizer list.
      * @return the drum synthesizer added
      */
@@ -58,34 +85,6 @@ public class Engine {
         var asd = new DrumSynth();
         synthetizers.add(asd);
         return asd;
-    }
-
-    /**
-     * Add a standard keyboard synthesizer to the synthesizer list.
-     * @param track the track that the synth will play
-     */
-    public Synth addSynth(final MidiTrack track) {
-        SynthBuilderImpl b = new SynthBuilderImpl();
-        b.setEnveloper(new Enveloper(10l, 1.2f, 100l));
-        b.setWavetables(new WaveTable[]{WaveTable.Triangle});
-        b.setOffsets(new double[]{1f});
-
-        List<Pair<Integer, Long>> notes = new ArrayList<>();
-        var actualTrack = (TrackImpl) track;
-
-        actualTrack.getNotesMaxDuration().forEach((key, value) -> {
-            notes.add(new Pair<>(key, (value / 1000)));
-        });
-
-        try {
-            var asd = b.build(notes);
-            synthetizers.add(asd);
-            return asd;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     /**
