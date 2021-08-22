@@ -14,7 +14,7 @@ public class GameModel {
         return numColumn;
     }
 
-    public void setNumColumn(int numColumn) {
+    public void setNumColumn(final int numColumn) {
         this.numColumn = numColumn;
     }
 
