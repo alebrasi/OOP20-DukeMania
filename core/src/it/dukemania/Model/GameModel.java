@@ -8,6 +8,15 @@ public class GameModel {
     private String playerName = "P1";
     private Song selectedSong;
     private MidiTrack selectedTrack;
+    private int numColumn;
+
+    public int getNumColumn() {
+        return numColumn;
+    }
+
+    public void setNumColumn(int numColumn) {
+        this.numColumn = numColumn;
+    }
 
     public MidiTrack getSelectedTrack() {
         return selectedTrack;
