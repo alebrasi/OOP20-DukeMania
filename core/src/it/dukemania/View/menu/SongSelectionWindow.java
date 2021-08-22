@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -67,6 +68,9 @@ public class SongSelectionWindow extends AbstractView {
         TextButton btnSaveSongConfigs = new TextButton("Save configuration", skin);
         TextButton btnPlayTrack = new TextButton("Play Track", skin);
 
+        btnPlayTrack.setTouchable(Touchable.disabled);
+        btnSaveSongConfigs.setTouchable(Touchable.disabled);
+
         ScrollPane scrollTableTracks = new ScrollPane(tblTracks, skin);
         scrollTableTracks.setFadeScrollBars(false);
         scrollTableTracks.setScrollingDisabled(true, false);
@@ -84,6 +88,8 @@ public class SongSelectionWindow extends AbstractView {
                 boolean isACorrectMidiFile = true;
                 try {
                     controller.openSong(filePath);
+                    btnPlayTrack.setTouchable(Touchable.enabled);
+                    btnSaveSongConfigs.setTouchable(Touchable.enabled);
                 } catch (InvalidMidiDataException e) {
                     new ErrorDialog("The selected file is not a valid MIDI", skin).show(mainStage);
                     e.printStackTrace();
