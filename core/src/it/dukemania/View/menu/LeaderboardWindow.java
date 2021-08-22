@@ -45,7 +45,7 @@ public class LeaderboardWindow extends AbstractView {
         btnPlayAgain.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                switchWindowNotifier.switchWindow(DukeManiaWindowState.SONG_SELECTION, new GameModel());
+                switchWindowNotifier.switchWindow(DukeManiaWindowState.SONG_SELECTION, data);
             }
         });
 

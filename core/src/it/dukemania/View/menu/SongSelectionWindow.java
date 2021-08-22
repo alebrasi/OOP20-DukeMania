@@ -139,7 +139,7 @@ public class SongSelectionWindow extends AbstractView {
         btnBackToTitle.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                switchWindowNotifier.switchWindow(DukeManiaWindowState.TITLE, null);
+                switchWindowNotifier.switchWindow(DukeManiaWindowState.TITLE, data);
             }
         });
 
