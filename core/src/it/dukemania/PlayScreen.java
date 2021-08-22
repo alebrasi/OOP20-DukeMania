@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -100,7 +101,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private static final int FONT_SIZE = 40;
 
     private PlayerAudio player;
-    
+
 
     @Override
     public void dispose() {
@@ -204,11 +205,10 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         //adding elements on the stage
         this.stage.addActor(backgroundImage);
 
-        Gdx.graphics.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
         Gdx.graphics.setResizable(false);
+        Gdx.graphics.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
     }
-    
-    
+
     //this method associates the logical note to the corresponding graphic note
     private Note associationNote(final LogicNote noteLogic) {
         return new NoteImpl(this.dimensions.getSize().getY(),
@@ -219,9 +219,9 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             this.numberOfColumns
         );
     }
-    
+
     //this method returns the notes that are playing right now
-    private List<Note> getPlayingNotes(final long actualTime) {
+    /*private List<Note> getPlayingNotes(final long actualTime) {
         final List<Note> playing = new ArrayList<>();
             for (final Note n : this.notes) {
                 if (n.getStartTime() <= actualTime) {
@@ -230,9 +230,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             }
         return playing;
 
-    }
-    
-    
+    }*/
+
 
     private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
         final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), 
@@ -251,7 +250,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         renderer.end();*/
 
     }
-    
+
     private void isSparked(final Note n) {
         if (n.getPosyNote() <= this.finishLine && n.getPosyNote() >= this.finishLine - this.shift.getSparksHeight()) {
             this.batch.draw(this.textureSparks, n.getPosxSpark(), this.posySpark, n.getxSpark(), n.getySpark(), 0, 1, 1, 0);
@@ -286,7 +285,9 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         }
 
         final long actualTime = Instant.now().toEpochMilli() - this.startTime;
-        final List<Note> notesPlaying = getPlayingNotes(actualTime);
+        //returns the notes that are playing right now
+        final List<Note> notesPlaying = this.notes.stream().filter(n -> n.getStartTime() <= actualTime).collect(Collectors.toList()); //getPlayingNotes(actualTime);
+ 
 
         //drawing of each note
         if (!notesPlaying.isEmpty()) {
