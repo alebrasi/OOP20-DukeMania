@@ -1,16 +1,7 @@
 package it.dukemania.View.notesGraphics;
 
 import java.time.Instant;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
-
+import java.util.Optional;
 import it.dukemania.Controller.logic.Columns;
 
 
@@ -32,6 +23,8 @@ public class NoteImpl implements Note {
     private final ComputingShift shift = new ComputingShiftImpl();
     private long timeOfFall;
     private boolean isPressed;
+    private Optional<EventsFromKeyboard> keyboard = Optional.empty(); 
+    private Optional<Key> key = Optional.empty();
 
 	
 	
@@ -54,8 +47,8 @@ public class NoteImpl implements Note {
 	    this.posyNote -= NoteImpl.NOTE_SPEED * deltaTime;
 
 	    if (this.posyNote <= NoteImpl.FINISH_LINE + NoteImpl.DISPLACEMENT  && this.posyNote >= NoteImpl.FINISH_LINE - NoteImpl.DISPLACEMENT) {
-	        System.out.println("hey");
-	        this.timeOfFall = Instant.now().toEpochMilli() - this.startNote;
+	        this.timeOfFall = Instant.now().toEpochMilli() - (this.startNote * (long) Math.pow(10, 3));
+	           System.out.println("hey time of fall" + this.timeOfFall);
 	    }
 
 
@@ -124,9 +117,32 @@ public class NoteImpl implements Note {
         return this.yNote;
     }
 
+
     @Override
     public int getxNote() {
         return NoteImpl.XNOTE;
+    }
+
+
+    @Override
+    public void setKeyboard() {
+        this.keyboard = Optional.of(new EventsFromKeyboardImpl(this.column));
+
+    }
+
+    @Override
+    public Optional<EventsFromKeyboard> getKeyboard() {
+        return this.keyboard;
+    }
+
+    @Override
+    public Optional<Key> getKey() {
+        return this.key;
+    }
+
+    @Override
+    public void setKey() {
+        this.key = Optional.of(new KeyImpl(this.column, this.timeOfFall));
     }
 
 

@@ -1,5 +1,7 @@
 package it.dukemania.View.notesGraphics;
 
+import java.util.Optional;
+
 import it.dukemania.Controller.logic.Columns;
 
 
@@ -77,6 +79,7 @@ public interface Note {
 	 */
 	int getySpark();
 	
+	
 	/***
 	 * 
 	 * @return true if a button is pressed
@@ -88,5 +91,28 @@ public interface Note {
 	 * @param isPressed
 	 */
 	void setIsPressed(boolean isPressed);
+	
+	/***
+     * 
+     * @return the keyboard associated to the note
+     */
+    Optional<EventsFromKeyboard> getKeyboard();
+	
+	/***
+	 * Associate a keyboard to the note.
+	 */
+	void setKeyboard();
+	
+	/***
+     * 
+     * @return the key associated to the note
+     */
+    Optional<Key> getKey();
+
+    /***
+     * Associate a key to the note.
+     * @param timeOfFall 
+     */
+    void setKey();
 	
 }
