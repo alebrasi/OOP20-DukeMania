@@ -11,7 +11,7 @@ import java.util.List;
 public class Engine {
 
     private final List<Synth> synthetizers = new ArrayList<>();
-    private final AudioDevice ad = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
+    private static final AudioDevice ad = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
     private final float [] buffer = new float[Settings.BUFFER_LENGHT];
 
     private float step = 0, vol = 0;

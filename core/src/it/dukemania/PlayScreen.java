@@ -142,7 +142,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         layout = new GlyphLayout();
         camera = new OrthographicCamera();
 
-        final List<LogicNote> logicNotes = logic.noteQueuing(selectedTrack);
 
         this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
         final Image backgroundImage = new Image(this.background);
@@ -197,6 +196,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             this.buttonsStage.addActor(this.buttons.get(i));
         }
 
+        final List<LogicNote> logicNotes = logic.noteQueuing(selectedTrack);
         for (final LogicNote noteLogic : logicNotes) {
             notes.add(associationNote(noteLogic));
         }
@@ -211,15 +211,20 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     
     //this method associates the logical note to the corresponding graphic note
     private Note associationNote(final LogicNote noteLogic) {
-            return new NoteImpl(this.dimensions.getSize().getY(), noteLogic.getColumn(), this.finishLine, 
-                    noteLogic.getHeight() * PlayScreen.YNOTE, noteLogic.getNoteStarts(), this.numberOfColumns);
-        }
+        return new NoteImpl(this.dimensions.getSize().getY(),
+            noteLogic.getColumn(),
+            80,
+            noteLogic.getNoteStarts() / 1000 - 2500,
+            noteLogic.getNoteDuration() / 1000,
+            this.numberOfColumns
+        );
+    }
     
     //this method returns the notes that are playing right now
     private List<Note> getPlayingNotes(final long actualTime) {
         final List<Note> playing = new ArrayList<>();
             for (final Note n : this.notes) {
-                if (n.getStartTime() / 1000 <= actualTime) {
+                if (n.getStartTime() <= actualTime) {
                     playing.add(n);
                 }
             }
@@ -316,10 +321,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                 }
 
 
+                /*
                 //tempo di caduta
                 if (n.getTimeOfFall() > 0) {
                     System.out.println("nota " + n.getColumn().name() + "tempo di caduta " + n.getTimeOfFall());
                 }
+                 */
 
                 
                 
@@ -343,6 +350,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         //player.playNotes();
         if ((song.getDuration() / 1000) + 1000 < (Instant.now().toEpochMilli() - startTime)) {
             switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, new Object[] {songHash, "Pluto", 69});
+            this.startTime = 0;
         } else {
             player.playNotes();
         }
