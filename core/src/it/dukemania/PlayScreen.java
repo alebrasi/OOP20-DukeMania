@@ -1,5 +1,6 @@
 package it.dukemania;
 
+import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -379,5 +380,11 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         this.switchWindowNotifier = listener;
     }
 
+    @Override
+    public void resize(final int width, final int height) {
+        if (width != dimensions.getSize().getX() && height != dimensions.getSize().getY()) {
+            Gdx.graphics.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
+        }
+    }
 
 }
