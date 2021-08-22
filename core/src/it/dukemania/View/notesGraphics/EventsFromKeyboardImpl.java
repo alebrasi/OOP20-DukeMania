@@ -7,38 +7,41 @@ import java.util.stream.Collectors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
+import it.dukemania.Controller.logic.Columns;
+
 
 
 public class EventsFromKeyboardImpl implements EventsFromKeyboard {
-    private final Note note;
-    private final List<Integer> keys = Arrays.asList(Input.Keys.D, Input.Keys.F, Input.Keys.J, 
-            Input.Keys.K, Input.Keys.S, Input.Keys.L, Input.Keys.A, Input.Keys.P);
+    private final Columns column;
+    private final List<Integer> keys = Arrays.asList(Input.Keys.A, Input.Keys.S, Input.Keys.D, 
+            Input.Keys.F, Input.Keys.H, Input.Keys.J, Input.Keys.K, Input.Keys.L);
 
 
 
-    public EventsFromKeyboardImpl(final Note note) { 
-        this.note = note;
+    public EventsFromKeyboardImpl(final Columns column) { 
+        this.column = column;
     }
 
 
 
     @Override
     public boolean isColumnSelected(final int max) {
-        return Gdx.input.isKeyPressed(this.associationKeyColumn(this.note.getColumn().getNumericValue(), max));
+        return Gdx.input.isKeyPressed(this.associationKeyColumn(this.column.getNumericValue(), max));
     }
 
 
 
     /*TASTI
-     * 1 - D 
-     * 2 - F
-     * 3 - J
-     * 4 - K
-     * 5 - S
-     * 6 - L
-     * 7 - A
-     * 8 - P
+     * 1 - A 
+     * 2 - S
+     * 3 - D
+     * 4 - F
+     * 5 - H
+     * 6 - J
+     * 7 - K
+     * 8 - L
      * */
+
 
     @Override
     public int associationKeyColumn(final int column, final int max) {

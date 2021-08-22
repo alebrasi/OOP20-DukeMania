@@ -67,7 +67,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private FreeTypeFontGenerator generator;
 
 
-    // widnow fields
+    // window fields
     private TextButtonStyle styleDown;
     private TextButtonStyle styleUp;
     private Texture background;
@@ -292,64 +292,73 @@ public class PlayScreen extends ApplicationAdapter implements Window {
  
 
         //drawing of each note
-        if (!notesPlaying.isEmpty()) {
-            for (final Note n : notesPlaying) {
-                drawNote(n.getPosxNote(), n.getPosyNote(), n.getxNote(), n.getyNote());
-                this.deltaTime = Gdx.graphics.getDeltaTime();
-                n.updateNote(this.deltaTime);
-                this.keyboard = new EventsFromKeyboardImpl(n);
-                this.key = new KeyImpl(n);
-
-
-                //set the sparks
-                if (this.keyboard.isColumnSelected(this.numberOfColumns)) {
-                    isSparked(n);
+        for (final Note n : notesPlaying) {
+            drawNote(n.getPosxNote(), n.getPosyNote(), n.getxNote(), n.getyNote());
+            this.deltaTime = Gdx.graphics.getDeltaTime();
+            n.updateNote(this.deltaTime);
+            if (n.getKeyboard().isEmpty()) {
+                n.setKeyboard();
+            }
+            if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && !n.isPressed()) { 
+                n.setIsPressed(true);
+                if (n.getKey().isEmpty()) {
+                    n.setKey();
                 }
-
-                
-                
-                
-                
-                //it returns the time when the user starts to press a key
-                if (this.keyboard.isColumnSelected(this.numberOfColumns) && !n.isPressed()) { 
-                    n.setIsPressed(true);
-                    this.key.startPressing();
-                }
-
+                n.getKey().get().startPressing();
+            } else {
                 //it returns the time when the user finishes to press a key
-                if (!this.keyboard.isColumnSelected(this.numberOfColumns) && n.isPressed()) {
+                if (!n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && n.isPressed()) {
                     n.setIsPressed(false);
-                    this.key.finishPressing();
-                    this.score += this.logic.verifyNote(this.key.getColumn(), this.key.getInitialTime(), this.key.getFinalTime());
+                    n.getKey().get().finishPressing();
+                    this.score += this.logic.verifyNote(n.getColumn(), n.getKey().get().getInitialTime(), n.getKey().get().getFinalTime());
                 }
 
+            }
 
-                /*
+
+            //set the sparks
+            if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns)) {
+                isSparked(n);
+            }
+
+
+
+
+
+            /*//it returns the time when the user starts to press a key
+            if (this.keyboard.isColumnSelected(this.numberOfColumns) && !n.isPressed()) { 
+                n.setIsPressed(true);
+                this.key.startPressing();
+            }*/ //delete this
+
+
+
+            /*
                 //tempo di caduta
                 if (n.getTimeOfFall() > 0) {
                     System.out.println("nota " + n.getColumn().name() + "tempo di caduta " + n.getTimeOfFall());
                 }
-                 */
+             */
 
-                
-                
-                
-                
-                
-                
-                //change the style of the buttons if they are clicked
-                for (int i = 0; i < this.numberOfColumns; i++) {
-                    if (!this.keyboard.isButtonPressed(i + 1, this.numberOfColumns)) {
-                        this.buttons.get(i).setStyle(this.styleUp);
-                    } else {
-                        this.buttons.get(i).setStyle(this.styleDown);
-                    }
+
+
+
+
+
+
+            //change the style of the buttons if they are clicked
+            for (int i = 0; i < this.numberOfColumns; i++) {
+                if (!n.getKeyboard().get().isButtonPressed(i + 1, this.numberOfColumns)) {
+                    this.buttons.get(i).setStyle(this.styleUp);
+                } else {
+                    this.buttons.get(i).setStyle(this.styleDown);
                 }
+            }
 
-            }
-            //removal of notes that are terminated
-            notesPlaying.removeIf(x -> x.getStartTime() + x.getDuration() * (long) Math.pow(10, 3) >= actualTime);
-            }
+        }
+        //removal of notes that are terminated
+        notesPlaying.removeIf(x -> x.getStartTime() + x.getDuration() * (long) Math.pow(10, 3) >= actualTime);
+
         //player.playNotes();
         if ((song.getDuration() / 1000) + 1000 < (Instant.now().toEpochMilli() - startTime)) {
             data.setScore(score);

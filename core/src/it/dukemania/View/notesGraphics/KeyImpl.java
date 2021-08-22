@@ -9,16 +9,17 @@ import it.dukemania.Controller.logic.Columns;
 public class KeyImpl implements Key {
     private long initialTime;
     private long finalTime;
+    private final long timeOfFall;
     private final Columns column;
-    //private EventsFromKeyboard keyboard;
-    private final Note note;
 
-    public KeyImpl(final Note note) {
+
+
+    public KeyImpl(final Columns column, final long timeOfFall) {
         this.initialTime = 0;
         this.finalTime = 0;
-        this.note = note;
-        this.column = this.note.getColumn();
-        //this.keyboard = new EventsFromKeyboardImpl(note);
+        this.timeOfFall = timeOfFall;
+        this.column = column;
+
     }
 
 
@@ -36,12 +37,12 @@ public class KeyImpl implements Key {
 
     @Override
     public long getFinalTime() {
-        return this.finalTime - this.note.getTimeOfFall();
+        return this.finalTime - this.timeOfFall;
     }
 
     @Override
     public long getInitialTime() {
-        return this.initialTime - this.note.getTimeOfFall();
+        return this.initialTime - this.timeOfFall;
     }
 
     @Override
