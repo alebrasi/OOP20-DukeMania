@@ -36,6 +36,7 @@ import it.dukemania.Controller.logic.ColumnLogicImpl;
 import it.dukemania.Controller.logic.Columns;
 import it.dukemania.Controller.logic.LogicNote;
 import it.dukemania.Controller.logic.LogicNoteImpl;
+import it.dukemania.Model.GameModel;
 import it.dukemania.View.notesGraphics.ComputingShift;
 import it.dukemania.View.notesGraphics.ComputingShiftImpl;
 import it.dukemania.View.notesGraphics.EventsFromKeyboard;
@@ -100,6 +101,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private static final int BUTTON_DIM = 120;
     private static final int YNOTE = 80;
     private static final int FONT_SIZE = 40;
+    private GameModel data;
 
 
 
@@ -350,7 +352,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             }
         //player.playNotes();
         if ((song.getDuration() / 1000) + 1000 < (Instant.now().toEpochMilli() - startTime)) {
-            switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, new Object[] {songHash, "Pluto", 69});
+            data.setScore(score);
+            switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, data);
             this.startTime = 0;
         } else {
             logic.play();
@@ -367,11 +370,17 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 
     @Override
-    public void receiveData(final Object data) {
+    public void receiveData(final GameModel data) {
+        /*
         final Object[] receivedData = (Object[]) data;
         this.song = (Song) receivedData[0];
         this.selectedTrack = (MidiTrack) receivedData[1];
         this.songHash = (String) receivedData[2];
+         */
+        this.data = data;
+        this.song = data.getSelectedSong();
+        this.selectedTrack = data.getSelectedTrack();
+        this.songHash = data.getSongHash();
     }
 
     @Override

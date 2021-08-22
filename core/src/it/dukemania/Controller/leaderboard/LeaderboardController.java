@@ -6,5 +6,5 @@ import it.dukemania.audioengine.Pair;
 import java.util.List;
 
 public interface LeaderboardController {
-     List<Pair<String, String>> getLeaderboard(String playerName, Integer score, String songHash);
+     List<Pair<String, String>> getLeaderboard();
 }

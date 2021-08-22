@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class SongSelectionWindow extends AbstractView {
 
-    private final SongSelectionWindowController controller = new SongSelectionWindowControllerImpl();
+    private SongSelectionWindowController controller;
     private static final int FILE_DIALOG_SIZE = 800;
     private static final int TABLE_CONFIGS_OFFSET_Y = -300;
     private static final int TABLE_PADDING = 30;
@@ -41,6 +41,11 @@ public class SongSelectionWindow extends AbstractView {
     @Override
     public void create() {
         super.create();
+        try {
+            controller = new SongSelectionWindowControllerImpl(data);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         float screenWidth = mainStage.getWidth();
         float screenHeight = mainStage.getHeight();

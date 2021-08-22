@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import it.dukemania.Model.GameModel;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
 import it.dukemania.windowmanager.Window;
 
@@ -23,7 +24,7 @@ public abstract class AbstractView implements Window {
     protected Camera camera;
     protected Skin skin;
     protected Image backgroundImage;
-    protected Object data;
+    protected GameModel data;
 
     private Texture backgroundTexture;
     private static final int VIEWPORT_WIDTH = 2560;
@@ -87,7 +88,7 @@ public abstract class AbstractView implements Window {
     }
 
     @Override
-    public void receiveData(final Object data) {
+    public void receiveData(final GameModel data) {
         this.data = data;
     }
 }

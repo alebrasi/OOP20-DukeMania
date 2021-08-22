@@ -1,6 +1,7 @@
 package it.dukemania;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import it.dukemania.Model.GameModel;
 import it.dukemania.View.menu.LeaderboardWindow;
 import it.dukemania.View.menu.OptionWindow;
 import it.dukemania.View.menu.SongSelectionWindow;
@@ -31,6 +33,7 @@ public class DukeManiaTest extends ApplicationAdapter {
     private final int fontSize = 50;
     private float fontBorderWidth = 0.5f;
     private final Color fontColor = Color.BLACK;
+    private GameModel data = new GameModel();
 
     private BitmapFont generateFont() {
         generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_PATH));
@@ -76,7 +79,7 @@ public class DukeManiaTest extends ApplicationAdapter {
         wdm.addWindow(songSelectionScreen, DukeManiaWindowState.SONG_SELECTION);
         wdm.addWindow(leaderBoardScreen, DukeManiaWindowState.LEADERBOARD);
         wdm.addWindow(playScreen, DukeManiaWindowState.PLAY);
-        wdm.switchWindow(DukeManiaWindowState.TITLE, null);
+        wdm.switchWindow(DukeManiaWindowState.TITLE, data);
         titleScreen.setWindowListener(wdm);
         optionScreen.setWindowListener(wdm);
         songSelectionScreen.setWindowListener(wdm);

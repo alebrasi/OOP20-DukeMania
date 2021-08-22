@@ -39,13 +39,14 @@ public class OptionWindow extends AbstractView {
         btnBack.addListener(new ClickListener() {
            @Override
            public void clicked(final InputEvent event, final float x, final float y) {
-               switchWindowNotifier.switchWindow(DukeManiaWindowState.TITLE, null);
+               switchWindowNotifier.switchWindow(DukeManiaWindowState.TITLE, data);
            }
         });
 
         btnSave.addListener(new ClickListener() {
            @Override
            public void clicked(final InputEvent event, final float x, final float y) {
+               data.setPlayerName(txtPlayerName.getText());
                /*
                Map<String, Integer> scores = Map.of("Pinco", -420, "Pallino", -69, "Topolino", 69420);
                List<SongLeaderBoard> l = List.of(new SongLeaderBoard("dffsfdsf", scores), new SongLeaderBoard("kjshfdjkhsjkfhsf", scores));

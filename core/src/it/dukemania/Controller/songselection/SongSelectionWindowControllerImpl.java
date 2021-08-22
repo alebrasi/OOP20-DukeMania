@@ -1,6 +1,7 @@
 package it.dukemania.Controller.songselection;
 
 import it.dukemania.Controller.logic.*;
+import it.dukemania.Model.GameModel;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.ConfigurationsModelImpl;
 import it.dukemania.Model.serializers.song.TrackInfo;
@@ -49,10 +50,12 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     private String path;
     private Song selectedSong;
+    private final GameModel data;
 
-    public SongSelectionWindowControllerImpl() throws NoSuchAlgorithmException {
+    public SongSelectionWindowControllerImpl(final GameModel data) throws NoSuchAlgorithmException {
         synthesizersPresets = readSynthPresets();
         songsConfigurations = getSongsConfiguration();
+        this.data = data;
     }
 
     @Override
@@ -156,7 +159,10 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                 track.setInstrument((InstrumentType) x.getInstrument());
             }
         });
-        notifier.switchWindow(DukeManiaWindowState.PLAY, new Object[]{song, selectedTrack, currentSong.getSongHash()});
+        data.setSelectedSong(song);
+        data.setSelectedTrack(selectedTrack);
+        data.setSongHash(currentSong.getSongHash());
+        notifier.switchWindow(DukeManiaWindowState.PLAY, data);
     }
 
     @Override

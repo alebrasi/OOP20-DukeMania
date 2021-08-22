@@ -1,5 +1,6 @@
 package it.dukemania.Controller.leaderboard;
 
+import it.dukemania.Model.GameModel;
 import it.dukemania.Model.serializers.ConfigurationsModel;
 import it.dukemania.Model.serializers.ConfigurationsModelImpl;
 import it.dukemania.Model.serializers.leaderboard.SongLeaderBoard;
@@ -15,9 +16,15 @@ public class LeaderboardControllerImpl implements LeaderboardController {
 
     private final Storage storage = new StorageFactoryImpl().getConfigurationStorage();
     private final ConfigurationsModel model = new ConfigurationsModelImpl(storage);
+    private GameModel data;
+
+    public LeaderboardControllerImpl(final GameModel data) {
+        this.data = data;
+    }
 
     @Override
-    public List<Pair<String, String>> getLeaderboard(final String playerName, final Integer score, final String songHash) {
+    public List<Pair<String, String>> getLeaderboard() {
+        String songHash = data.getSongHash();
         SongLeaderBoard scores = new SongLeaderBoard(songHash, new HashMap<>());
         List<SongLeaderBoard> leaderBoards = new ArrayList<>();
         try {
@@ -31,7 +38,7 @@ public class LeaderboardControllerImpl implements LeaderboardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        scores.setUserScore(playerName, score);
+        scores.setUserScore(data.getPlayerName(), data.getScore());
         leaderBoards.add(scores);
         try {
             model.writeLeaderBoards(leaderBoards);

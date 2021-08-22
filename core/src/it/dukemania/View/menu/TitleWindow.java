@@ -40,7 +40,7 @@ public class TitleWindow extends AbstractView {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
                 if (switchWindowNotifier != null) {
-                    switchWindowNotifier.switchWindow(DukeManiaWindowState.SONG_SELECTION, null);
+                    switchWindowNotifier.switchWindow(DukeManiaWindowState.SONG_SELECTION, data);
                 }
             }
         });
@@ -48,8 +48,8 @@ public class TitleWindow extends AbstractView {
         btnOptions.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                if(switchWindowNotifier != null) {
-                    switchWindowNotifier.switchWindow(DukeManiaWindowState.OPTIONS, null);
+                if (switchWindowNotifier != null) {
+                    switchWindowNotifier.switchWindow(DukeManiaWindowState.OPTIONS, data);
                 }
             }
         });

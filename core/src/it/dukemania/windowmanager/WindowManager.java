@@ -1,5 +1,7 @@
 package it.dukemania.windowmanager;
 
+import it.dukemania.Model.GameModel;
+
 import java.util.HashMap;
 
 public class WindowManager implements SwitchWindowNotifier {
@@ -18,7 +20,7 @@ public class WindowManager implements SwitchWindowNotifier {
         windows.put(associatedState.getStateValue(), window);
     }
 
-    public void switchWindow(final WindowState state, final Object data) {
+    public void switchWindow(final WindowState state, final GameModel data) {
         //TODO Do dispose?
         Window prevWindow = currentWindow;
         currentWindow = windows.get(state.getStateValue());
