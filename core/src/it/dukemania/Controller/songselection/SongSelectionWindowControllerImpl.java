@@ -195,7 +195,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public Integer[] getNumOfCols() {
-        return Arrays.stream(Columns.values()).map(Columns::getNumericValue).toArray(Integer[]::new);
+        return Arrays.stream(Columns.values()).map(Columns::getNumericValue).filter(c -> c >= 4).toArray(Integer[]::new);
     }
 
     private List<SongInfo> getSongsConfiguration() {

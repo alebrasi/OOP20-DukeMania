@@ -19,7 +19,7 @@ import it.dukemania.midi.InstrumentType;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 
 import javax.sound.midi.InvalidMidiDataException;
-import java.io.IOException;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
