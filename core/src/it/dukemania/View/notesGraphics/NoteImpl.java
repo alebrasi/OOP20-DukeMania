@@ -22,6 +22,7 @@ public class NoteImpl implements Note {
     private static final Double NOTE_SPEED = 200.0;
     private final Columns column;
     private static final int FINISH_LINE = 108;
+    private static final int DISPLACEMENT = 5;
     private final int posxSparks;
     private final int xSparks;
     private final int ySparks;
@@ -52,7 +53,8 @@ public class NoteImpl implements Note {
 	public void updateNote(final float deltaTime) {
 	    this.posyNote -= NoteImpl.NOTE_SPEED * deltaTime;
 
-	    if (this.posyNote == NoteImpl.FINISH_LINE) {
+	    if (this.posyNote <= NoteImpl.FINISH_LINE + NoteImpl.DISPLACEMENT  && this.posyNote >= NoteImpl.FINISH_LINE - NoteImpl.DISPLACEMENT) {
+	        System.out.println("hey");
 	        this.timeOfFall = Instant.now().toEpochMilli() - this.startNote;
 	    }
 
