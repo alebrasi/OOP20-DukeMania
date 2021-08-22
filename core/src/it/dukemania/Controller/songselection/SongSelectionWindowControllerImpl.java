@@ -15,7 +15,6 @@ import it.dukemania.windowmanager.DukeManiaWindowState;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.Track;
 import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -68,6 +67,9 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         Optional<SongInfo> song = songsConfigurations.stream().filter(s -> s.getSongHash().equals(hashedFile)).findFirst();
         this.path = path;
         if (song.isPresent()) {
+            if (song.get().getTracks().size() == 0) {
+                throw new InvalidMidiDataException();
+            }
             currentSong = song.get();
             songsConfigurations.remove(currentSong);
         } else {
@@ -131,7 +133,6 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     @Override
     public void setPlayTrack(final int trackNumber) {
         selectedTrackChannel = trackNumber;
-        System.out.println(trackNumber);
     }
 
     @Override
@@ -155,7 +156,11 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                                             .findFirst().get();
         currentSong.getTracks().forEach(x -> {
             if (x.getChannel() != 10) {
-                TrackImpl track = (TrackImpl) song.getTracks().stream().filter(trk -> trk.getChannel() == x.getChannel()).findFirst().get();
+                TrackImpl track = (TrackImpl) song.getTracks()
+                                                    .stream()
+                                                    .filter(trk -> trk.getChannel() == x.getChannel())
+                                                    .findFirst()
+                                                    .get();
                 track.setInstrument((InstrumentType) x.getInstrument());
             }
         });
@@ -166,8 +171,12 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     @Override
+    public void setColumnsNumber(final int columns) {
+        data.setNumColumn(columns);
+    }
+
+    @Override
     public SongInfo getSongInfo() {
-        currentSong.getTracks().forEach(t -> System.out.println(t.getDifficultyLevel().getEffectiveName()));
         return new SongInfo(currentSong.getTitle(),
                             "",
                             currentSong.getDuration(),
@@ -184,9 +193,13 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         return Arrays.stream(InstrumentType.values()).map(Enum::toString).toArray(String[]::new);
     }
 
+    @Override
+    public Integer[] getNumOfCols() {
+        return Arrays.stream(Columns.values()).map(Columns::getNumericValue).toArray(Integer[]::new);
+    }
+
     private List<SongInfo> getSongsConfiguration() {
-        //ConfigurationsModelImpl.Song conf = new ConfigurationsModelImpl.Song();
-        List<SongInfo> songs = Collections.emptyList();
+        List<SongInfo> songs;
         try {
             songs = configurationModel.readSongsConfiguration();
         } catch (IOException e) {
@@ -197,15 +210,6 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     private void writeSongsConfiguration(final List<SongInfo> songs) {
-        /*
-        List<TrackInfo> tracks = new ArrayList<>();
-        List<SongInfo> mySongs = new ArrayList<>();
-        tracks.add(new TrackInfo(1, "Slap Bass", InstrumentType.ELECTRIC_GUITAR_C));
-        tracks.add(new TrackInfo(2, "Guitar Solo", InstrumentType.ELECTRIC_GUITAR_C));
-        mySongs.add(new SongInfo("This game", "8e155c5c5b4b0b2c2cbedbcdcc58d59859cf493aa67d6a26e8d079872d062f9b", 3, tracks, 160));
-        mySongs.add(new SongInfo("Red Zone", "agdgggdgfg", 3, tracks, 180));
-        */
-
         try {
             configurationModel.writeSongsConfiguration(songs);
         } catch (IOException e) {

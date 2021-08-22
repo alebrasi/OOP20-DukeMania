@@ -10,20 +10,12 @@ import java.io.IOException;
 import java.util.List;
 
 public interface SongSelectionWindowController {
-    /*
-    TODO:
-        - Select song
-        - Get Tracks
-        - Get Instruments
-        - Get instrument associated to the track
-        - Set instrument to a track (Optional)
-        - Set play track
-        - Play!
-    */
     void openSong(String path) throws InvalidMidiDataException, IOException;
     void setPlayTrack(int trackNumber);
     void updateTracks(List<String> names, List<InstrumentType> instruments);
     void playSong(SwitchWindowNotifier notifier) throws InvalidMidiDataException, IOException;
+    void setColumnsNumber(int columns);
     SongInfo getSongInfo();
     String[] getAllInstruments();
+    Integer[] getNumOfCols();
 }

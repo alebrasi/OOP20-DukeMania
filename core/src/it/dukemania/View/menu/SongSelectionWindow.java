@@ -33,7 +33,7 @@ public class SongSelectionWindow extends AbstractView {
     private static final int TABLE_PADDING = 30;
     private static final float TABLE_BACKGROUND_OPACITY = 0.2f;
     private static final float TABLE_TRACKS_HEIGHT = 200f;
-    private final Texture tableBackgroundTexture = new Texture(Gdx.files.internal("background.png"));
+    private Texture tableBackgroundTexture;
 
     public SongSelectionWindow(final String backgroundPath, final Skin skin) throws NoSuchAlgorithmException {
         super(backgroundPath, skin);
@@ -42,6 +42,7 @@ public class SongSelectionWindow extends AbstractView {
     @Override
     public void create() {
         super.create();
+        tableBackgroundTexture = new Texture(Gdx.files.internal("background.png"));
         try {
             controller = new SongSelectionWindowControllerImpl(data);
         } catch (NoSuchAlgorithmException e) {
@@ -64,9 +65,12 @@ public class SongSelectionWindow extends AbstractView {
         Label lblSongName = new Label("", skin);
         Label lblBPM = new Label("", skin);
         Label lblDifficultyLevel = new Label("Difficulty", skin);
+        Label lblNumCols = new Label("Choose the number of columns", skin);
         TextButton btnBackToTitle = new TextButton("Back to title screen", skin);
         TextButton btnSaveSongConfigs = new TextButton("Save configuration", skin);
         TextButton btnPlayTrack = new TextButton("Play Track", skin);
+        SelectBox<Integer> slctNumCols = new SelectBox<Integer>(skin);
+        slctNumCols.setItems(controller.getNumOfCols());
 
         btnPlayTrack.setTouchable(Touchable.disabled);
         btnSaveSongConfigs.setTouchable(Touchable.disabled);
@@ -153,6 +157,7 @@ public class SongSelectionWindow extends AbstractView {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
                 controller.setPlayTrack(Integer.parseInt(playableTracks.getChecked().getText().toString()));
+
                 try {
                     controller.playSong(switchWindowNotifier);
                 } catch (InvalidMidiDataException | IOException e) {
@@ -201,6 +206,9 @@ public class SongSelectionWindow extends AbstractView {
         tblConfigSong.row();
         tblConfigSong.add(scrollTableTracks).expandX().fillX().colspan(4).height(TABLE_TRACKS_HEIGHT);
         tblConfigSong.row();
+        tblConfigSong.add(lblNumCols).padLeft(TABLE_PADDING);
+        tblConfigSong.add(slctNumCols);
+        tblConfigSong.row();
         tblConfigSong.add(btnBackToTitle).expandX().left().padLeft(TABLE_PADDING);
         tblConfigSong.add(btnSaveSongConfigs).expandX().colspan(3).right().padRight(TABLE_PADDING);
         tblConfigSong.row();
@@ -217,5 +225,11 @@ public class SongSelectionWindow extends AbstractView {
         //mainMenuContainer.setDebug(true, true);
         mainStage.addActor(mainMenuContainer);
         Gdx.input.setInputProcessor(mainStage);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        tableBackgroundTexture.dispose();
     }
 }
