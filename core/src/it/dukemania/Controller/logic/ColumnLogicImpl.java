@@ -11,8 +11,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import it.dukemania.audioengine.Pair;
+import it.dukemania.audioengine.PlayerAudio;
 import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.Song;
 
 public class ColumnLogicImpl implements ColumnLogic {
 
@@ -27,11 +29,29 @@ public class ColumnLogicImpl implements ColumnLogic {
     private List<NoteRange> noteRanges;
     private int combo;
 
+    private PlayerAudio player;
+
     public ColumnLogicImpl(final int columnNumber) {
         this.columnNumber = (columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP)
                         ? columnNumber : COLUMN_MIN_CAP;
         combo = 0;
         this.noteRanges = new ArrayList<>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initAudio(final Song song) {
+        player = new PlayerAudio(song);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void play() {
+        player.playNotes();
     }
 
     @Override

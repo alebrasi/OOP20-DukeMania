@@ -101,7 +101,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private static final int YNOTE = 80;
     private static final int FONT_SIZE = 40;
 
-    private PlayerAudio player;
 
 
     @Override
@@ -139,6 +138,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     @Override
     public void create() {
 
+
         notes = new ArrayList<>();
         buttons = new ArrayList<>();
         layout = new GlyphLayout();
@@ -156,7 +156,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         final Viewport buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
         final Viewport stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
 
-        player = new PlayerAudio(song);
 
         this.buttonsStage = new Stage(buttonsViewport, this.batch);
         this.stage = new Stage(stageViewport, this.backgroundBatch);
@@ -167,7 +166,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         Skin skin = new Skin();
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("pinkAndBlueButtons.atlas"));
 
-
+        logic.initAudio(song);
         skin.addRegions(atlas);
 
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
@@ -354,7 +353,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, new Object[] {songHash, "Pluto", 69});
             this.startTime = 0;
         } else {
-            player.playNotes();
+            logic.play();
         }
 
 

@@ -2,9 +2,21 @@ package it.dukemania.Controller.logic;
 
 import java.util.List;
 import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.Song;
 
 
 public interface ColumnLogic {
+
+    /**
+     * Initialize the audio player.
+     * @param song the song configuration
+     */
+    void initAudio(Song song);
+
+    /**
+     * play a buffer from the audio Player.
+     */
+    void play();
 
     /**
      * 
