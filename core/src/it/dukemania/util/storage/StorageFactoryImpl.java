@@ -1,6 +1,7 @@
 package it.dukemania.util.storage;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -15,14 +16,9 @@ public class StorageFactoryImpl implements StorageFactory {
     private static final String FILE_SEPARATOR = File.separator;
     private static final String CONFIGS_PATH = USER_HOME_PATH + FILE_SEPARATOR + CONFIG_FOLDER_NAME;
 
-    private final Function<String, File> configurationMappingFunction = (path) -> new File(CONFIGS_PATH + FILE_SEPARATOR + path);
-    private final Function<String, File> externalMappingFunction = File::new;
-    private final Function<String, File> assetMappingFunction = (path) -> {
-        if (Gdx.files.internal(path).file().exists()) {
-            return Gdx.files.internal((path)).file().getAbsoluteFile();
-        }
-        return Gdx.files.internal("core" + FILE_SEPARATOR + "assets" + FILE_SEPARATOR + path).file().getAbsoluteFile();
-    };
+    private final Function<String, FileHandle> configurationMappingFunction = path -> new FileHandle(new File(CONFIGS_PATH + FILE_SEPARATOR + path));
+    private final Function<String, FileHandle> externalMappingFunction = path -> new FileHandle(new File(path));
+    private final Function<String, FileHandle> assetMappingFunction = path -> Gdx.files.internal(path);
 
     @Override
     public Storage getAssetStorage() {
@@ -41,35 +37,35 @@ public class StorageFactoryImpl implements StorageFactory {
 
     private static final class StorageImpl implements Storage {
 
-        private final Function<String, File> fileMapping;
+        private final Function<String, FileHandle> fileMapping;
 
-        private StorageImpl(final Function<String, File> fileMappingFunction) {
+        private StorageImpl(final Function<String, FileHandle> fileMappingFunction) {
             this.fileMapping = fileMappingFunction;
         }
 
         @Override
         public void writeStringOnFile(final String filePath, final String content) throws IOException {
-            Files.write(fileMapping.apply(filePath).toPath(), content.getBytes());
+            Files.write(fileMapping.apply(filePath).file().getAbsoluteFile().toPath(), content.getBytes());
         }
 
         @Override
         public String readFileAsString(final String filePath) throws IOException {
-            return Files.readString(fileMapping.apply(filePath).toPath());
+            return Files.readString(fileMapping.apply(filePath).file().getAbsoluteFile().toPath());
         }
 
         @Override
         public byte[] readFileAsByte(final String filePath) throws IOException {
-            return Files.readAllBytes(fileMapping.apply(filePath).toPath());
+            return Files.readAllBytes(fileMapping.apply(filePath).file().getAbsoluteFile().toPath());
         }
 
         @Override
         public boolean createDirectory(final String dirName) {
-            return fileMapping.apply(dirName).mkdir();
+            return fileMapping.apply(dirName).file().getAbsoluteFile().mkdir();
         }
 
         @Override
         public boolean createDirectoryRecursively(final String path) {
-            return fileMapping.apply(path).mkdirs();
+            return fileMapping.apply(path).file().getAbsoluteFile().mkdirs();
         }
 
         @Override
@@ -79,7 +75,7 @@ public class StorageFactoryImpl implements StorageFactory {
             String tmpPath = Arrays.stream(dirs).limit(dirs.length - 1).collect(Collectors.joining(tmpSeparator));
             createDirectoryRecursively(tmpPath);
             try {
-                return fileMapping.apply(path).createNewFile();
+                return fileMapping.apply(path).file().getAbsoluteFile().createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -87,18 +83,27 @@ public class StorageFactoryImpl implements StorageFactory {
         }
 
         @Override
-        public String getDirectorySeparator() {
-            return FILE_SEPARATOR;
-        }
-
-        @Override
         public File getAsFile(final String path) {
-            return fileMapping.apply(path);
+            return fileMapping.apply(path).file();
         }
 
         @Override
         public String getBaseDirectoryName() {
-            return null;
+            return fileMapping.apply("").file().getAbsoluteFile().getAbsolutePath();
+        }
+
+        @Override
+        public FileHandle getAsFileHandle(final String path) {
+            return fileMapping.apply(path);
+        }
+
+        @Override
+        public void copyTo(final String source, final String destination) throws IOException {
+            createFileIfNotExists(destination);
+            File file = new File(destination);
+            InputStream in = fileMapping.apply(source).read();
+            FileOutputStream outStream = new FileOutputStream(file, false);
+            outStream.write(in.readAllBytes());
         }
     }
 }

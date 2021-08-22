@@ -1,6 +1,9 @@
 package it.dukemania.util.storage;
 
+import com.badlogic.gdx.files.FileHandle;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface Storage {
@@ -10,7 +13,8 @@ public interface Storage {
     boolean createDirectory(String dirName);
     boolean createDirectoryRecursively(String path);
     boolean createFileIfNotExists(String path);
-    String getDirectorySeparator();
     File getAsFile(String path);
     String getBaseDirectoryName();
+    FileHandle getAsFileHandle(String path);
+    void copyTo(String source, String destination) throws IOException;
 }
