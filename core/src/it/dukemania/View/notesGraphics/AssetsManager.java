@@ -18,12 +18,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public final class AssetsManager {
     private static AssetsManager instance;
-    private static boolean areLoaded;
-    private static Map<String, Texture> textureAssociations = new HashMap<>();
-    private static Map<String, Skin> skinAssociations = new HashMap<>();
-    private static Map<String, FreeTypeFontGenerator> fontAssociations = new HashMap<>();
-    private static Map<String, TextureAtlas> textureAtlasAssociations = new HashMap<>();
-    private static Map<String, FileHandle> jsonAssociations = new HashMap<>();
+    private boolean areLoaded;
+    private Map<String, Texture> textureAssociations = new HashMap<>();
+    private Map<String, Skin> skinAssociations = new HashMap<>();
+    private Map<String, FreeTypeFontGenerator> fontAssociations = new HashMap<>();
+    private Map<String, TextureAtlas> textureAtlasAssociations = new HashMap<>();
+    private Map<String, FileHandle> jsonAssociations = new HashMap<>();
 
 
 
@@ -39,7 +39,7 @@ public final class AssetsManager {
 
 
     private AssetsManager() {
-
+        load();
     }
 
     /***
@@ -60,10 +60,13 @@ public final class AssetsManager {
      * @return a specific texture
      * @throws FileNotFoundException 
      */
-    public static Texture getTexture(final String textureStr) throws NullPointerException {
+    public Texture getTexture(final String textureStr) throws NullPointerException {
+        /*
         if (textureAssociations.isEmpty()) {
             load();
         }
+
+         */
         if (textureAssociations.get(textureStr) == null) { 
             throw new NullPointerException(); 
         }
@@ -73,7 +76,7 @@ public final class AssetsManager {
     /***
      * load all the textures.
      */
-    private static void loadTexture() {
+    private void loadTexture() {
         textureAssociations.put("pinkAndBlueButtons.png", new Texture(Gdx.files.internal("atlas/pinkAndBlueButtons.png")));
         textureAssociations.put("background.png", new Texture(Gdx.files.internal("textures/background.png")));
         textureAssociations.put("blueBackground.png", new Texture(Gdx.files.internal("textures/blueBackground.png")));
@@ -88,10 +91,13 @@ public final class AssetsManager {
      * @param skinStr
      * @return a specific skin
      */
-    public static Skin getSkin(final String skinStr) throws NullPointerException {
+    public Skin getSkin(final String skinStr) throws NullPointerException {
+        /*
         if (skinAssociations.isEmpty()) {
             load();
         }
+
+         */
         if (skinAssociations.get(skinStr) == null) { 
             throw new NullPointerException(); 
         }
@@ -100,7 +106,7 @@ public final class AssetsManager {
 
     /***load all the skins.
      * */
-    private static void loadSkin() {
+    private void loadSkin() {
         skinAssociations.put("skin_menu", generateSkinMenu());
     }
 
@@ -110,10 +116,13 @@ public final class AssetsManager {
      * @param fontStr
      * @return a specific BitmapFont
      */
-    public static FreeTypeFontGenerator getBitmapFont(final String fontStr) {
+    public FreeTypeFontGenerator getBitmapFont(final String fontStr) {
+        /*
         if (fontAssociations.isEmpty()) {
             load();
         }
+
+         */
         if (fontAssociations.get(fontStr) == null) { 
             throw new NullPointerException(); 
         }
@@ -122,8 +131,8 @@ public final class AssetsManager {
 
     /***load all the BitmapFonts.
      * */
-    public static void loadBitmapFont() {
-        fontAssociations.put("scoreboard_font.TTF", new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF")));
+    public void loadBitmapFont() {
+        fontAssociations.put("scoreboard_font.TTF", new FreeTypeFontGenerator(Gdx.files.internal("fonts/scoreboard_font.TTF")));
         fontAssociations.put("agency-fb.ttf", new FreeTypeFontGenerator(Gdx.files.internal("fonts/agency-fb.ttf")));
     }
 
@@ -132,11 +141,14 @@ public final class AssetsManager {
      * @param textureStr
      * @return a specific textureAtlas
      */
-    public static TextureAtlas getTextureAtlas(final String textureAtlasStr) {
+    public TextureAtlas getTextureAtlas(final String textureAtlasStr) {
+        /*
         if (textureAtlasAssociations.isEmpty()) {
             load();
         }
-        if (textureAtlasAssociations.get(textureAtlasStr) == null) { 
+
+         */
+        if (textureAtlasAssociations.get(textureAtlasStr) == null) {
             throw new NullPointerException(); 
         }
         return textureAtlasAssociations.get(textureAtlasStr);
@@ -144,7 +156,7 @@ public final class AssetsManager {
 
     /***load all the TextureAtlas.
      * */
-    public static void loadTextureAtlas() {
+    public void loadTextureAtlas() {
         textureAtlasAssociations.put("pinkAndBlueButtons.atlas", new TextureAtlas(Gdx.files.internal("atlas/pinkAndBlueButtons.atlas")));
         textureAtlasAssociations.put("quantum-horizon-ui.atlas", new TextureAtlas(Gdx.files.internal("atlas/quantum-horizon-ui.atlas")));
     }
@@ -155,10 +167,13 @@ public final class AssetsManager {
      * @param jsonStr
      * @return a specific json
      */
-    public static FileHandle getJson(final String jsonStr) {
+    public FileHandle getJson(final String jsonStr) {
+        /*
         if (textureAtlasAssociations.isEmpty()) {
             load();
         }
+
+         */
         if (jsonAssociations.get(jsonStr) == null) { 
             throw new NullPointerException(); 
         }
@@ -167,12 +182,12 @@ public final class AssetsManager {
 
     /***load all the json files.
      * */
-    public static void loadJson() {
-        jsonAssociations.put("quantum-horizon-ui.json", new FileHandle("json/quantum-horizon-ui.json"));
-        jsonAssociations.put("synthesizers_config.json", new FileHandle("json/synthesizers_config.json"));
+    public void loadJson() {
+        jsonAssociations.put("quantum-horizon-ui.json", Gdx.files.internal("json/quantum-horizon-ui.json"));
+        //jsonAssociations.put("synthesizers_config.json", new FileHandl("json/synthesizers_config.json"));
     }
 
-    private static BitmapFont generateFontMenu() {
+    private BitmapFont generateFontMenu() {
         generator = getBitmapFont("agency-fb.ttf");
         final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = fontSize;
@@ -184,7 +199,7 @@ public final class AssetsManager {
         return font;
     }
 
-    public static BitmapFont generateFontScoreboard() {
+    public BitmapFont generateFontScoreboard() {
         generator = getBitmapFont("scoreboard_font.TTF");
         final FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = AssetsManager.FONT_SIZE;
@@ -196,24 +211,25 @@ public final class AssetsManager {
         return fontScoreboard;
     }
 
-    private static Skin generateSkinMenu() {
+    private Skin generateSkinMenu() {
         final Skin s1 = new Skin();
         final BitmapFont font = generateFontMenu();
         s1.add("font", font);
         s1.add("title", font);
-        s1.addRegions(AssetsManager.getTextureAtlas("quantum-horizon-ui.atlas"));
-        s1.load(AssetsManager.getJson("quantum-horizon-ui.json"));
+        s1.addRegions(getTextureAtlas("quantum-horizon-ui.atlas"));
+        s1.load(getJson("quantum-horizon-ui.json"));
         return s1;
     }
 
     /***load all the resources.
      * */
-    public static void load() {
+    public void load() {
         if (!areLoaded) {
             loadTexture();
-            loadSkin();
-            loadBitmapFont();
             loadTextureAtlas();
+            loadBitmapFont();
+            loadJson();
+            loadSkin();
             areLoaded = true;
         }
     }
