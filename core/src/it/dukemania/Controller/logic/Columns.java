@@ -1,8 +1,38 @@
 package it.dukemania.Controller.logic;
 
 public enum Columns {
-    COLUMN_1(1), COLUMN_2(2), COLUMN_3(3), COLUMN_4(4),
-    COLUMN_5(5), COLUMN_6(6), COLUMN_7(7), COLUMN_8(8);
+    /**
+     * first column.
+     */
+    COLUMN_1(1),
+    /**
+     * second column.
+     */
+    COLUMN_2(2),
+    /**
+     * third column.
+     */
+    COLUMN_3(3),
+    /**
+     * fourth column.
+     */
+    COLUMN_4(4),
+    /**
+     * fifth column.
+     */
+    COLUMN_5(5),
+    /**
+     * sixth column.
+     */
+    COLUMN_6(6),
+    /**
+     * seventh column.
+     */
+    COLUMN_7(7),
+    /**
+     * eighth column.
+     */
+    COLUMN_8(8);
 
     private int numericValue;
 

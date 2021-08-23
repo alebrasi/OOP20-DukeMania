@@ -48,10 +48,10 @@ public interface ColumnLogic {
     List<LogicNote> noteQueuing(MidiTrack track);
 
     /**
-     * Initialize the score strategy.
-     * @param actualScoreStrategy the strategy for calculating the score
+     * Call this method before playing a new track to reset combo variable.
+     * 
      */
-    void contextInit(ScoreStrategy actualScoreStrategy);
+    void contextInit();
 
     /**
      * 

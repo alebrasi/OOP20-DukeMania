@@ -30,7 +30,7 @@ public class ColumnLogicImpl implements ColumnLogic {
         this.columnNumber = (columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP)
                         ? columnNumber : COLUMN_MIN_CAP;
         this.noteRanges = new ArrayList<>();
-        this.context = new ScoreContext(new FullCalculator());
+        contextInit();
     }
 
     @Override
@@ -143,8 +143,8 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     @Override
-    public final void contextInit(final ScoreStrategy actualScoreStrategy) {
-        this.context = new ScoreContext(actualScoreStrategy);
+    public final void contextInit() {
+        this.context = new ScoreContext(new FullCalculator());
     }
 
     @Override
