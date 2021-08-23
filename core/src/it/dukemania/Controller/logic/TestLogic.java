@@ -24,6 +24,7 @@ public class TestLogic {
     private ColumnLogic columnLogic;
 
     private List<AbstractNote> createNotes(final int quantity) { 
+        //generate notes for testing
         List<AbstractNote> testNotes = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
             testNotes.add(new Note(Optional.of(2000000L), i, 0));
@@ -32,6 +33,7 @@ public class TestLogic {
     }
 
     private List<List<LogicNote>> logicNoteGrouping(final List<LogicNote> notes) {
+        //organize notes for testing purposes
         return notes.stream()
                 .collect(Collectors.groupingBy(LogicNote::getColumn, Collectors.toList()))
                 .values()

@@ -7,7 +7,11 @@ public class FullCalculator implements ScoreStrategy {
     private static final int MAX_COMBO = 20;
     private static final int COMBO_POINT = 5;
     private static final int GIFT_POINT = 20;
-    private int combo = 0;
+    private int combo;
+
+    public FullCalculator() {
+        this.combo = 0;
+    }
 
     /**
      * calculate the score using tolerance, gift point and combo point.
