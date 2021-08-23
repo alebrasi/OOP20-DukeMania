@@ -16,7 +16,9 @@ public class StorageFactoryImpl implements StorageFactory {
     private static final String FILE_SEPARATOR = File.separator;
     private static final String CONFIGS_PATH = USER_HOME_PATH + FILE_SEPARATOR + CONFIG_FOLDER_NAME;
 
-    private final Function<String, FileHandle> configurationMappingFunction = path -> new FileHandle(new File(CONFIGS_PATH + FILE_SEPARATOR + path));
+    private final Function<String, FileHandle> configurationMappingFunction = path -> {
+        return new FileHandle(new File(CONFIGS_PATH + FILE_SEPARATOR + path));
+    };
     private final Function<String, FileHandle> externalMappingFunction = path -> new FileHandle(new File(path));
     private final Function<String, FileHandle> assetMappingFunction = path -> Gdx.files.internal(path);
 
@@ -98,10 +100,11 @@ public class StorageFactoryImpl implements StorageFactory {
         }
 
         @Override
-        public void copyTo(final String source, String destination) throws IOException {
-            destination = (destination.contains("/") && !File.separator.equals("/")) ? destination.replace("/", "\\") : destination;
-            createFileIfNotExists(destination);
-            File file = new File(destination);
+        public void copyTo(final String source, final String destination) throws IOException {
+            String tmpDestination = (destination.contains("/") && !File.separator.equals("/")) ? destination.replace("/", "\\")
+                                                                                                : destination;
+            createFileIfNotExists(tmpDestination);
+            File file = new File(tmpDestination);
             InputStream in = fileMapping.apply(source).read();
             FileOutputStream outStream = new FileOutputStream(file, false);
             outStream.write(in.readAllBytes());
