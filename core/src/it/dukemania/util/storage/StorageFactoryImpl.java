@@ -24,24 +24,24 @@ public class StorageFactoryImpl implements StorageFactory {
 
     @Override
     public Storage getAssetStorage() {
-        return new StorageImpl(assetMappingFunction);
+        return new LocalStorageImpl(assetMappingFunction);
     }
 
     @Override
     public Storage getConfigurationStorage() {
-        return new StorageImpl(configurationMappingFunction);
+        return new LocalStorageImpl(configurationMappingFunction);
     }
 
     @Override
     public Storage getExternalStorage() {
-        return new StorageImpl(externalMappingFunction);
+        return new LocalStorageImpl(externalMappingFunction);
     }
 
-    private static final class StorageImpl implements Storage {
+    private static final class LocalStorageImpl implements Storage {
 
         private final Function<String, FileHandle> fileMapping;
 
-        private StorageImpl(final Function<String, FileHandle> fileMappingFunction) {
+        private LocalStorageImpl(final Function<String, FileHandle> fileMappingFunction) {
             this.fileMapping = fileMappingFunction;
         }
 
