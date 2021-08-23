@@ -13,19 +13,25 @@ import it.dukemania.midi.TrackImpl;
 public class TrackFilterImpl implements TrackFilter {
 
     static final int MAX_NOTE = 600;
-    static final int SAFE_CHANNEL = 10;
+    static final int PERCUSSION_CHANNEL = 10;
+    static final long MIN_DURATION = 125000; //microseconds
 
     @Override
     public final List<MidiTrack> reduceTrack(final Song song) {
         return song.getTracks().stream()
-                .filter(x -> x.getChannel() != SAFE_CHANNEL)//remove unplayable tracks
+                .filter(x -> x.getChannel() != PERCUSSION_CHANNEL)//remove unplayable tracks
+                .map(x -> FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
+                        x.getNotes().stream()
+                        .filter(y -> y.getDuration().orElse(0L) >= MIN_DURATION)
+                        //remove unplayable notes
+                        .collect(Collectors.toList()), x.getChannel()))
                 .map(x -> {
                     final int numberOfNotes = x.getNotes().size();
                     final List<AbstractNote> notePos = x.getNotes();
                     return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
                             x.getNotes().stream()
                             .filter(y -> notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0) 
-                            //remove extra note
+                            //remove extra notes
                             .collect(Collectors.toList()), x.getChannel());
                     })
                 .sorted(Comparator.comparing(e -> e.getNotes().size()))

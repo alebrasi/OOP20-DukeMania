@@ -7,7 +7,7 @@ public class PercussionTrackImpl implements MidiTrack {
     private final int channel;
 
     /**
-     * constructor
+     * constructor.
      * @param notes
      * @param channel
      */

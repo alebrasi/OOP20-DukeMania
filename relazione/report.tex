@@ -60,17 +60,26 @@ Ci sarà una entità responsabile della gestione e riproduzione del tono e del v
 Il gameplay si svolgerà su varie colonne, in ognuna delle quali cadranno note relative alla traccia selezionata, opportunamente semplificata per garantirne la giocabilità.
 Le difficoltà primarie riguarderanno il calcolo del punteggio in base alla precisione del giocatore e la sincronizzazione tra la caduta delle note e il suono riprodotto.
 Alla fine della partita, dovrà essere visualizzata una schermata contenente il punteggio migliore di ogni singolo giocatore ottenuto sulla canzone selezionata in precedenza.
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{img/uml_analisi.jpg}}
+	\caption{Schema UML della fase di analisi.}
+	\label{img:analysis}
+\end{figure}
 \newpage
-
 
 
 \chapter{Design}
 \section{Architettura}
-Qui viene descritta in maniera dettagliata l'architettura
+L'architettura di DukeMania è basata sul pattern MVC.
+La classe DukeMania è l'entry point dell'applicazione, al suo interno vengono inizializzate tutte le View e il WindowManager, la classe che fungerà da Controller principale.
+Il compito pricipale di WindowManager è quello di cambiare, tra le varie View, la finestra da renderizzare e visualizzare, occupandosi inoltre di passare il Model alle varie schermate, che a loro volta lo passeranno al relativo Controller.
+Il Model principale, rappresentato da GameModel, conterrà le configurazioni di gioco, rendendole così accessibili a tutte le View.
+La classe WindowManager implementa l'interfaccia SwitchWindowNotifier, il cui compito principale e' quello di notificare il WindowManager, segnalandogli che un controller di una View vuole sostituire la finestra attiva.
+Tutte le View implementano l'interfaccia Window, la quale le rende predisposte a ricevere i dati del Model, e ad utilizzare lo SwitchWindowNotifier tramite il proprio controller.
+Utilizzando questa strategia è semplice aggiungere nuove View e definirne il comportamento.
+\newpage
 \section{Design dettagliato}
 \subsection{Gianluca Migliarini}
-La parte del progetto alla quale mi sono dedicato riguarda lo sviluppo del Player Audio. \\
-A questo oggetto viene delegato il compito di riprodurre le varie note musicali e le percussioni che compongono il file Midi seguendo il ritmo giusto, ovvero senza essere influenzato da eventuali cali di frame o problematiche simili. \\
 La classe Engine si occupa di aggiornare e visualizzare lo stato dei vari sintetizzatori (tastiere simulate),
 ad ogni chiamata del metodo render viene riempito un buffer di samples (campioni audio), ogni campione audio viene calcolato sommando i campioni audio di tutti i sintetizzatori al momento della chiamata.
 Una volta che il buffer e' pieno, viene mandato al dispositivo audio che si occupa di suonare i vari campioni.
@@ -118,7 +127,7 @@ progetto
 
 \chapter{Sviluppo}
 \section{Testing}
-Abbiamo fatto i test amonger per vedere se le classi facevano schifo \\ \\
+test \\ \\
 {\setstretch{0.6}
 Le classi che sono state testate sono: \\
 \begin{itemize}
@@ -133,10 +142,11 @@ Le classi che sono state testate sono: \\
 }
 \newpage
 \section{Metodologia di lavoro}
-\subsection*{lavoro meme}
-git 
-\subsection*{lavoro meme 2}
-git 
+\subsection{Gestione del lavoro}
+Lo sviluppo del progetto è stato preceduto da una fase preliminare di analisi, durante la quale tutti insieme abbiamo lavorato per definire le basi dell'applicazione e, successivamente, per specificare i vari dettagli implementativi tramite UML.
+La suddivisione delle parti del progetto è avvenuta in modo equo assegnando a ciascuno una parte significativa e importante del progetto.
+\subsection*{Gestione del DVCS}
+Per il DVCS è stato utilizzato git, in quanto è stato il Software spiegato a lezione. Abbiamo creato una repository su github e abbiamo deciso di creare un branch per ogni membro del team. In seguito, quando ritenuto che ognuno di noi avesse implementato il "core" della propria parte, abbiamo deciso di eseguire un merge in un nuovo branch "alpha", sul quale ogni membro ha continuato a salvare le proprie modifiche e sul quale sono stati effettuati i primi test di giocabilità.
 \newpage
 
 \subsection*{Suddivisione del lavoro}
@@ -328,8 +338,7 @@ librerie utilizzate:
 
 
 \chapter{Commenti Finali}
-\section{Autovalutazione e lavori futuri}
-questo progetto ci ha fatto schifo \\
+\section{Autovalutazione e lavori futuri} \\
 schermata 
 \newpage
 
@@ -344,9 +353,10 @@ In conclusione, ritengo che il corso sia stato più che sufficiente per garantir
 \newpage
 \section{Serafino Pandolfini}
 \subsection{commenti}
-progetto 
+Sono personalmente soddisfatto del lavoro che ho svolto; fin dai miei primi approcci alla programmazione ho sempre preferito, piuttosto che dedicarmi a particolari funzionalità di librerie, a porre il mio interesse sulle strutture dati e le loro organizzazioni e in questo progetto ho avuto modo di mettermi alla prova in un contesto che non fosse il mio solito programma giocattolo scoprendo le mie effettive conoscenze e capacità. Ho avuto modo di apprezzare in particolare gli stream e le loro funzionalità che riuscivano sempre a stupirmi. È stata ricorrente la situazione in cui emergeva un problema ed esisteva già un operazione in grado di risolverlo in modo quasi istantaneo.
+Non ho intenzione di continuare a sviluppare questo progetto ma se non mi fossi limitato al monte ore richiesto mi sarebbe piaciuto sviluppare altre modalità di gioco con calcoli dei punteggi e gameplay differenti prendendo ispirazione da altri giochi simili. 
 \subsection{difficoltà riscontrate}
-progetto 
+Il progetto non è stato esente da difficoltà, principalmente la coordinazione tra i vari membri per quanto ottimale ha portato a incomprensioni sul funzionamento di certi aspetti e talvolta si è dovuto ricorrere a soluzioni non ottimali dal mio punto di vista. Dal mio punto di vista però l'emergere di queste difficoltà mi ha permesso di avere una comprensione più completa del progetto che non avrei avuto altrimenti.
 \newpage
 \section{Sofia Tosi}
 \subsection{commenti}
