@@ -24,6 +24,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     private static final int NOTE_TOLERANCE = 50;
     private static final int MAX_COMBO = 20;
     private static final int COMBO_POINT = 5;
+    private static final int GIFT_POINT = 20;
     private static final int MAX_HEIGHT = 4;
     private int columnNumber;
     private List<NoteRange> noteRanges;
@@ -167,7 +168,8 @@ public class ColumnLogicImpl implements ColumnLogic {
         this.combo = normalPoint >= NOTE_POINT - NOTE_TOLERANCE ? (this.combo < MAX_COMBO ? this.combo + 1 : this.combo) : 0;
         //combo increase if you played a perfect note (100 - NOTE_TOLERANCE)%
         return ((normalPoint >= NOTE_POINT - NOTE_TOLERANCE 
-                ? NOTE_POINT : (normalPoint + NOTE_TOLERANCE < 0 ? 0 
+                ? NOTE_POINT : (normalPoint + NOTE_TOLERANCE < 0 
+                        ? (currentRange.getStart() <= start && currentRange.getEnd() >= end ? GIFT_POINT : 0) 
                         : normalPoint + NOTE_TOLERANCE)) + COMBO_POINT * combo) * columnNumber;
     }
 
