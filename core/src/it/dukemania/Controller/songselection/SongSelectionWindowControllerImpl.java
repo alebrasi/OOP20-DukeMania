@@ -57,14 +57,6 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     private final GameModel data;
 
     public SongSelectionWindowControllerImpl(final GameModel data) throws NoSuchAlgorithmException {
-        //TODO De-HardCode
-        if (!configurationStorage.getAsFile("configs/synthesizers_config.json").exists()) {
-            try {
-                assetStorage.copyTo("synthesizers_config.json", configurationStorage.getBaseDirectoryName() + File.separator + "configs/synthesizers_config.json");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         synthesizersPresets = readSynthPresets();
         songsConfigurations = getSongsConfiguration();
         this.data = data;

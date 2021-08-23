@@ -35,8 +35,7 @@ public class LeaderboardControllerImpl implements LeaderboardController {
                             .findFirst()
                             .orElse(new SongLeaderBoard(songHash, new HashMap<>()));
             leaderBoards.remove(scores);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         scores.setUserScore(data.getPlayerName(), data.getScore());
         leaderBoards.add(scores);

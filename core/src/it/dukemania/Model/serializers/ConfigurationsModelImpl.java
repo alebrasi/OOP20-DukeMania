@@ -49,10 +49,9 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
         if (!storage.getAsFile(SYNTHESIZERS_CONFIGURATION_PATH).exists()) {
             try {
                 Storage assetStorage = new StorageFactoryImpl().getAssetStorage();
-                assetStorage.copyTo(SYNTHESIZERS_CONFIGURATION_NAME,
+                assetStorage.copyTo("json" + File.separator + SYNTHESIZERS_CONFIGURATION_NAME,
                         storage.getBaseDirectoryName() + File.separator + SYNTHESIZERS_CONFIGURATION_PATH);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         }
         String json = storage.readFileAsString(SYNTHESIZERS_CONFIGURATION_PATH);
