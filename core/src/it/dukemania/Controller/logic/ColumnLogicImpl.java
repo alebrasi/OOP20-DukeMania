@@ -20,38 +20,17 @@ public class ColumnLogicImpl implements ColumnLogic {
 
     private static final int COLUMN_MAX_CAP = 8;
     private static final int COLUMN_MIN_CAP = 4;
-    private static final int NOTE_POINT = 100;
-    private static final int NOTE_TOLERANCE = 50;
-    private static final int MAX_COMBO = 20;
-    private static final int COMBO_POINT = 5;
     private static final int MAX_HEIGHT = 4;
     private int columnNumber;
     private List<NoteRange> noteRanges;
-    private int combo;
-
     private PlayerAudio player;
+    private ScoreContext context;
 
     public ColumnLogicImpl(final int columnNumber) {
         this.columnNumber = (columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP)
                         ? columnNumber : COLUMN_MIN_CAP;
-        combo = 0;
         this.noteRanges = new ArrayList<>();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void initAudio(final Song song) {
-        player = new PlayerAudio(song);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void play() {
-        player.playNotes();
+        this.context = new ScoreContext(new FullCalculator());
     }
 
     @Override
@@ -67,6 +46,16 @@ public class ColumnLogicImpl implements ColumnLogic {
     @Override
     public final void addNoteRanges(final Columns column, final long start, final long end) {
         this.noteRanges.add(new NoteRange(column, start, end));
+    }
+
+    @Override
+    public final void initAudio(final Song song) {
+        player = new PlayerAudio(song);
+    }
+
+    @Override
+    public final void play() {
+        player.playNotes();
     }
 
     private List<AbstractNote> overlappingNotes(final List<AbstractNote> notes) {
@@ -154,9 +143,12 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     @Override
+    public final void contextInit(final ScoreStrategy actualScoreStrategy) {
+        this.context = new ScoreContext(actualScoreStrategy);
+    }
+
+    @Override
     public final int verifyNote(final Columns column, final long start, final long end) {
-        System.out.println("start " + start + " end " + end);
-        noteRanges.forEach(x -> System.out.println("tempo inizio " + x.getStart() +  "tempo di fine " + x.getEnd() + "colonna" + x.getColumn()));
         NoteRange currentRange = noteRanges.stream()
                 .filter(x -> x.getColumn().equals(column))
                 .filter(x -> start < x.getEnd() && end > x.getStart()) 
@@ -164,17 +156,9 @@ public class ColumnLogicImpl implements ColumnLogic {
                 .sorted(Comparator.comparingLong(NoteRange::getStart))
                 .findFirst() //take the first range of the compatible with the pressed note
                 .orElse(new NoteRange(column, 0, 1));
-        System.out.println("currentrange start" + currentRange.getStart() + "current end" + currentRange.getEnd());
-        noteRanges.remove(currentRange);
-        int normalPoint = (int) ((double) (end - start - Math.abs(currentRange.getEnd() - end)
-                - Math.abs(currentRange.getStart() - start)) / (end - start)  * NOTE_POINT);
-        // NOTE_POINT multiplied by the percentage of match between the note and the range
-        System.out.println("normal point" + normalPoint);
-        this.combo = normalPoint >= NOTE_POINT - NOTE_TOLERANCE ? (this.combo < MAX_COMBO ? this.combo + 1 : this.combo) : 0;
-        //combo increase if you played a perfect note (100 - NOTE_TOLERANCE)%
-        return ((normalPoint >= NOTE_POINT - NOTE_TOLERANCE 
-                ? NOTE_POINT : (normalPoint + NOTE_TOLERANCE < 0 ? 0 
-                        : normalPoint + NOTE_TOLERANCE)) + COMBO_POINT * combo) * columnNumber;
+        this.noteRanges.remove(currentRange);
+        System.out.println("current r: " + currentRange.getStart());
+        return this.context.executeStrategy(column, start, end, currentRange, columnNumber);
     }
 
 }
