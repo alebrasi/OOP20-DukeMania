@@ -98,7 +98,8 @@ public class StorageFactoryImpl implements StorageFactory {
         }
 
         @Override
-        public void copyTo(final String source, final String destination) throws IOException {
+        public void copyTo(final String source, String destination) throws IOException {
+            destination = (destination.contains("/") && !File.separator.equals("/")) ? destination.replace("/", "\\") : destination;
             createFileIfNotExists(destination);
             File file = new File(destination);
             InputStream in = fileMapping.apply(source).read();

@@ -216,7 +216,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private Note associationNote(final LogicNote noteLogic) {
         return new NoteImpl(this.dimensions.getSize().getY(),
             noteLogic.getColumn(),
-            80,
+                (int) (noteLogic.getNoteDuration()) / 5500,
             noteLogic.getNoteStarts() / 1000 - 2500,
             noteLogic.getNoteDuration() / 1000,
             this.numberOfColumns
@@ -369,6 +369,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             data.setScore(score);
             switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, data);
             this.startTime = 0;
+            this.score = 0;
         } else {
             logic.play();
         }
