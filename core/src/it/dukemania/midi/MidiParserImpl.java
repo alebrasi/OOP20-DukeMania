@@ -25,11 +25,14 @@ public class MidiParserImpl implements MidiParser {
     private static final int MICROSEC_PER_MIN = 60_000_000;
 
 
+
     @Override
     public final Song parseMidi(final File myMidi) throws InvalidMidiDataException, IOException  {
         final Sequence sequence = MidiSystem.getSequence(myMidi);
         final double microsecPerTick = (double) sequence.getMicrosecondLength() / sequence.getTickLength();
-
+        if (MidiSystem.getMidiFileFormat(myMidi).getType() == 2) {
+            throw new InvalidMidiDataException();
+        }
         final List<MidiTrack> myTracks = new ArrayList<>();
         final Map<Integer, Pair<Enum<InstrumentType>, List<AbstractNote>>> channelMap = new HashMap<>();
         double bpm = 0;
@@ -69,13 +72,22 @@ public class MidiParserImpl implements MidiParser {
     }
 
 
-
+    /**
+     * this method calculate time in microseconds.
+     * @param tick
+     * @param microsecPerTick
+     * @return time in microsec
+     */
     private long calcTime(final long tick, final double microsecPerTick) {
         //System.out.println(tick + " " + microsecPerTick + " " + tick * microsecPerTick + " " + (long) (tick * microsecPerTick));
         return  (long) (tick * microsecPerTick);
     }
 
-
+    /**
+     * this method calculate bpm.
+     * @param data
+     * @return bpm
+     */
     private static double calcBpm(final byte[] data) {
         final ByteBuffer microsecPerBeat = ByteBuffer.allocate(Integer.BYTES);
         microsecPerBeat.position(microsecPerBeat.position() + 1);
@@ -83,12 +95,24 @@ public class MidiParserImpl implements MidiParser {
         return (double) MICROSEC_PER_MIN / microsecPerBeat.getInt(0);
     }
 
+    /**
+     * this method tells if sm is a useful message.
+     * @param sm
+     * @return a boolean which is true if the message is a note or instrument message
+     */
     private static boolean isNoteOrInsrument(final MidiMessage sm) {
         final int type = ((ShortMessage) sm).getCommand();
         return type == ShortMessage.NOTE_ON || type == ShortMessage.NOTE_OFF || type == ShortMessage.PROGRAM_CHANGE;
     }
 
 
+    /**
+     * this method add a note to its track.
+     * @param sm
+     * @param notes
+     * @param factory
+     * @param time
+     */
     private static void addNote(final ShortMessage sm, final List<AbstractNote> notes, final AbstractFactory factory, 
             final long time) {
         final int data = sm.getData1();

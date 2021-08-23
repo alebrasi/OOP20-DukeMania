@@ -6,6 +6,11 @@ public class PercussionTrackImpl implements MidiTrack {
     private final List<AbstractNote> notes;
     private final int channel;
 
+    /**
+     * constructor
+     * @param notes
+     * @param channel
+     */
     public PercussionTrackImpl(final List<AbstractNote> notes, final int channel) {
         this.notes = notes;
         this.channel = channel;

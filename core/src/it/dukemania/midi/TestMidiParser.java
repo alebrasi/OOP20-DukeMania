@@ -25,6 +25,14 @@ import org.junit.jupiter.api.Test;
 
 class TestMidiParser {
 
+    /**
+     * this method create a MIDI file.
+     * @param nTracks
+     * @param type
+     * @return a MIDI file
+     * @throws InvalidMidiDataException
+     * @throws IOException
+     */
     File createFile(final int nTracks, final int type) throws InvalidMidiDataException, IOException {
         Sequence seq = new Sequence((float) 0.0, 1, nTracks);
         List<Track> tracks = new ArrayList<>();
@@ -46,11 +54,16 @@ class TestMidiParser {
         }
         File f = new File("File.mid");
         MidiSystem.write(seq, type, f);
-        //System.out.println(MidiSystem.isFileTypeSupported(1,seq));
+        //System.out.println(MidiSystem.isFileTypeSupported(2,seq));
         return f;
     }
 
 
+    /**
+     * this test makes sure that the midi parser works.
+     * @throws InvalidMidiDataException
+     * @throws IOException
+     */
     @Test
     void testMidiParser() throws InvalidMidiDataException, IOException {
         //int size = 3;
