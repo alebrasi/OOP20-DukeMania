@@ -31,7 +31,7 @@ public class SongSelectionWindow extends AbstractView {
     private static final int FILE_DIALOG_SIZE = 800;
     private static final int TABLE_CONFIGS_OFFSET_Y = -300;
     private static final int TABLE_PADDING = 30;
-    private static final float TABLE_BACKGROUND_OPACITY = 0.2f;
+    private static final float TABLE_BACKGROUND_OPACITY = 0.3f;
     private static final float TABLE_TRACKS_HEIGHT = 200f;
     private Texture tableBackgroundTexture;
 

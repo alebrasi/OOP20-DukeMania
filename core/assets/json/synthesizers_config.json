@@ -1,0 +1,25 @@
+[ {
+  "presetName" : "default",
+  "associatedInstruments" : [ "CELESTA", "GLOCKENSPIEL", "MARIMBA" ],
+  "values" : {
+    "enveloper" : {
+      "attackMS" : 10,
+      "attackVolume" : 1.0,
+      "releaseMS" : 100
+    },
+    "wavetables" : [ "Sine" ],
+    "offsets" : [ 1.0 ]
+  }
+}, {
+  "presetName" : "simple_saw",
+  "associatedInstruments" : [ "ACOUSTIC_GRAND_PIANO", "BRIGHT_ACOUSTIC_PIANO", "ELECTRIC_GRAND_PIANO" ],
+  "values" : {
+    "enveloper" : {
+      "attackMS" : 10,
+      "attackVolume" : 1.0,
+      "releaseMS" : 100
+    },
+    "wavetables" : [ "Saw", "Saw", "Saw" ],
+    "offsets" : [ 1.0, 1.005, 0.997 ]
+  }
+} ]
