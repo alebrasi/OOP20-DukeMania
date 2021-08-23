@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import it.dukemania.Controller.leaderboard.LeaderboardController;
 import it.dukemania.Controller.leaderboard.LeaderboardControllerImpl;
 import it.dukemania.View.AbstractView;
+import it.dukemania.View.notesGraphics.AssetsManager;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 
 
@@ -31,7 +32,7 @@ public class LeaderboardWindow extends AbstractView {
         super.create();
         Gdx.graphics.setResizable(true);
         controller = new LeaderboardControllerImpl(data);
-        tableBackgroundTexture = new Texture(Gdx.files.internal("background.png"));
+        tableBackgroundTexture = AssetsManager.getInstance().getTexture("background.png");
         float screenWidth = mainStage.getWidth();
         float screenHeight = mainStage.getHeight();
         Table table = new Table(skin);

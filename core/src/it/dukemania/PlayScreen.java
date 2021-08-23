@@ -92,7 +92,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private static final int BUTTON_DIM = 120;
     private static final int YNOTE = 80;
     private GameModel data;
-
+    private AssetsManager ass = AssetsManager.getInstance();
 
 
 
@@ -100,12 +100,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     public void dispose() {
         buttonsStage.dispose();
         stage.dispose();
-        fontScoreboard.dispose();
-        generator.dispose();
-        background.dispose();
-        scoreboard.dispose();
-        textureNote.dispose();
-        textureSparks.dispose();
+        //fontScoreboard.dispose();
+        //generator.dispose();
+        //background.dispose();
+        //scoreboard.dispose();
+        //textureNote.dispose();
+        //textureSparks.dispose();
         batch.dispose();
         backgroundBatch.dispose();
         this.startTime = 0;
@@ -138,11 +138,11 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         camera = new OrthographicCamera();
 
 
-        this.background = AssetsManager.getTexture("blueBackground.png");
+        this.background = ass.getTexture("blueBackground.png");
         final Image backgroundImage = new Image(this.background);
-        this.textureNote = AssetsManager.getTexture("note.png");
-        this.textureSparks = AssetsManager.getTexture("blueSpark.png");
-        this.scoreboard = AssetsManager.getTexture("scoreboard.png");
+        this.textureNote = ass.getTexture("note.png");
+        this.textureSparks = ass.getTexture("blueSpark.png");
+        this.scoreboard = ass.getTexture("scoreboard.png");
         this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         this.batch = new SpriteBatch();
         this.backgroundBatch = new SpriteBatch();
@@ -157,12 +157,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
         final BitmapFont font = new BitmapFont();
         final Skin skin = new Skin();
-        final TextureAtlas atlas = AssetsManager.getTextureAtlas("pinkAndBlueButtons.atlas");
+        final TextureAtlas atlas = ass.getTextureAtlas("pinkAndBlueButtons.atlas");
 
         logic.initAudio(song);
         skin.addRegions(atlas);
 
-        this.fontScoreboard = AssetsManager.generateFontScoreboard();
+        this.fontScoreboard = ass.generateFontScoreboard();
 
         /*this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
         final FreeTypeFontParameter parameter = new FreeTypeFontParameter();

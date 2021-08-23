@@ -1,7 +1,5 @@
 package it.dukemania.View;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,11 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import it.dukemania.Model.GameModel;
+import it.dukemania.View.notesGraphics.AssetsManager;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
 import it.dukemania.windowmanager.Window;
 
 
-//TODO Make factory?
 public abstract class AbstractView implements Window {
 
     protected SwitchWindowNotifier switchWindowNotifier = null;
@@ -53,7 +51,7 @@ public abstract class AbstractView implements Window {
 
     @Override
     public void create() {
-        backgroundTexture = new Texture(backgroundPath);
+        backgroundTexture = AssetsManager.getInstance().getTexture(backgroundPath);
         setupCamera();
         setupStages();
         backgroundStage.addActor(backgroundImage);
@@ -71,7 +69,6 @@ public abstract class AbstractView implements Window {
     public void dispose() {
         mainStage.dispose();
         backgroundStage.dispose();
-        backgroundTexture.dispose();
     }
 
     @Override

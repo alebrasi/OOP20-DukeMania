@@ -15,6 +15,7 @@ import it.dukemania.Controller.songselection.SongSelectionWindowController;
 import it.dukemania.Controller.songselection.SongSelectionWindowControllerImpl;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.View.AbstractView;
+import it.dukemania.View.notesGraphics.AssetsManager;
 import it.dukemania.midi.InstrumentType;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 
@@ -42,7 +43,7 @@ public class SongSelectionWindow extends AbstractView {
     @Override
     public void create() {
         super.create();
-        tableBackgroundTexture = new Texture(Gdx.files.internal("background.png"));
+        tableBackgroundTexture = AssetsManager.getInstance().getTexture("background.png");
         try {
             controller = new SongSelectionWindowControllerImpl(data);
         } catch (NoSuchAlgorithmException e) {
@@ -226,11 +227,5 @@ public class SongSelectionWindow extends AbstractView {
         //mainMenuContainer.setDebug(true, true);
         mainStage.addActor(mainMenuContainer);
         Gdx.input.setInputProcessor(mainStage);
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        tableBackgroundTexture.dispose();
     }
 }
