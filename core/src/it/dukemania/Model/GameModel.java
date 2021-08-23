@@ -8,15 +8,9 @@ public class GameModel {
     private String playerName = "P1";
     private Song selectedSong;
     private MidiTrack selectedTrack;
-    private int numColumn;
+    private int numColumns;
+    private int score;
 
-    public int getNumColumn() {
-        return numColumn;
-    }
-
-    public void setNumColumn(final int numColumn) {
-        this.numColumn = numColumn;
-    }
 
     public MidiTrack getSelectedTrack() {
         return selectedTrack;
@@ -34,8 +28,6 @@ public class GameModel {
         this.numColumns = numColumns;
     }
 
-    private int numColumns;
-    private int score;
 
     public void setSelectedSong(final Song selectedSong) {
         this.selectedSong = selectedSong;
