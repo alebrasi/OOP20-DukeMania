@@ -13,14 +13,14 @@ public enum Percussion {
     private DrumSamples associated;
 
     static {
-        for (Percussion pp : Percussion.values()) {
-            pp.associated = DrumSamples.Hat;
-            if (pp.name().contains("KICK")) {
-                pp.associated = DrumSamples.Kick;
-            } else if (pp.name().contains("SNARE")) {
-                pp.associated = DrumSamples.Snare;
-            } else if (pp.name().contains("TOM")) {
-                pp.associated = DrumSamples.Tom;
+        for (Percussion p : Percussion.values()) {
+            p.associated = DrumSamples.Hat;
+            if (p.name().contains("KICK")) {
+                p.associated = DrumSamples.Kick;
+            } else if (p.name().contains("SNARE")) {
+                p.associated = DrumSamples.Snare;
+            } else if (p.name().contains("TOM")) {
+                p.associated = DrumSamples.Tom;
             }
         }
         BASS_DRUM_1.associated = DrumSamples.Kick;
