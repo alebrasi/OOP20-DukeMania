@@ -24,25 +24,27 @@ public class KeyImpl implements Key {
 
 
     @Override
-    public void startPressing() {
-        this.initialTime = Instant.now().toEpochMilli();
-        System.out.println("inizio a premere il tasto" + this.initialTime);
+    public void startPressing(long startTime) {
+        this.initialTime = Instant.now().toEpochMilli() - startTime;
+        System.out.println("startTime " + startTime + "initialTime" + initialTime);
+        //System.out.println("inizio a premere il tasto" + this.initialTime);
     }
 
     @Override
-    public void finishPressing() {
-        this.finalTime = Instant.now().toEpochMilli();
-        System.out.println("finisco di premere il tasto" + this.finalTime);
+    public void finishPressing(long startTime) {
+        this.finalTime = Instant.now().toEpochMilli() - startTime;
+        System.out.println("startTime " + startTime + "finalTime" + finalTime);
+        //System.out.println("finisco di premere il tasto" + this.finalTime);
     }
 
     @Override
     public long getFinalTime() {
-        return this.finalTime - this.timeOfFall;
+        return this.finalTime ;
     }
 
     @Override
     public long getInitialTime() {
-        return this.initialTime - this.timeOfFall;
+        return this.initialTime;
     }
 
     @Override

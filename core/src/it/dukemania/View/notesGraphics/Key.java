@@ -8,12 +8,12 @@ public interface Key {
      * set the time when you start to press a button.
 
      */
-    void startPressing();
+    void startPressing(long startTime);
 
     /***
      * set the time when you finish to press a button.
      */
-    void finishPressing();
+    void finishPressing(long startTime);
 
     /***
      * 

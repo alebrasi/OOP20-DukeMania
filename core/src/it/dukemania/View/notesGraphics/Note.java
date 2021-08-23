@@ -11,13 +11,19 @@ public interface Note {
      * update the note position.
      * @param deltaTime
      */
-	void updateNote(float deltaTime);
+	void updateNote(float deltaTime, long starttime);
 	
 	/***
 	 * 
 	 * @return the start time of the note
 	 */
 	long getStartTime();
+	
+	/***
+	 * set the start time of the note.
+	 * @param time
+	 */
+	void setStartNote(long time);
 	
 	/***
 	 * 

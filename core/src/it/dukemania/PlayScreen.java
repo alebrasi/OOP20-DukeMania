@@ -102,6 +102,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private static final int YNOTE = 80;
     private static final int FONT_SIZE = 40;
     private GameModel data;
+    private long timeprova = 0;
 
 
 
@@ -288,29 +289,33 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
         final long actualTime = Instant.now().toEpochMilli() - this.startTime;
         //returns the notes that are playing right now
-        final List<Note> notesPlaying = this.notes.stream().filter(n -> n.getStartTime() <= actualTime).collect(Collectors.toList()); //getPlayingNotes(actualTime);
- 
+        final List<Note> notesPlaying = this.notes.stream().filter(n -> (n.getStartTime()) <= actualTime).collect(Collectors.toList()); //getPlayingNotes(actualTime);
+
 
         //drawing of each note
         for (final Note n : notesPlaying) {
             drawNote(n.getPosxNote(), n.getPosyNote(), n.getxNote(), n.getyNote());
             this.deltaTime = Gdx.graphics.getDeltaTime();
-            n.updateNote(this.deltaTime);
             if (n.getKeyboard().isEmpty()) {
                 n.setKeyboard();
+                n.setStartNote(Instant.now().toEpochMilli());
             }
-            if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && !n.isPressed()) { 
+            n.updateNote(this.deltaTime, this.startTime);
+
+            //it returns the time when the user starts to press a key
+            if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && !n.isPressed()) {
                 n.setIsPressed(true);
                 if (n.getKey().isEmpty()) {
                     n.setKey();
                 }
-                n.getKey().get().startPressing();
+                n.getKey().get().startPressing(this.startTime);
             } else {
                 //it returns the time when the user finishes to press a key
                 if (!n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && n.isPressed()) {
                     n.setIsPressed(false);
-                    n.getKey().get().finishPressing();
-                    this.score += this.logic.verifyNote(n.getColumn(), n.getKey().get().getInitialTime(), n.getKey().get().getFinalTime());
+                    n.getKey().get().finishPressing(this.startTime);
+                    System.out.println("valori passati a rapo"+ n.getKey().get().getInitialTime() * 1000 + "hey " + n.getKey().get().getFinalTime() * 1000);
+                    this.score += this.logic.verifyNote(n.getColumn(), ((n.getKey().get().getInitialTime()) * 1000 - 250000), ((n.getKey().get().getFinalTime()) * 1000)-250000);
                 }
 
             }
@@ -357,7 +362,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
         }
         //removal of notes that are terminated
-        notesPlaying.removeIf(x -> x.getStartTime() + x.getDuration() * (long) Math.pow(10, 3) >= actualTime);
+        notesPlaying.removeIf(x -> (x.getStartTime()  + x.getDuration()) / (long) Math.pow(10, 3) >= actualTime);
 
         //player.playNotes();
         if ((song.getDuration() / 1000) + 1000 < (Instant.now().toEpochMilli() - startTime)) {

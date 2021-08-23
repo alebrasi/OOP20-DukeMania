@@ -18,6 +18,7 @@ public class NoteImpl implements Note {
     private final int xSparks;
     private final int ySparks;
     private final long startNote;
+    private long startNoteprova;
     private final long duration;
     private final Size dimensions = new SizeImpl();
     private final ComputingShift shift = new ComputingShiftImpl();
@@ -43,12 +44,13 @@ public class NoteImpl implements Note {
 	}
 
 	@Override
-	public void updateNote(final float deltaTime) {
+	public void updateNote(final float deltaTime, long startTime) {
 	    this.posyNote -= NoteImpl.NOTE_SPEED * deltaTime;
 
 	    if (this.posyNote <= NoteImpl.FINISH_LINE + NoteImpl.DISPLACEMENT  && this.posyNote >= NoteImpl.FINISH_LINE - NoteImpl.DISPLACEMENT) {
-	        this.timeOfFall = Instant.now().toEpochMilli() - (this.startNote * (long) Math.pow(10, 3));
-	           System.out.println("hey time of fall" + this.timeOfFall);
+	        this.timeOfFall = Instant.now().toEpochMilli() - startNoteprova;
+	        System.out.println("print di rapo" + (Instant.now().toEpochMilli() - startTime) + "colonna" + this.column);
+	           System.out.println("hey time of fall" + this.timeOfFall + "inizio nota" + this.startNoteprova * (long) Math.pow(10, 3));
 	    }
 
 
@@ -143,6 +145,12 @@ public class NoteImpl implements Note {
     @Override
     public void setKey() {
         this.key = Optional.of(new KeyImpl(this.column, this.timeOfFall));
+    }
+
+    @Override
+    public void setStartNote(long time) {
+        this.startNoteprova = time;
+        
     }
 
 
