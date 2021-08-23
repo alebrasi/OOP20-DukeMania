@@ -38,22 +38,6 @@ public class ColumnLogicImpl implements ColumnLogic {
         this.noteRanges = new ArrayList<>();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void initAudio(final Song song) {
-        player = new PlayerAudio(song);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void play() {
-        player.playNotes();
-    }
-
     @Override
     public final int getColumnNumber() {
         return columnNumber;
@@ -67,6 +51,16 @@ public class ColumnLogicImpl implements ColumnLogic {
     @Override
     public final void addNoteRanges(final Columns column, final long start, final long end) {
         this.noteRanges.add(new NoteRange(column, start, end));
+    }
+
+    @Override
+    public final void initAudio(final Song song) {
+        player = new PlayerAudio(song);
+    }
+
+    @Override
+    public final void play() {
+        player.playNotes();
     }
 
     private List<AbstractNote> overlappingNotes(final List<AbstractNote> notes) {

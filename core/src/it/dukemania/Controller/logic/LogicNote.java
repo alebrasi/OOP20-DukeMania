@@ -16,13 +16,13 @@ public interface LogicNote {
 
     /**
      * 
-     * @return the start time of the AbstractNote
+     * @return the start time of the AbstractNote in microseconds
      */
     long getNoteStarts();
 
     /**
      * 
-     * @return the duration of the AbstractNote
+     * @return the duration of the AbstractNote in microseconds
      */
     long getNoteDuration();
 

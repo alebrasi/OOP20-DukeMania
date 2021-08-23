@@ -45,11 +45,8 @@ public class PlayerAudio implements Player {
         }));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void playNotes() {
+    public final void playNotes() {
         this.startMillis = this.startMillis == 0 ? Instant.now().toEpochMilli() : this.startMillis;
         trak.stream()
         .filter(PlayableTrack::hasNext)
