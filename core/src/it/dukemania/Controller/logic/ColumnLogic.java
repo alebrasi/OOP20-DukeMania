@@ -48,6 +48,12 @@ public interface ColumnLogic {
     List<LogicNote> noteQueuing(MidiTrack track);
 
     /**
+     * Initialize the score strategy.
+     * @param actualScoreStrategy the strategy for calculating the score
+     */
+    void contextInit(ScoreStrategy actualScoreStrategy);
+
+    /**
      * 
      * @param column the column of the note pressed
      * @param start the start time of the note pressed in microseconds 
@@ -55,6 +61,8 @@ public interface ColumnLogic {
      * @return a score for the note pressed
      */
     int verifyNote(Columns column, long start, long end);
+
+
 
 
 
