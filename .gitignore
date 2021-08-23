@@ -113,3 +113,10 @@ Thumbs.db
 /ios/xcode/native/
 /ios/IOSLauncher.app
 /ios/IOSLauncher.app.dSYM
+
+## Latex
+relazione/report.aux
+relazione/report.log
+relazione/report.out
+relazione/report.synctex.gz
+relazione/report.toc
