@@ -7,7 +7,9 @@ import it.dukemania.Model.serializers.leaderboard.SongLeaderBoard;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.synthesizer.SynthInfo;
 import it.dukemania.util.storage.Storage;
+import it.dukemania.util.storage.StorageFactoryImpl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -16,7 +18,8 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
     private final Storage storage;
     private final ObjectMapper mapper = new ObjectMapper();
     private static final String SONGS_CONFIGURATION_PATH = "configs/song_config.json";
-    private static final String SYNTHESIZERS_CONFIGURATION_PATH = "configs/synthesizers_config.json";
+    private static final String SYNTHESIZERS_CONFIGURATION_NAME = "synthesizers_config.json";
+    private static final String SYNTHESIZERS_CONFIGURATION_PATH = "configs/" + SYNTHESIZERS_CONFIGURATION_NAME;
     private static final String SONGS_LEADERBOARDS_PATH = "configs/users_score.json";
 
     public ConfigurationsModelImpl(final Storage storage) {
@@ -42,6 +45,16 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
 
     @Override
     public List<SynthInfo> readSynthesizersConfiguration() throws IOException {
+        //Copies the synthesizers configurations to the configuration folder if it not exists
+        if (!storage.getAsFile(SYNTHESIZERS_CONFIGURATION_PATH).exists()) {
+            try {
+                Storage assetStorage = new StorageFactoryImpl().getAssetStorage();
+                assetStorage.copyTo(SYNTHESIZERS_CONFIGURATION_NAME,
+                        storage.getBaseDirectoryName() + File.separator + SYNTHESIZERS_CONFIGURATION_PATH);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         String json = storage.readFileAsString(SYNTHESIZERS_CONFIGURATION_PATH);
 
         JavaType listSynthInfoType = mapper.constructType(new TypeReference<List<SynthInfo>>() {
