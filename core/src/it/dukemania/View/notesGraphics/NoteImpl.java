@@ -20,7 +20,6 @@ public class NoteImpl implements Note {
     private final long startNote;
     private long startNoteprova;
     private final long duration;
-    private final Size dimensions = new SizeImpl();
     private final ComputingShift shift = new ComputingShiftImpl();
     private long timeOfFall;
     private boolean isPressed;
@@ -32,7 +31,8 @@ public class NoteImpl implements Note {
 	public NoteImpl(final int heightpos, final Columns letter, final int height, final long startNote, final long duration, final int numberOfColumns) {
 		this.yNote = height;
 		this.column = letter;
-		this.posxNote = (letter.getNumericValue() - 1) * this.dimensions.getSize().getX() / numberOfColumns 
+	    final Size dimensions = new SizeImpl(numberOfColumns);
+		this.posxNote = (letter.getNumericValue() - 1) * dimensions.getSize().getX() / numberOfColumns 
 		        + this.shift.calculateShifting(numberOfColumns) * letter.getNumericValue() + this.shift.getNoteShift();
 		this.posyNote = heightpos;
 		this.posxSparks = this.posxNote - this.shift.getHorizontalSparkShift();
@@ -41,6 +41,7 @@ public class NoteImpl implements Note {
 		this.startNote = startNote;
 		this.duration = duration;
 		this.timeOfFall = 0;
+
 	}
 
 	@Override
