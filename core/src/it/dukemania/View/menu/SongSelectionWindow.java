@@ -157,6 +157,7 @@ public class SongSelectionWindow extends AbstractView {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
                 controller.setPlayTrack(Integer.parseInt(playableTracks.getChecked().getText().toString()));
+                controller.setColumnsNumber(slctNumCols.getSelected());
 
                 try {
                     controller.playSong(switchWindowNotifier);
