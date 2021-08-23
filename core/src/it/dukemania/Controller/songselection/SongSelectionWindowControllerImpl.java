@@ -1,5 +1,6 @@
 package it.dukemania.Controller.songselection;
 
+import com.badlogic.gdx.files.FileHandle;
 import it.dukemania.Controller.logic.*;
 import it.dukemania.Model.GameModel;
 import it.dukemania.Model.serializers.song.SongInfo;
@@ -17,6 +18,9 @@ import it.dukemania.windowmanager.SwitchWindowNotifier;
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -34,6 +38,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     private final StorageFactory storageFactory = new StorageFactoryImpl();
     private final Storage externalStorage = storageFactory.getExternalStorage();
     private final Storage configurationStorage = storageFactory.getConfigurationStorage();
+    private final Storage assetStorage = storageFactory.getAssetStorage();
 
     private SongInfo currentSong;
     private final List<SongInfo> songsConfigurations;
@@ -52,9 +57,35 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     private final GameModel data;
 
     public SongSelectionWindowControllerImpl(final GameModel data) throws NoSuchAlgorithmException {
+        //TODO De-HardCode
+        if (!configurationStorage.getAsFile("configs/synthesizers_config.json").exists()) {
+            try {
+                assetStorage.copyTo("synthesizers_config.json", configurationStorage.getBaseDirectoryName() + File.separator + "configs/synthesizers_config.json");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         synthesizersPresets = readSynthPresets();
         songsConfigurations = getSongsConfiguration();
         this.data = data;
+
+        /*
+        URI uri = null;
+        Path myPath = null;
+        try {
+            uri = getClass().getResource("/").toURI();
+            if (uri.getScheme().equals("jar")) {
+                FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+                myPath = fileSystem.getPath("/");
+            } else {
+                myPath = Paths.get(uri);
+            }
+            Files.walk(myPath, 1).forEach(s -> System.out.println(s));
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
+
+         */
     }
 
     @Override
