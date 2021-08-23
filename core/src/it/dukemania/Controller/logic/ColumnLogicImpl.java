@@ -30,7 +30,7 @@ public class ColumnLogicImpl implements ColumnLogic {
         this.columnNumber = (columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP)
                         ? columnNumber : COLUMN_MIN_CAP;
         this.noteRanges = new ArrayList<>();
-        this.context = new ScoreContext(new FullCalculation());
+        this.context = new ScoreContext(new FullCalculator());
     }
 
     @Override
@@ -157,6 +157,7 @@ public class ColumnLogicImpl implements ColumnLogic {
                 .findFirst() //take the first range of the compatible with the pressed note
                 .orElse(new NoteRange(column, 0, 1));
         this.noteRanges.remove(currentRange);
+        System.out.println("current r: " + currentRange.getStart());
         return this.context.executeStrategy(column, start, end, currentRange, columnNumber);
     }
 

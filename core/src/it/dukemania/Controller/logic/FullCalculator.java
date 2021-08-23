@@ -1,6 +1,6 @@
 package it.dukemania.Controller.logic;
 
-public class FullCalculation implements ScoreStrategy {
+public class FullCalculator implements ScoreStrategy {
 
     private static final int NOTE_POINT = 100;
     private static final int NOTE_TOLERANCE = 50;
