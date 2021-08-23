@@ -26,7 +26,7 @@ public class TestLogic {
     private List<AbstractNote> createNotes(final int quantity) { 
         List<AbstractNote> testNotes = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
-            testNotes.add(new Note(Optional.of(2L), i, 0));
+            testNotes.add(new Note(Optional.of(2000000L), i, 0));
         }
         return testNotes;
     }
