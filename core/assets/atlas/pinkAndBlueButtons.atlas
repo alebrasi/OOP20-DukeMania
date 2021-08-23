@@ -1,0 +1,20 @@
+
+pinkAndBlueButtons.png
+size: 4096, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+buttonDown
+  rotate: false
+  xy: 2, 2
+  size: 1534, 1500
+  orig: 1534, 1500
+  offset: 0, 0
+  index: -1
+buttonUp
+  rotate: false
+  xy: 1538, 4
+  size: 1518, 1498
+  orig: 1518, 1498
+  offset: 0, 0
+  index: -1
