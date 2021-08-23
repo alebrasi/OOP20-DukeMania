@@ -20,13 +20,12 @@ public class TrackFilterImpl implements TrackFilter {
     public final List<MidiTrack> reduceTrack(final Song song) {
         return song.getTracks().stream()
                 .filter(x -> x.getChannel() != PERCUSSION_CHANNEL)//remove unplayable tracks
+                .map(x -> FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
+                        x.getNotes().stream()
+                        .filter(y -> y.getDuration().orElse(0L) >= MIN_DURATION)
+                        //remove unplayable notes
+                        .collect(Collectors.toList()), x.getChannel()))
                 .map(x -> {
-                    return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
-                            x.getNotes().stream()
-                            .filter(y -> y.getDuration().orElse(0L) >= MIN_DURATION)
-                            //remove unplayable notes
-                            .collect(Collectors.toList()), x.getChannel());
-                }).map(x -> {
                     final int numberOfNotes = x.getNotes().size();
                     final List<AbstractNote> notePos = x.getNotes();
                     return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
