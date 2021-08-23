@@ -50,7 +50,7 @@ import it.dukemania.windowmanager.Window;
 public class PlayScreen extends ApplicationAdapter implements Window {
 
     // functional fields
-    private final Size dimensions;
+    private Size dimensions;
     private Stage buttonsStage;
     private Stage stage;
     private GlyphLayout layout;
@@ -78,7 +78,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private Key key;
     private final ComputingShift shift;
     private OrthographicCamera camera;
-    private final int numberOfColumns;
+    private int numberOfColumns;
     private float deltaTime = 0;
     private List<TextButton> buttons;
     private Song song;
@@ -113,14 +113,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     }
 
     public PlayScreen() {
-        dimensions = new SizeImpl();
         notes = new ArrayList<>();
         buttons = new ArrayList<>();
         shift = new ComputingShiftImpl();
-        numberOfColumns = this.dimensions.getNumberOfColumns();
         posySpark = PlayScreen.BUTTON_DIM - this.shift.getNoteShift();
         finishLine = PlayScreen.BUTTON_DIM;
-        logic = new ColumnLogicImpl(this.dimensions.getNumberOfColumns());
+        logic = new ColumnLogicImpl(this.numberOfColumns);
 
     }
 
@@ -131,13 +129,13 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     @Override
     public void create() {
 
-
+        
         notes = new ArrayList<>();
         buttons = new ArrayList<>();
         layout = new GlyphLayout();
         camera = new OrthographicCamera();
 
-
+        dimensions = new SizeImpl(this.numberOfColumns);
         this.background = ass.getTexture("blueBackground.png");
         final Image backgroundImage = new Image(this.background);
         this.textureNote = ass.getTexture("note.png");
@@ -375,6 +373,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         this.song = data.getSelectedSong();
         this.selectedTrack = data.getSelectedTrack();
         this.songHash = data.getSongHash();
+        this.numberOfColumns = data.getNumColumns();
     }
 
     @Override
