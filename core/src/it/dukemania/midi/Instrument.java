@@ -28,7 +28,6 @@ public final class Instrument {
         } catch (IOException e2) {
             // TODO Auto-generated catch block
             e2.printStackTrace();
-            System.out.println("helo");
         }
         try {
             this.synthetizer = calcSynthetizer();

@@ -1,15 +1,12 @@
 package it.dukemania;
 
-import java.awt.*;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,7 +16,6 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -33,22 +29,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import it.dukemania.Controller.logic.ColumnLogic;
 import it.dukemania.Controller.logic.ColumnLogicImpl;
-import it.dukemania.Controller.logic.Columns;
 import it.dukemania.Controller.logic.LogicNote;
-import it.dukemania.Controller.logic.LogicNoteImpl;
 import it.dukemania.Model.GameModel;
+import it.dukemania.View.notesGraphics.AssetsManager;
 import it.dukemania.View.notesGraphics.ComputingShift;
 import it.dukemania.View.notesGraphics.ComputingShiftImpl;
 import it.dukemania.View.notesGraphics.EventsFromKeyboard;
-import it.dukemania.View.notesGraphics.EventsFromKeyboardImpl;
 import it.dukemania.View.notesGraphics.Key;
-import it.dukemania.View.notesGraphics.KeyImpl;
 import it.dukemania.View.notesGraphics.Note;
 import it.dukemania.View.notesGraphics.NoteImpl;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
-import it.dukemania.audioengine.Engine;
-import it.dukemania.audioengine.PlayerAudio;
 import it.dukemania.midi.MidiTrack;
 import it.dukemania.midi.Song;
 import it.dukemania.windowmanager.DukeManiaWindowState;
@@ -100,9 +91,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     //constant
     private static final int BUTTON_DIM = 120;
     private static final int YNOTE = 80;
-    private static final int FONT_SIZE = 40;
     private GameModel data;
-    private long timeprova = 0;
+
 
 
 
@@ -148,11 +138,11 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         camera = new OrthographicCamera();
 
 
-        this.background = new Texture(Gdx.files.internal("Textures/blueBackground.png"));
+        this.background = AssetsManager.getTexture("blueBackground.png");
         final Image backgroundImage = new Image(this.background);
-        this.textureNote = new Texture(Gdx.files.internal("Textures/blueNote.png"));
-        this.textureSparks = new Texture(Gdx.files.internal("Textures/blueSpark.png"));
-        this.scoreboard = new Texture(Gdx.files.internal("Textures/scoreboard.png"), true);
+        this.textureNote = AssetsManager.getTexture("note.png");
+        this.textureSparks = AssetsManager.getTexture("blueSpark.png");
+        this.scoreboard = AssetsManager.getTexture("scoreboard.png");
         this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         this.batch = new SpriteBatch();
         this.backgroundBatch = new SpriteBatch();
@@ -165,14 +155,16 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         Gdx.input.setInputProcessor(buttonsStage);
 
 
-        BitmapFont font = new BitmapFont();
-        Skin skin = new Skin();
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("pinkAndBlueButtons.atlas"));
+        final BitmapFont font = new BitmapFont();
+        final Skin skin = new Skin();
+        final TextureAtlas atlas = AssetsManager.getTextureAtlas("pinkAndBlueButtons.atlas");
 
         logic.initAudio(song);
         skin.addRegions(atlas);
 
-        this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
+        this.fontScoreboard = AssetsManager.generateFontScoreboard();
+
+        /*this.generator = new FreeTypeFontGenerator(Gdx.files.internal("scoreboard_font.TTF"));
         final FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = PlayScreen.FONT_SIZE;
         parameter.color = Color.WHITE;
@@ -180,7 +172,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         parameter.shadowOffsetX = 2;
         fontScoreboard = generator.generateFont(parameter);
         fontScoreboard.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
+         */
 
         this.styleDown = new TextButtonStyle();
         this.styleDown.font = font;
@@ -314,7 +306,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                 if (!n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && n.isPressed()) {
                     n.setIsPressed(false);
                     n.getKey().get().finishPressing(this.startTime);
-                    System.out.println("valori passati a rapo"+ n.getKey().get().getInitialTime() * 1000 + "hey " + n.getKey().get().getFinalTime() * 1000);
                     this.score += this.logic.verifyNote(n.getColumn(), ((n.getKey().get().getInitialTime()) * 1000 - 250000), ((n.getKey().get().getFinalTime()) * 1000)-250000);
                 }
 
@@ -335,18 +326,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                 n.setIsPressed(true);
                 this.key.startPressing();
             }*/ //delete this
-
-
-
-            /*
-                //tempo di caduta
-                if (n.getTimeOfFall() > 0) {
-                    System.out.println("nota " + n.getColumn().name() + "tempo di caduta " + n.getTimeOfFall());
-                }
-             */
-
-
-
 
 
 
@@ -381,7 +360,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 
     }
-    
+
 
 
     @Override
