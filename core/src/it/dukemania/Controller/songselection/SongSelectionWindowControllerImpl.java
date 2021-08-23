@@ -168,6 +168,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void updateTracks(final List<String> names, final List<InstrumentType> instruments) {
+        songsConfigurations.removeIf(x -> x.getSongHash().equals(currentSong.getSongHash()));
         TrackInfo[] tracks = currentSong.getTracks().toArray(TrackInfo[]::new);
         for (int i = 0; i < names.size(); i++) {
             tracks[i].setTrackName(names.get(i));
