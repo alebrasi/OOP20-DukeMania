@@ -204,7 +204,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void setColumnsNumber(final int columns) {
-        data.setNumColumn(columns);
+        data.setNumColumns(columns);
     }
 
     @Override
