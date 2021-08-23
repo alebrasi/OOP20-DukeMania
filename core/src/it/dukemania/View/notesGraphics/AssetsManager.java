@@ -74,13 +74,13 @@ public final class AssetsManager {
      * load all the textures.
      */
     private static void loadTexture() {
-        textureAssociations.put("atlas/pinkAndBlueButtons.png", new Texture(Gdx.files.internal("atlas/pinkAndBlueButtons.png")));
-        textureAssociations.put("textures/background.png", new Texture(Gdx.files.internal("textures/background.png")));
-        textureAssociations.put("textures/blueBackground.png", new Texture(Gdx.files.internal("textures/blueBackground.png")));
-        textureAssociations.put("textures/blueSpark.png", new Texture(Gdx.files.internal("textures/blueSpark.png")));
-        textureAssociations.put("textures/DukeMania.png", new Texture(Gdx.files.internal("textures/DukeMania.png")));
-        textureAssociations.put("textures/note.png", new Texture(Gdx.files.internal("textures/note.png")));
-        textureAssociations.put("textures/scoreboard.png", new Texture(Gdx.files.internal("textures/scoreboard.png"), true));
+        textureAssociations.put("pinkAndBlueButtons.png", new Texture(Gdx.files.internal("atlas/pinkAndBlueButtons.png")));
+        textureAssociations.put("background.png", new Texture(Gdx.files.internal("textures/background.png")));
+        textureAssociations.put("blueBackground.png", new Texture(Gdx.files.internal("textures/blueBackground.png")));
+        textureAssociations.put("blueSpark.png", new Texture(Gdx.files.internal("textures/blueSpark.png")));
+        textureAssociations.put("DukeMania.png", new Texture(Gdx.files.internal("textures/DukeMania.png")));
+        textureAssociations.put("note.png", new Texture(Gdx.files.internal("textures/note.png")));
+        textureAssociations.put("scoreboard.png", new Texture(Gdx.files.internal("textures/scoreboard.png"), true));
     }
 
     /***
