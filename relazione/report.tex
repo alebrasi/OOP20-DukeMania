@@ -13,6 +13,15 @@
 
 \usepackage[italian]{cleveref}
 
+
+\newcommand\pathgenerale{img/generali/}
+\newcommand\pathsofia{img/sofia/}
+\newcommand\pathlaura{img/laura/}
+\newcommand\pathgianluca{img/gianluca/}
+\newcommand\pathalessandro{img/alessandro/}
+\newcommand\pathserafino{img/serafino/}
+
+
 \title{Relazione:\break``DUKEMANIA''}
 
 \author{Gianluca Migliarini, \\ Serafino Pandolfini,\\ Sofia Tosi,\\ Laura Leonardi, \\ Alessandro Brasini}
@@ -61,7 +70,7 @@ Il gameplay si svolgerà su varie colonne, in ognuna delle quali cadranno note r
 Le difficoltà primarie riguarderanno il calcolo del punteggio in base alla precisione del giocatore e la sincronizzazione tra la caduta delle note e il suono riprodotto.
 Alla fine della partita, dovrà essere visualizzata una schermata contenente il punteggio migliore di ogni singolo giocatore ottenuto sulla canzone selezionata in precedenza.
 \begin{figure}[!htb]
-	\centerline{\includegraphics[scale=0.7]{img/uml_analisi.jpg}}
+	\centerline{\includegraphics[scale=0.7]{\pathgenerale uml_analisi.jpg}}
 	\caption{Schema UML della fase di analisi.}
 	\label{img:analysis}
 \end{figure}
@@ -77,25 +86,44 @@ Il Model principale, rappresentato da GameModel, conterrà le configurazioni di 
 La classe WindowManager implementa l'interfaccia SwitchWindowNotifier, il cui compito principale e' quello di notificare il WindowManager, segnalandogli che un controller di una View vuole sostituire la finestra attiva.
 Tutte le View implementano l'interfaccia Window, la quale le rende predisposte a ricevere i dati del Model, e ad utilizzare lo SwitchWindowNotifier tramite il proprio controller.
 Utilizzando questa strategia è semplice aggiungere nuove View e definirne il comportamento.
-\newpage
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathgenerale architettura.png}}
+	\caption{Schema UML dell'architettura MVC.}
+	\label{img:architecture}
+\end{figure}
+\clearpage
+
+
 \section{Design dettagliato}
 \subsection{Gianluca Migliarini}
-La classe Engine si occupa di aggiornare e visualizzare lo stato dei vari sintetizzatori (tastiere simulate),
-ad ogni chiamata del metodo render viene riempito un buffer di samples (campioni audio), ogni campione audio viene calcolato sommando i campioni audio di tutti i sintetizzatori al momento della chiamata.
+La classe Engine si occupa di aggiornare e valutare lo stato dei vari sintetizzatori (tastiere simulate), ad ogni chiamata del metodo render viene riempito un buffer di samples (campioni audio). Ogni campione audio viene calcolato sommando i campioni audio di tutti i sintetizzatori al momento della chiamata.
 Una volta che il buffer e' pieno, viene mandato al dispositivo audio che si occupa di suonare i vari campioni.
-Ogni traccia della canzone viene suonata da un sintetizzatore, per differenziare i sintetizzatori delle percussioni da quelli di tastiere e' stata creata l' interfaccia Synth, contenente solamente i metodi comuni tra i due, ovvero quello per fermare le note/percussioni che hanno finito di suonare e quello per ottenere un sample da scrivere sub buffer audio in uscita. 
+Ogni traccia della canzone viene affidata ad un sintetizzatore di tastiera o di percussioni. Per differenziarli, e' stata creata l' interfaccia Synth, contenente i metodi comuni tra i due, per calcolare quante note/percussioni stanno suonando e per ottenere un campione audio.
 Le variabili di impostazioni che garantiscono il corretto funzionamento dell'audio sono scritte nella classe Settings.java, come campi finali statici.
-TODO FACTORY SYNTH?
-Per evitare costi computazionali troppo alti, i vari campioni delle varie note di tutti i sintetizzatori vengono pre-caricati in istanze anonime dell'interfaccia BufferManager, la quale estende l'interfaccia iterator, in quanto, oltre al nuovo metodo per ri-iniziare a suonare una nota/percussione (refresh), e' necessario avere metodi per controllare se un altro campione puo' essere riprodotto e per ottenere quest'utlimo.
-\subsubsection{DrumSynth}
-Nel caso del sintetizzatore per le percussioni, le varie istanze di BufferManager sono presenti come campo dell'enum DrumSamples. Ho scelto di utilizzare questo enum come pattern "singleton" in quanto non richiede l' istanziazione di oggetto, e perche' l'AudioEngine gira solamente su un Thread.
-L'unico metodo esterno all'interfaccia Synth e' playPercussion, il quale si occupa di ri-iniziare la riproduzione di un elemento della batteria.
-\subsubsection{KeyboardSynth}
-Per i vari sintetizzatori di tastiere, oltre ai metodi dell'interaccia Synth, e' presente il metodo playTimeNote, per suonare una nota ad una determinata frequenza per un determinato tempo espresso in microsecondi. Inoltre, ad ogni Synth viene associato un Enveloper, per determinare il tempo di attacco e di caduta della nota, espressi in millisecondi. I BufferManager delle note vengono creati all'istanziamento del sintetizzatore seguendo calcoli che coinvolgono le onde che danno la forma al suono, anche queste gia' caricate in vettori read only in un enum singleton (WaveTable), al fine di ridurre i calcoli matematici.
-A seconda dello strumento da simulare, le note possono seguire degli LFO, ovvero delle funzioni che cambiano lo il pitch e il volume della nota nel tempo, per la creazione di queste funzioni ho scelto di utilizzare il pattern "factory", in quanto il tipo e' lo stesso ma le implementazioni sono differenti.
-Per impostare correttamente tutti i parametri dei sintetizzatori di tastiera ho inoltre utilizzato il pattern "builder".
-Le note dei vari sintetizzatori vengono suonate da PlayerAudio, che periodicamente controllera' quando ad ogni nota arriva il suo tempo di essere suonata.
+Per evitare costi computazionali troppo alti, i vari campioni delle varie note di tutti i sintetizzatori vengono pre-caricati in istanze anonime dell'interfaccia BufferManager. Lo scopo di quest'ultima e' quello di rendere una nota risuonabile in ogni momento tramite il metodo refresh, e, tramite i meotodi di iterator, ottenere il prossimo campione suonabile e controllarne l'esistenza. \\ \\
+I sintetizzatori di tastiera e di percussioni si differenziano nel seguente modo:
 \newpage
+\subsubsection{KeyboardSynth}
+Per i vari sintetizzatori di tastiere, oltre ai metodi dell'interaccia Synth, e' presente il metodo playTimeNote, per suonare una nota ad una determinata frequenza per un determinato tempo espresso in microsecondi. \\
+Per aumentare le performance, i vari campioni delle note sono caricati all'instanziamento della classe, a partire da una lista contenente gli indici delle note utilizzate e il relativo tempo di suonata. \\
+I BufferManager vengono creati a partire da una classe Enveloper, che si occupa di gestire il volume della nota in entrata e in uscita.
+Per impostare correttamente tutti i parametri dei sintetizzatori di tastiera ho deciso di utilizzare il pattern "builder", in quanto alcune impostazioni non sono sempre necessarie, ad esempio gli LFO, visti in dettaglio piu' avanti. \\ \\ \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathgianluca synth_builder}}
+	\caption{Schema UML del Builder dei sintetizzatori di tastiere.}
+	\label{img:SynthBuilder}
+\end{figure}
+\clearpage
+\subsubsection{DrumSynth}
+Nel caso del sintetizzatore per le percussioni, le varie istanze di BufferManager sono presenti come campo read only dell'enum DrumSamples. Ho scelto di utilizzare questo enum come pattern "singleton" in quanto non richiede l' istanziazione di oggetto, e perchè le percussioni non cambiano tra i diversi file Midi, a differenza delle note di diversa lunghezza.
+L'unico metodo esterno all'interfaccia Synth e' playPercussion, il quale si occupa di ri-iniziare la riproduzione di un elemento della batteria. \\
+\\ \\ \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathgianluca drum_singleton}}
+	\caption{Schema UML del Singleton Drum Samples.}
+	\label{img:drumSingleton}
+\end{figure}
+\clearpage
 \subsection{membro 2}
 progetto 
 \newpage
@@ -338,7 +366,7 @@ librerie utilizzate:
 
 
 \chapter{Commenti Finali}
-\section{Autovalutazione e lavori futuri} \\
+\section{Autovalutazione e lavori futuri} 
 schermata 
 \newpage
 
