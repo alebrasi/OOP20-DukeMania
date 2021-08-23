@@ -29,6 +29,10 @@ public enum Percussion {
         ACOUSTIC_SNARE.associated = DrumSamples.Snare;
     }
 
+    /**
+     * this method return the associated DrumSample for each Percussion.
+     * @return the associated drum
+     */
     public DrumSamples  getAssociated() {
         return associated;
     }

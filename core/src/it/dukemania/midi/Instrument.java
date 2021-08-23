@@ -16,6 +16,10 @@ public final class Instrument {
     private List<SynthInfo> list;
 
 
+    /**
+     * this is the constructor.
+     * @param instrument
+     */
     public Instrument(final InstrumentType instrument) {
         this.instrument = instrument;
         try {
@@ -48,30 +52,35 @@ public final class Instrument {
         }
     }
 
+    /**
+     * this method find the instruments which use the same synthetizer as the current one. 
+     * @return a list of instruments
+     * @throws IOException
+     */
     private List<InstrumentType> calcAssociatedInstrumentType() throws IOException {
-        /*Storage st = new StorageFactoryImpl().getConfigurationStorage();
-        List<SynthInfo> list = new ConfigurationsModelImpl(st).readSynthesizersConfiguration();
-        */
         return this.list.stream()
                 .filter(s -> s.getSynth().equals(this.synthetizer))
                 .findAny().orElseThrow().getAssociatedInstruments();
     }
 
+    /**
+     * this method find the name associated to the synthetizer for this instrument.
+     * @return the syntetizer name
+     * @throws IOException
+     */
     private String calcName() throws IOException {
-        /*Storage st = new StorageFactoryImpl().getConfigurationStorage();
-        List<SynthInfo> list = new ConfigurationsModelImpl(st).readSynthesizersConfiguration();
-        */
         return this.list.stream()
                 .filter(s -> s.getSynth().equals(this.synthetizer))
                 .findAny().orElseThrow().getName();
     }
 
 
+    /**
+     * this method find which synthetizer is associated to this instrument.
+     * @return the synthetizer
+     * @throws IOException
+     */
     private SynthBuilderImpl calcSynthetizer() throws IOException {
-        /*
-        Storage st = new StorageFactoryImpl().getConfigurationStorage();
-        List<SynthInfo> list = new ConfigurationsModelImpl(st).readSynthesizersConfiguration();
-        */
         return this.list.stream()
                 .filter(s -> s.getAssociatedInstruments().contains(this.instrument))
                 .map(s -> s.getSynth())
@@ -82,16 +91,38 @@ public final class Instrument {
     }
 
 
+
+    /**
+     * this method returns the name associated to the synthetizer for this instrument.
+     * @return the syntetizer name
+     * @throws IOException
+     */
     public String getName() {
         return name;
     }
+
+    /**
+     * this method returns the synthetizer associated to this instrument.
+     * @return the synthetizer
+     * @throws IOException
+     */
     public SynthBuilderImpl getSynthetizer() {
         return this.synthetizer;
     }
+
+    /**
+     * this method return the instruments which use the same synthetizer as the current one. 
+     * @return a list of instruments
+     * @throws IOException
+     */
     public List<InstrumentType> getAssociatesInstrumentType() {
         return this.associatedInstrumentType;
     }
 
+    /**
+     * this method return the instrument.
+     * @return an instrument
+     */
     public Enum<InstrumentType> getInstrument() {
         return this.instrument;
     }

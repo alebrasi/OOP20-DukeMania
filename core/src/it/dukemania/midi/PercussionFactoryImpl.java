@@ -13,7 +13,6 @@ public class PercussionFactoryImpl implements AbstractFactory {
             return new PercussionNote(duration, startTime, identifier);
         } else {
             throw new InvalidNoteException();
-            //return null;
         }
     }
 

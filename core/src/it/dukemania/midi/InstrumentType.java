@@ -1,17 +1,5 @@
 package it.dukemania.midi;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import it.dukemania.Model.serializers.ConfigurationsModelImpl;
-import it.dukemania.Model.serializers.synthesizer.SynthInfo;
-import it.dukemania.audioengine.SynthBuilderImpl;
-import it.dukemania.util.storage.Storage;
-import it.dukemania.util.storage.StorageFactoryImpl;
 
 public enum InstrumentType {
 
