@@ -189,7 +189,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
     private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
         final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 600, dimensions.getSize().getX(), 
-                dimensions.getSize().getY() - 200); //magic numbers
+                dimensions.getSize().getY() - 200);
 
 
 
@@ -251,7 +251,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             n.updateNote(deltaTime, this.startTime);
 
             //it returns the time when the user starts to press a key
-            if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && !n.isPressed()) {
+            if (n.getKeyboard().get().isButtonPressed(this.numberOfColumns) && !n.isPressed()) {
                 n.setIsPressed(true);
                 if (n.getKey().isEmpty()) {
                     n.setKey();
@@ -259,7 +259,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                 n.getKey().get().startPressing(this.startTime);
             } else {
                 //it returns the time when the user finishes to press a key
-                if (!n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && n.isPressed()) {
+                if (!n.getKeyboard().get().isButtonPressed(this.numberOfColumns) && n.isPressed()) {
                     n.setIsPressed(false);
                     n.getKey().get().finishPressing(this.startTime);
                     this.score += this.logic.verifyNote(n.getColumn(), n.getKey().get().getInitialTime() * 1000 - this.shift.getTimeShift(), (n.getKey().get().getFinalTime()) * 1000 - this.shift.getTimeShift());
@@ -269,15 +269,16 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 
             //set the sparks
-            if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns)) {
+            if (n.getKeyboard().get().isButtonPressed(this.numberOfColumns)) {
                 isSparked(n);
             }
 
 
             //change the style of the buttons if they are clicked
-            if (n.getKeyboard().get().isButtonPressed(n.getColumn().getNumericValue(), this.numberOfColumns)) {
+            if (n.getKeyboard().get().isButtonPressed(this.numberOfColumns)) {
                 this.buttons.get(n.getColumn().getNumericValue() - 1).setStyle(this.styleDown);
             }
+
 
         }
         //removal of notes that are terminated
@@ -304,6 +305,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
     @Override
     public void receiveData(final GameModel data) {
+        this.data = data;
         this.song = data.getSelectedSong();
         this.selectedTrack = data.getSelectedTrack();
         this.songHash = data.getSongHash();

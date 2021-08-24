@@ -25,11 +25,9 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
 
 
     @Override
-    public boolean isColumnSelected(final int max) {
+    public boolean isButtonPressed(final int max) {
         return Gdx.input.isKeyPressed(this.associationKeyColumn(this.column.getNumericValue(), max));
     }
-
-
 
 
 
@@ -39,10 +37,6 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
         return usedKeys.get(column - 1);
     }
 
-    @Override
-    public boolean isButtonPressed(final int column, final int max) {
-        return Gdx.input.isKeyPressed(this.associationKeyColumn(column, max));
-    }
 
 
     /*TASTI
