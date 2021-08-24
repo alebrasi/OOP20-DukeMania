@@ -44,6 +44,9 @@
 Il gruppo si pone come obbiettivo quello di realizzare un clone del videogioco musicale "BeatManiaIIDX".
 Lo sviluppo mira alla completa funzionalità a livello di gameplay, e, in aggiunta all'opera originale
 dalla quale viene presa ispirazione, offrire all'utente la possibilità di importare i propri livelli giocabili tramite file Midi (Musical Instrument Digital Interface). Viene inoltre considerato come requisito la sostituzione della riproduzione di una traccia audio con la sintesi sonora in tempo reale.
+\begingroup
+\fontsize{11pt}{10pt}\selectfont
+
 \subsubsection{Requisiti funzionali}
 \begin{itemize}
 	\item L'utente è in grado di scegliere quale canzone giocare a partire dalla scelta di un file Midi.
@@ -60,6 +63,7 @@ dalla quale viene presa ispirazione, offrire all'utente la possibilità di impor
 	\item L'applicativo deve funzionare correttamente sia su Windows sia su sistemi basati su Unix
 	\item La fluidità del gameplay e la qualità dell'audio non devono essere compromesse dalla pesantezza del file midi (ovviamente se non troppo complesso)
 \end{itemize}
+\endgroup
 \newpage
 
 % section analisi di modello e dominio
@@ -143,9 +147,39 @@ SynthBuilder utilizza una strategy con "Function Long,Float" come interfaccia fu
 	\label{img:wavetables}
 \end{figure}
 \clearpage
+
 \subsection{Serafino Pandolfini}
-progetto 
-\newpage
+Il package logic si occupa di ricevere Song fornite dal MidiParser e di elaborare le tracce e le note che la compongono. Vi sono inoltre presenti metodi e classi per il calcolo del punteggio e per l'avvio della traccia audio. Il tutto si può dividere nelle seguenti sezioni:
+\subsubsection{Filtraggio delle note e difficoltà tracce}
+Il primo passaggio svolto è la riduzione del numero di note per ogni traccia. Prima vengono eliminate tracce non giocabili, generalmente tracce di percussioni identificate da un canale; poi da ogni traccia vengono eliminate le note troppo piccole per poter essere giocate con successo; infine, basandosi sul numero di note, vengono eliminate ulteriori note in modo da portare il numero di note di ogni traccia sotto una soglia predeterminata. Questo ultimo filtro è basato sull'ordine temporale delle note, in modo da preservare l'uniformità della traccia e garantire una certa diversità di numero di note tra le tracce di una Song. Si precisa che ogni volta che è necessario eliminare note dalla traccia invece che eliminarle si preferisce ricreare la traccia stessa tramite una factory in modo da utilizzare gli stream più agilmente.
+Dopo che ogni traccia è stata filtrata queste vengono mostrate a schermo con l'aggiunta di un livello di difficoltà per ognuna di esse. Questo livello è basato sul numero di note della traccia dopo essere stata filtrata. I vari livelli sono contenuti all'intenro dell'enum DifficultyLevel.
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathserafino TrackFilter.jpg}}
+	\caption{Schema UML del Track Filter.}
+	\label{img:trackfilter}
+\end{figure}
+\clearpage \hfill\break
+\subsubsection{Incolonnamento delle note e passaggio alla grafica}
+Dopo che viene scelta una traccia da giocare è necessario posizionare le note nelle colonne presenti nell'enum Columns. In questo processo vengono anche generati i range che poi saranno sfruttati nel calcolo del punteggio. Dopo aver incolonnato le colonne queste vengono convertite da AbstractNote a LogicNote. Questo passaggio viene svolto tramite un pattern adapter ed è necessario applicarlo per permettere la compatibilità con la grafica del gioco. \\ \\ \\ \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathserafino adapter.jpg}}
+	\caption{Schema UML dell'adapter.}
+	\label{img:incollamentonote}
+\end{figure}
+\clearpage \hfill\break
+
+\subsubsection{Calcolo del punteggio}
+Per ogni nota premuta dal giocatore viene calcolato un punteggio. Viene prima deciso il range della nota premuta su quelli creati precedentemente, poi si passa al calcolo effettivo.L'algoritmo utilizzato per questo calcolo è strutturato usando il pattern strategy in modo da permettere in futuro l'aggiunta di ulteriori algoritmi per il calcolo del punteggio. \\ \\ \\ \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathserafino Strategy.jpg}}
+	\caption{Schema UML della strategy per il calcolo del punteggio.}
+	\label{img:calcpunteggio}
+\end{figure}
+\clearpage \hfill\break
+
+
+
+
 \subsection{Sofia Tosi}
 Questo paragrafo illustra il design relativo alla gestione dell'input e degli assets.
 In seguito ad un'attenta valutazione, si è deciso di far interfacciare l'utente all'applicazione DukeMania tramite l'utilizzo di
@@ -155,7 +189,7 @@ La classe EventsFromKeyboardImpl rappresenta l'Adapter in sè che, implementando
 tra la tastiera, che sfrutta la libreria com.badlogic.gdx.Input, e la classe relativa alla grafica PlayScreen.
 Per non superare eccessivamente l'ammontare di ore, l'applicazione attuale è stata implementata per consentire solo l'utilizzo della tastiera del pc. 
 Laddove si volesse, in futuro, cambiare la periferica, l'applicazione non esclude questa possibilità. Si potrebbe infatti implementare EventsFromKeyboard 
-e sostituire la classe dell'adapter con un altro adapter che interagisca con una diversa periferica (ad esempio un gamepad, una SG Guitar Hero o una tastiera midi).
+e sostituire la classe dell'adapter con un altro adapter che interagisca con una diversa periferica (ad esempio un gamepad, una SG Guitar Hero o una tastiera midi). \\ \\
 \newline
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.7]{\pathsofia sofia_adapter.jpg}}
@@ -167,7 +201,7 @@ Un'altra peculiare classe che merita di essere citata è l'AssetsManager che, co
 necessarie per il corretto funzionamento dell'applicazione. Queste risorse, che possono essere, ad esempio, le texture degli elementi nella GUI o i file con i font utilizzati,
 vengono caricate una sola volta in memoria.
 Ho deciso di sfruttare il pattern Singleton per la realizzazione di tale classe. Difatti è importante che ci sia una sola istanza dell'AssetsManager per evitare che le risorse 
-grafiche vengano istanziate più volte in memoria sprecando spazio inutilmente. 
+grafiche vengano istanziate più volte in memoria sprecando spazio inutilmente. \\ \\
 \newline
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.7]{\pathsofia sofia_singleton.png}}
@@ -203,19 +237,19 @@ Nell'implementare le concrete factory ho ritenuto opportuno che non si generasse
 
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.8]{\pathlaura midiparser.jpg}}
-	\caption{TODO.}
+	\caption{Classe MidiParser.}
 	\label{img:midiparser}
 \end{figure}  
 \hfill\break\break
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.8]{\pathlaura percfactimpl.jpg}}
-	\caption{TODO.}
+	\caption{Classe PercussionFactoryImpl.}
 	\label{img:percfactimpl}
 \end{figure}
 \hfill\break\break
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.8]{\pathlaura factimpl.jpg}}
-	\caption{TODO.}
+	\caption{classe FactoryImpl.}
 	\label{img:factimpl}
 \end{figure}
 \clearpage
@@ -314,6 +348,8 @@ Il metodo switchWindow non fa altro che notificare il WindowManager, mediante un
 Abbiamo deciso di eseguire test automatizzati prevalentemente per le classi più complesse. Per quanto riguarda le varie schermate e la gestione di queste, una volta prese in considerazione le limitazioni causate da libGdx, abbiamo preferito eseguire accurati test manuali. \\ \\ Per il testing del file midi sono stati utilizzati anche dei test manuali, specialmente nella fase iniziale, con lo scopo di comprendere appieno e con quanta più precisone possibile la struttura del file midi \\
 {\setstretch{0.6}
 \begin{itemize}
+	\begingroup
+	\fontsize{10pt}{12pt}\selectfont	
 	\item \textbf{testStraightLFO - testSquareLFO - testSineLFO - testIntervalLFO:} per ogni funzione LFO è presente un test per garantirne il corretto funzionamento.	
 	\item \textbf{TestKeyboardSynth:} testato la correttezza del conto di quante note stanno suonando al momento, il metodo per ottenere il campione audio, il metodo per risuonare una nota.	
 	\item \textbf{DrumSynthTest:} testato la correttezza del conto di quante percussioni stanno suonando al momento, il metodo per ottenere il campione audio, il metodo per risuonare una percussione.	
@@ -323,6 +359,7 @@ Abbiamo deciso di eseguire test automatizzati prevalentemente per le classi più
 	\item \textbf{ColumnLogic - noteQueuing:} testate diverse configurazioni di numero di note, sia sovrapposte che non, e colonne.	
 	\item \textbf{ColumnLogic - verifyNote:} testato il calcolo del punteggio in relazione a precisione della nota e combo di note.
 	\item \textbf{testMidiParser:} testata la correttezza della song restituita e degli elementi che la compongono.
+	\endgroup
 \end{itemize}
 }
 \newpage
@@ -341,7 +378,7 @@ In questo progetto, mi sono dedicato principalmente della riproduzione audio.
 Gli oggetti principali del mio package sono i Synth, i quali sono in grado, alla chiamata di un metodo, di restituire un campione audio ottenuto dalla somma di tutte le note o percussioni che stanno suonando simultaneamente.
 La classe Engine, si occupa di ottenere i campioni dai vari sintetizzatori, comporre il buffer audio, regolarne il volume e riprodurlo in uscita.
 Mi sono inoltre dedicato allo sviluppo di delle classi LFOFactory ed Enveloper, per, rispettivamente aggiungere varietà ai timbri sonori e per regolare il volume delle singole note in entrata e in uscita al fine di eliminare i "click" audio, sgradevoli all'udito.
-Infine, per semplificare la gestione delle forme audio da caricare nelle note, ho sviluppato l'enum read-only WaveTable. \\ \\
+Infine, per semplificare la gestione delle forme audio da caricare nelle note, ho sviluppato l'enum read-only WaveTable. \\ \\ \\
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
 	\begin{itemize}
@@ -356,9 +393,7 @@ Classi sviluppate singolarmente:
 	\end{itemize}
 } 
 \hfill\break
-Inoltre, a mio parere, anche gli enum WaveTable DrumSamples devono essere listati, inquanto contenti metodi e campi oltre alla semplice enumerazione.
-\textbf{• Problematiche riscontrate}\hfill\break
-problemi 
+Inoltre, a mio parere, anche gli enum WaveTable DrumSamples devono essere listati, in quanto contenti metodi e campi oltre alla semplice enumerazione.
 \newpage
 
 \subsection{Serafino Pandolfini}
@@ -370,15 +405,17 @@ L'ultima parte sviluppata singolarmente è quella relativa alla classe GameUtili
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
 	\begin{itemize}
-		\item classe 1
-		\item classe 1
-		\item classe 1
+		\item ColumnLogicImpl
+		\item NoteRange
+		\item LogicNoteImpl
+		\item ScoreContext
+		\item FullCalculator
+		\item TrackFilterImpl
+		\item GameUtilitiesImpl
+		\item PlayerAudio
+		\item TestLogic
 	\end{itemize}
-}
-\hfill\break
-\textbf{• Problematiche riscontrate}\hfill\break
-problemi 
-\newpage
+
 
 \subsection{Sofia Tosi}
 In questa sezione si parlerà di grafica. La classe principale è PlayScreen, il cuore della View relativa al game, attraverso la
@@ -413,7 +450,7 @@ Classi sviluppate singolarmente:
 }
 \hfill\break
 
-\subsection{membro 4}
+\subsection{Laura Leonardi}
 Studio del protocollo midi e midi parsing, creazione delle tracce e delle note che le compongono, gestione degli strumenti  \\ \\
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
@@ -440,31 +477,37 @@ Classi sviluppate singolarmente:
 	\end{itemize}
 }
 \hfill\break
-\textbf{• Problematiche riscontrate}\hfill\break
-problemi 
 \newpage
 
-\subsection{membro 5}
-ha fatto questo bla bla bla \\ \\
-Classi sviluppate singolarmente:
-{\setstretch{0.6}
-	\begin{itemize}
-		\item classe 1
-		\item classe 1
-		\item classe 1
-	\end{itemize}
-}
-\hfill\break
-\textbf{• Problematiche riscontrate}\hfill\break
-problemi 
+\subsection*{Alessandro Brasini}
+All'interno del progetto mi sono occupato di sviluppare le view e relativi controller per le varie schermate del menù; realizzazione di serializzatori e 
+deserializzatori custom per le configurazioni delle canzoni salvate, leaderboard e preset dei sintetizzatori; gestione dell'accesso ai file di configurazione;
+implementazione della core architecture.
+Il processo di integrazione della mia parte con le altre è stato relativamente semplice in quanto non necessitava di molte interazioni
+tra le varie classi sviluppate dai miei colleghi. Le parti in cui si necessitava di una integrazione, come quella per integrare la schermata di PlayScreen,
+è stata risolta facendo implementare a quest'ultima l'interfaccia Window, mentre per il passaggio dei dati tra le varie Window è stata implementata la 
+classe GameModel, la quale racchiude tutti i dati attuali della partita (nome del giocatore, traccia e canzone selezionata, punteggio, hash della canzone e il numero di 
+colonne sul quale vuole giocare).
+Package sviluppati:
+\begin{itemize}
+	\item \textbf{it.dukemania.controller.filedialog}
+	\item \textbf{it.dukemania.controller.leaderboard}
+	\item \textbf{it.dukemania.controller.option}
+	\item \textbf{it.dukemania.controller.songselection}
+	\item \textbf{it.dukemania.model}
+	\item \textbf{it.dukemania.util.storage}
+	\item \textbf{it.dukemania.view.menu}
+	\item \textbf{it.dukemania.windowmanager}
+\end{itemize}
+Classi sviluppate:
+\begin{itemize}
+	\item \textbf{DukeMania.java}
+\end{itemize}
 \newpage
 
 
 
 \section{Note di sviluppo}
-schermata
-\newpage
-
 \subsection{Gianluca Migliarini}
 Feature avanzate del linguaggio:
 \begin{itemize}
@@ -481,15 +524,12 @@ Classi riutilizzate: \\
 Per comodità ho deciso di riutilizzare la classe generica Pair, introdotta dal prof. Viroli durante il corso.
 \newpage
 
-\subsection{membro 2}
-commenti
+\subsection{Serafino Pandolfini}
+Feature avanzate del linguaggio:
 \begin{itemize}
-	\item \textbf{lambda:} tanta roba
-	\item \textbf{stream:} tanta roba
-\end{itemize}
-librerie utilizzate:
-\begin{itemize}
-	\item \textbf{libgdx:} gestione grafica
+	\item \textbf{lambda:} utilizzate per il filtraggio delle tracce, l'incolonnamento delle note, l'individuazione del range della nota premuta, l'assegnazione delle difficoltà alle tracce, all'interno del note player.
+	\item \textbf{stream:} utilizzate per il filtraggio delle tracce, l'incolonnamento delle note, l'individuazione del range della nota premuta, l'assegnazione delle difficoltà alle tracce, all'interno del note player.
+	\item \textbf{optional:} utilizzate per il filtraggio delle tracce, l'incolonnamento delle note, l'individuazione del range della nota premuta, l'assegnazione delle difficoltà alle tracce, all'interno del note player, nell'adapter per il passaggio dati alla grafica.
 \end{itemize}
 \newpage
 
@@ -505,10 +545,8 @@ librerie utilizzate:
 \begin{itemize}
 	\item \textbf{libgdx:} libreria grafica Libgdx: studio autonomo di tale libreria per realizzare l'interfaccia di gioco.
 \end{itemize}
-Classi riutilizzate: \\
+Classi riutilizzate: \\ \\
 Utilizzo della classe Pair fornita gentilmente dal professore Viroli
-\newpage
-
 \newpage
 
 \subsection{Laura Leonardi}
@@ -526,15 +564,18 @@ Classi riutilizzate: \\
 Classe generica Pair, fornita dal prof. Viroli.
 \newpage
 
-\subsection{membro 5}
-commenti
+\subsection{Alessandro Brasini}
+Aspetti avanzati del linguaggio:
 \begin{itemize}
-	\item \textbf{lambda:} tanta roba
-	\item \textbf{stream:} tanta roba
+	\item \textbf{Lambda}
+	\item \textbf{Stream:} utilizzati ampiamente nelle implementazioni dei vari controller delle view
+	\item \textbf{Interfaccia funzionale Function}: utilizzata come interfaccia strategy per la creazione dei vari tipi di storage.
 \end{itemize}
-librerie utilizzate:
+Librerie utilizzate:
 \begin{itemize}
-	\item \textbf{libgdx:} gestione grafica
+	\item \textbf{Jackson:} utilizzata per la serializzazione e deserializzazione delle leaderboard, preset dei sintetizzatori e configurazioni delle canzoni
+	in formato JSON.
+	\item \textbf{Libgdx:} libreria grafica utilizzata per la creazione dell'interfaccia grafica.
 \end{itemize}
 \newpage
 
@@ -542,9 +583,7 @@ librerie utilizzate:
 
 
 \chapter{Commenti Finali}
-\section{Autovalutazione e lavori futuri} 
-schermata 
-\newpage
+
 
 \section{Gianluca Migliarini}
 \subsection{commenti}
@@ -576,7 +615,7 @@ Indipendentemente dalla valutazione finale, mi ritengo molto soddisfatta del pro
 Ritengo il corso di Programmazione ad Oggetti un corso molto valido e interessante. 
 Mi ha permesso di approfondire nuovi argomenti non soltanto da autodidatta, ma anche con le lezioni dei prof 
 che ho trovato chiare e stimolanti. L'unica modifica che apporterei è l'aggiunta di ore di laboratorio per
-imparare già da subito ad applicare correttamente i pattern e Csharp. Nella mia modesta opinione avere più ore da dedicare a questi argomenti
+imparare già da subito ad applicare correttamente i pattern e C\#. Nella mia modesta opinione avere più ore da dedicare a questi argomenti
 comporterebbe un notevole aiuto.
 \newpage
 \section{Laura Leonardi}
