@@ -70,22 +70,18 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private int score;
     private long startTime;
     private final ComputingShift shift;
-    private OrthographicCamera camera;
     private int numberOfColumns;
-    private float deltaTime = 0;
     private List<TextButton> buttons;
     private Song song;
     private ParsedTrack selectedTrack;
     private List<GraphicNote> notes;
     private final ColumnLogic logic;
-    //private PlayerAudio player;
     private String songHash;
     private SwitchWindowNotifier switchWindowNotifier;
     //constant
     private static final int BUTTON_DIM = 120;
-    private static final int YNOTE = 80;
     private GameModel data;
-    private AssetsManager ass = AssetsManager.getInstance();
+    private final AssetsManager assetManager = AssetsManager.getInstance();
 
 
 
@@ -109,9 +105,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
     }
 
-    private BitmapFont font;
-    private Skin skin;
-    private TextureAtlas atlas;
 
     @Override
     public void create() {
@@ -120,14 +113,14 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         notes = new ArrayList<>();
         buttons = new ArrayList<>();
         layout = new GlyphLayout();
-        camera = new OrthographicCamera();
+        final OrthographicCamera camera = new OrthographicCamera();
 
         dimensions = new SizeImpl(this.numberOfColumns);
-        final Texture background = ass.getTexture("blueBackground.png");
+        final Texture background = assetManager.getTexture("blueBackground.png");
         final Image backgroundImage = new Image(background);
-        this.textureNote = ass.getTexture("note.png");
-        this.textureSparks = ass.getTexture("blueSpark.png");
-        this.scoreboard = ass.getTexture("scoreboard.png");
+        this.textureNote = assetManager.getTexture("note.png");
+        this.textureSparks = assetManager.getTexture("blueSpark.png");
+        this.scoreboard = assetManager.getTexture("scoreboard.png");
         this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         this.batch = new SpriteBatch();
         this.backgroundBatch = new SpriteBatch();
@@ -142,12 +135,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
         final BitmapFont font = new BitmapFont();
         final Skin skin = new Skin();
-        final TextureAtlas atlas = ass.getTextureAtlas("pinkAndBlueButtons.atlas");
+        final TextureAtlas atlas = assetManager.getTextureAtlas("pinkAndBlueButtons.atlas");
 
         logic.initAudio(song);
         skin.addRegions(atlas);
 
-        this.fontScoreboard = ass.generateFontScoreboard();
+        this.fontScoreboard = assetManager.generateFontScoreboard();
 
 
         this.styleDown = new TextButtonStyle();
@@ -192,18 +185,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             this.numberOfColumns
         );
     }
-
-    //this method returns the notes that are playing right now
-    /*private List<Note> getPlayingNotes(final long actualTime) {
-        final List<Note> playing = new ArrayList<>();
-            for (final Note n : this.notes) {
-                if (n.getStartTime() <= actualTime) {
-                    playing.add(n);
-                }
-            }
-        return playing;
-
-    }*/
 
 
     private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
@@ -266,12 +247,12 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         //drawing of each note
         for (final GraphicNote n : notesPlaying) {
             drawNote(n.getPosxNote(), n.getPosyNote(), n.getxNote(), n.getyNote());
-            this.deltaTime = Gdx.graphics.getDeltaTime();
+            final float deltaTime = Gdx.graphics.getDeltaTime();
             if (n.getKeyboard().isEmpty()) {
                 n.setKeyboard();
                 n.setStartNote(Instant.now().toEpochMilli());
             }
-            n.updateNote(this.deltaTime, this.startTime);
+            n.updateNote(deltaTime, this.startTime);
 
             //it returns the time when the user starts to press a key
             if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && !n.isPressed()) {
@@ -295,17 +276,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns)) {
                 isSparked(n);
             }
-
-
-
-
-
-            /*//it returns the time when the user starts to press a key
-            if (this.keyboard.isColumnSelected(this.numberOfColumns) && !n.isPressed()) { 
-                n.setIsPressed(true);
-                this.key.startPressing();
-            }*/ //delete this
-
 
 
 
