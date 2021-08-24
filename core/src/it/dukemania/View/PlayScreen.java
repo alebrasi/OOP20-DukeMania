@@ -185,7 +185,7 @@ public class PlayScreen implements Window {
     private GraphicNote associationNote(final LogicNote noteLogic) {
         return new GraphicNoteImpl(this.dimensions.getSize().getY(),
             noteLogic.getColumn(),
-                (int) (noteLogic.getNoteDuration()) / this.shift.getDurationOffset(),
+            (noteLogic.getNoteDuration().intValue()) / this.shift.getDurationOffset(),
             noteLogic.getNoteStarts() / 1000 - this.shift.getNoteStartOffset(),
             noteLogic.getNoteDuration() / 1000,
             this.numberOfColumns
