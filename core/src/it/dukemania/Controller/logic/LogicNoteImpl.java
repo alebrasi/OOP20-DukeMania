@@ -30,8 +30,8 @@ public class LogicNoteImpl implements LogicNote {
     }
 
     @Override
-    public final long getNoteDuration() {
-        return Math.round(this.note.getDuration().get());
+    public final Long getNoteDuration() {
+        return this.note.getDuration().orElse(0L);
     }
 
 
