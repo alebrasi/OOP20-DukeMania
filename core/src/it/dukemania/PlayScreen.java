@@ -192,11 +192,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                 dimensions.getSize().getY() - 200); //magic numbers
 
 
-        /*renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(Color.RED);
-        renderer.rect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
-        renderer.circle(30, clipBounds.y, 3);
-        renderer.end();*/
+
 
         this.batch.flush();
         ScissorStack.pushScissors(clipBounds);
@@ -266,7 +262,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                 if (!n.getKeyboard().get().isColumnSelected(this.numberOfColumns) && n.isPressed()) {
                     n.setIsPressed(false);
                     n.getKey().get().finishPressing(this.startTime);
-                    this.score += this.logic.verifyNote(n.getColumn(), ((n.getKey().get().getInitialTime()) * 1000 - 250000), ((n.getKey().get().getFinalTime()) * 1000)-250000);
+                    this.score += this.logic.verifyNote(n.getColumn(), n.getKey().get().getInitialTime() * 1000 - this.shift.getTimeShift(), (n.getKey().get().getFinalTime()) * 1000 - this.shift.getTimeShift());
                 }
 
             }
@@ -276,7 +272,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
             if (n.getKeyboard().get().isColumnSelected(this.numberOfColumns)) {
                 isSparked(n);
             }
-
 
 
             //change the style of the buttons if they are clicked
@@ -299,7 +294,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         }
 
 
-
         this.batch.end();
         this.backgroundBatch.end();
 
@@ -310,13 +304,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
     @Override
     public void receiveData(final GameModel data) {
-        /*
-        final Object[] receivedData = (Object[]) data;
-        this.song = (Song) receivedData[0];
-        this.selectedTrack = (MidiTrack) receivedData[1];
-        this.songHash = (String) receivedData[2];
-         */
-        this.data = data;
         this.song = data.getSelectedSong();
         this.selectedTrack = data.getSelectedTrack();
         this.songHash = data.getSongHash();

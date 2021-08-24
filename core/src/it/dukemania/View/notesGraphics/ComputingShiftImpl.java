@@ -1,5 +1,7 @@
 package it.dukemania.View.notesGraphics;
 
+import it.dukemania.Controller.logic.Columns;
+
 public class ComputingShiftImpl implements ComputingShift {
     private static final int NOTE_SHIFT = 35;
     private static final int SPARK_SPACE = 40;
@@ -9,12 +11,16 @@ public class ComputingShiftImpl implements ComputingShift {
     private static final int SPARK_HEIGHT = 70;
     private static final int DURATION_OFFSET = 5500;
     private static final int NOTE_START_OFFSET = 2500;
+    private static final int TIME_SHIFT = 250_000;
+    private static final int SHIFT_5_COLUMN = 20;
+    private static final int SHIFT_6_COLUMN = 9;
+
 
     //this method calculates the displacement of the position of the buttons as a function of the number of columns
     @Override
     public int calculateShifting(final int numberOfColumns) {
-        return numberOfColumns == 4 || numberOfColumns == 8 ? 0 : numberOfColumns == 5 ? 20 : numberOfColumns == 7 
-                ? 4 : 9;
+        return numberOfColumns == 4 || numberOfColumns == 8 ? 0 : numberOfColumns == Columns.COLUMN_5.getNumericValue() ? ComputingShiftImpl.SHIFT_5_COLUMN : numberOfColumns == Columns.COLUMN_7.getNumericValue() 
+                ? 4 : ComputingShiftImpl.SHIFT_6_COLUMN;
     }
 
     @Override
@@ -55,6 +61,11 @@ public class ComputingShiftImpl implements ComputingShift {
     @Override
     public int getNoteStartOffset() {
         return ComputingShiftImpl.NOTE_START_OFFSET;
+    }
+
+    @Override
+    public int getTimeShift() {
+        return ComputingShiftImpl.TIME_SHIFT;
     }
 
 }

@@ -31,16 +31,6 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
 
 
 
-    /*TASTI
-     * 1 - A 
-     * 2 - S
-     * 3 - D
-     * 4 - F
-     * 5 - H
-     * 6 - J
-     * 7 - K
-     * 8 - L
-     * */
 
 
     @Override
@@ -55,5 +45,15 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
     }
 
 
+    /*TASTI
+     * 1 - A 
+     * 2 - S
+     * 3 - D
+     * 4 - F
+     * 5 - H
+     * 6 - J
+     * 7 - K
+     * 8 - L
+     * */
 
 }

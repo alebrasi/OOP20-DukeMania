@@ -8,15 +8,13 @@ public class SizeImpl implements Size {
     private final int widthGUI =  (int) screenSize.getWidth();
     private final int heightGUI = (int) screenSize.getHeight();
     private final int numberOfColumns;
-    private final int width;
-    private final int height;
     private final Pair<Integer, Integer> windowsize;
 
 
-    public SizeImpl(int numberOfColumns) {
+    public SizeImpl(final int numberOfColumns) {
         this.numberOfColumns = numberOfColumns;
-        this.width = this.widthGUI / (this.numberOfColumns == 4 ? 4 : 2);
-        this.height = heightGUI * 2 / 3;
+        final int width = this.widthGUI / (this.numberOfColumns == 4 ? 4 : 2);
+        final int height = heightGUI * 2 / 3;
         this.windowsize = new Pair<>(width, height);
     }
 
