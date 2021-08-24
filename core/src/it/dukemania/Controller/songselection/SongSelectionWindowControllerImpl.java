@@ -134,6 +134,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                                                             instrument,
                                                             difficulty);
                                     })
+                                    .filter(t -> t.getDifficultyLevel() != DifficultyLevel.UNKNOWN)
                                     .collect(Collectors.toList());
         this.currentSong = new SongInfo(s.getTitle(), fileHash, s.getDuration(), tracks, Math.round(s.getBPM()));
     }
