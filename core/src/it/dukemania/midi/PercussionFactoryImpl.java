@@ -27,7 +27,7 @@ public final class PercussionFactoryImpl implements AbstractFactory {
     }
 
     @Override
-    public MidiTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes,
+    public ParsedTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes,
             final int channel) {
         return new PercussionTrackImpl(notes, channel);
     }

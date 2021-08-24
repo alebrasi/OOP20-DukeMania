@@ -101,9 +101,9 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     private void createConfig(final String path) throws InvalidMidiDataException, IOException {
-        MidiParser parser = new MidiParserImpl();
+        Parser parser = new MidiParser();
         File songFile = externalStorage.getAsFile(path);
-        Song s = parser.parseMidi(songFile);
+        Song s = parser.parse(songFile);
         String fileHash = getHashString(externalStorage.readFileAsByte(path));
 
         //Maps the difficulty level to the associated track channel
@@ -173,9 +173,9 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void playSong(final SwitchWindowNotifier notifier) throws InvalidMidiDataException, IOException {
-        MidiParser parser = new MidiParserImpl();
-        Song song = parser.parseMidi(new File(path));
-        MidiTrack selectedTrack = trackFilter.reduceTrack(song)
+        Parser parser = new MidiParser();
+        Song song = parser.parse(new File(path));
+        ParsedTrack selectedTrack = trackFilter.reduceTrack(song)
                                             .stream()
                                             .filter(t -> t.getChannel() == selectedTrackChannel)
                                             .findFirst().get();

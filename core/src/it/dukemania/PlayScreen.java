@@ -40,7 +40,7 @@ import it.dukemania.View.notesGraphics.Note;
 import it.dukemania.View.notesGraphics.NoteImpl;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
-import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.Song;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
@@ -82,7 +82,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private float deltaTime = 0;
     private List<TextButton> buttons;
     private Song song;
-    private MidiTrack selectedTrack;
+    private ParsedTrack selectedTrack;
     private List<Note> notes;
     private final ColumnLogic logic;
     //private PlayerAudio player;

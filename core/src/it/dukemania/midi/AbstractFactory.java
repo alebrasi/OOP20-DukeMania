@@ -21,6 +21,6 @@ public interface AbstractFactory {
      * @param channel
      * @return a midi track
      */
-    MidiTrack createTrack(Enum<InstrumentType> instrument, List<AbstractNote> notes, int channel);
+    ParsedTrack createTrack(Enum<InstrumentType> instrument, List<AbstractNote> notes, int channel);
 
 }

@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.AudioDevice;
 import it.dukemania.midi.Instrument;
 import it.dukemania.midi.InstrumentType;
-import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.TrackImpl;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class Engine {
      * @param track the track that the synth will play
      */
 
-    public Synth addSynth(final MidiTrack track) {
+    public Synth addSynth(final ParsedTrack track) {
         var actualTrack = (TrackImpl) track;
         List<Pair<Integer, Long>> notes = new ArrayList<>();
         actualTrack.getNotesMaxDuration().forEach((key, value) -> {
