@@ -5,7 +5,7 @@ import java.util.Optional;
 import it.dukemania.Controller.logic.Columns;
 
 
-public class NoteImpl implements Note {
+public class GraphicNoteImpl implements GraphicNote {
     private final int posxNote; //note's position
     private int posyNote;
     private static final int XNOTE = 50;
@@ -28,7 +28,7 @@ public class NoteImpl implements Note {
 
 	
 	
-	public NoteImpl(final int heightpos, final Columns letter, final int height, final long startNote, final long duration, final int numberOfColumns) {
+	public GraphicNoteImpl(final int heightpos, final Columns letter, final int height, final long startNote, final long duration, final int numberOfColumns) {
 		this.yNote = height;
 		this.column = letter;
 	    final Size dimensions = new SizeImpl(numberOfColumns);
@@ -45,10 +45,10 @@ public class NoteImpl implements Note {
 	}
 
 	@Override
-	public void updateNote(final float deltaTime, long startTime) {
-	    this.posyNote -= NoteImpl.NOTE_SPEED * deltaTime;
+	public void updateNote(final float deltaTime, final long startTime) {
+	    this.posyNote -= GraphicNoteImpl.NOTE_SPEED * deltaTime;
 
-	    if (this.posyNote <= NoteImpl.FINISH_LINE + NoteImpl.DISPLACEMENT  && this.posyNote >= NoteImpl.FINISH_LINE - NoteImpl.DISPLACEMENT) {
+	    if (this.posyNote <= GraphicNoteImpl.FINISH_LINE + GraphicNoteImpl.DISPLACEMENT  && this.posyNote >= GraphicNoteImpl.FINISH_LINE - GraphicNoteImpl.DISPLACEMENT) {
 	        this.timeOfFall = Instant.now().toEpochMilli() - startNoteprova;
 	        System.out.println("print di rapo" + (Instant.now().toEpochMilli() - startTime) + "colonna" + this.column);
 	           System.out.println("hey time of fall" + this.timeOfFall + "inizio nota" + this.startNoteprova * (long) Math.pow(10, 3));
@@ -123,7 +123,7 @@ public class NoteImpl implements Note {
 
     @Override
     public int getxNote() {
-        return NoteImpl.XNOTE;
+        return GraphicNoteImpl.XNOTE;
     }
 
 

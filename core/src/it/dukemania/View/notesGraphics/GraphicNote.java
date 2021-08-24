@@ -5,7 +5,7 @@ import java.util.Optional;
 import it.dukemania.Controller.logic.Columns;
 
 
-public interface Note {
+public interface GraphicNote {
 	
     /***
      * update the note position.

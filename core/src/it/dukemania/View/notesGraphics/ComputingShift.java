@@ -43,4 +43,16 @@ public interface ComputingShift {
      * @return the vertical dimension of the spark
      */
     int getySpark();
+
+    /***
+     * 
+     * @return the duration offset related to the graphic
+     */
+    int getDurationOffset();
+
+    /***
+     * 
+     * @return the offset related to the beginning of the note
+     */
+    int getNoteStartOffset();
 }

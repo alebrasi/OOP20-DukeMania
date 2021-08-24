@@ -39,7 +39,7 @@ public final class AssetsManager {
 
 
     private AssetsManager() {
-        load();
+        loadAll();
     }
 
     /***
@@ -223,7 +223,7 @@ public final class AssetsManager {
 
     /***load all the resources.
      * */
-    public void load() {
+    public void loadAll() {
         if (!areLoaded) {
             loadTexture();
             loadTextureAtlas();
@@ -239,7 +239,6 @@ public final class AssetsManager {
      */
     public void dispose() {
         if (areLoaded) {
-            skinAssociations.forEach((s, t) -> t.dispose());
             textureAssociations.forEach((s, t) -> t.dispose());
             fontAssociations.forEach((s, t) -> t.dispose());
             textureAtlasAssociations.forEach((s, t) -> t.dispose());

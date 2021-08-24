@@ -7,6 +7,8 @@ public class ComputingShiftImpl implements ComputingShift {
     private static final float FONT_ACCURACY = 0.75f;
     private static final int HORIZONTAL_SPARK_SHIFT = 25;
     private static final int SPARK_HEIGHT = 70;
+    private static final int DURATION_OFFSET = 5500;
+    private static final int NOTE_START_OFFSET = 2500;
 
     //this method calculates the displacement of the position of the buttons as a function of the number of columns
     @Override
@@ -43,6 +45,16 @@ public class ComputingShiftImpl implements ComputingShift {
     @Override
     public int getySpark() {
         return ComputingShiftImpl.SPARK_HEIGHT;
+    }
+
+    @Override
+    public int getDurationOffset() {
+        return ComputingShiftImpl.DURATION_OFFSET;
+    }
+
+    @Override
+    public int getNoteStartOffset() {
+        return ComputingShiftImpl.NOTE_START_OFFSET;
     }
 
 }
