@@ -24,13 +24,18 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
 
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isButtonPressed(final int max) {
         return Gdx.input.isKeyPressed(this.associationKeyColumn(this.column.getNumericValue(), max));
     }
 
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int associationKeyColumn(final int column, final int max) {
         final List<Integer> usedKeys = this.keys.stream().limit(max).collect(Collectors.toList()); 

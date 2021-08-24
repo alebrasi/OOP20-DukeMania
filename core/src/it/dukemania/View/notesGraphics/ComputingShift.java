@@ -56,9 +56,4 @@ public interface ComputingShift {
      */
     int getNoteStartOffset();
 
-    /***
-     * 
-     * @return the shifted time
-     */
-    int getTimeShift();
 }

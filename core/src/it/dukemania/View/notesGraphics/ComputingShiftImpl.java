@@ -62,9 +62,5 @@ public class ComputingShiftImpl implements ComputingShift {
         return ComputingShiftImpl.NOTE_START_OFFSET;
     }
 
-    @Override
-    public int getTimeShift() {
-        return ComputingShiftImpl.TIME_SHIFT;
-    }
 
 }

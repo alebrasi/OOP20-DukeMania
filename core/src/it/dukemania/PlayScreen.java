@@ -44,7 +44,7 @@ import it.dukemania.windowmanager.SwitchWindowNotifier;
 import it.dukemania.windowmanager.Window;
 
 
-public class PlayScreen extends ApplicationAdapter implements Window {
+public class PlayScreen implements Window {
 
     // functional fields
     private Size dimensions;
@@ -85,6 +85,9 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void dispose() {
         buttonsStage.dispose();
@@ -106,6 +109,9 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void create() {
 
@@ -209,6 +215,9 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void render() {
         //set the start time
@@ -303,6 +312,9 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void receiveData(final GameModel data) {
         this.data = data;
@@ -312,11 +324,17 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         this.numberOfColumns = data.getNumColumns();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setWindowListener(final SwitchWindowNotifier listener) {
         this.switchWindowNotifier = listener;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resize(final int width, final int height) {
         if (width != dimensions.getSize().getX() && height != dimensions.getSize().getY()) {

@@ -19,12 +19,18 @@ public class SizeImpl implements Size {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pair<Integer, Integer> getSize() {
         return this.windowsize;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfColumns() {
         return this.numberOfColumns;
