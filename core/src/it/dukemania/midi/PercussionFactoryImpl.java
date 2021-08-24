@@ -29,7 +29,7 @@ public final class PercussionFactoryImpl implements AbstractFactory {
     @Override
     public ParsedTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes,
             final int channel) {
-        return new PercussionTrackImpl(notes, channel);
+        return new PercussionTrack(notes, channel);
     }
 
 }

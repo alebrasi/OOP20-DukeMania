@@ -8,7 +8,7 @@ import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.FactoryConfigurator;
 import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.Song;
-import it.dukemania.midi.TrackImpl;
+import it.dukemania.midi.KeyboardTrack;
 
 public class TrackFilterImpl implements TrackFilter {
 
@@ -20,7 +20,7 @@ public class TrackFilterImpl implements TrackFilter {
     public final List<ParsedTrack> reduceTrack(final Song song) {
         return song.getTracks().stream()
                 .filter(x -> x.getChannel() != PERCUSSION_CHANNEL)//remove unplayable tracks
-                .map(x -> FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
+                .map(x -> FactoryConfigurator.getFactory(x.getChannel()).createTrack(((KeyboardTrack) x).getInstrument(),
                         x.getNotes().stream()
                         .filter(y -> y.getDuration().orElse(0L) >= MIN_DURATION)
                         //remove unplayable notes
@@ -28,7 +28,7 @@ public class TrackFilterImpl implements TrackFilter {
                 .map(x -> {
                     final int numberOfNotes = x.getNotes().size();
                     final List<AbstractNote> notePos = x.getNotes();
-                    return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),
+                    return FactoryConfigurator.getFactory(x.getChannel()).createTrack(((KeyboardTrack) x).getInstrument(),
                             x.getNotes().stream()
                             .filter(y -> notePos.indexOf(y) % Math.ceil((double) numberOfNotes / MAX_NOTE) == 0) 
                             //remove extra notes

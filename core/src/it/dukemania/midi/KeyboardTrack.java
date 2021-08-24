@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class TrackImpl extends ParsedTrack {
+public class KeyboardTrack extends ParsedTrack {
 
     private Enum<InstrumentType> instrument;
     private final Map<Integer, Long> notesMaxDuration;
@@ -16,7 +16,7 @@ public class TrackImpl extends ParsedTrack {
      * @param notes
      * @param channel
      */
-    public TrackImpl(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
+    public KeyboardTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
         super(notes, channel);
         this.instrument = instrument;
         this.notesMaxDuration = calcMaxDuration();

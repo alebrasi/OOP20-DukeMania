@@ -121,8 +121,8 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                                         String trackName = "Percussion";
                                         DifficultyLevel difficulty = DifficultyLevel.UNKNOWN;
 
-                                        if (t.getClass().equals(TrackImpl.class)) {
-                                            TrackImpl tmp = (TrackImpl) t;
+                                        if (t.getClass().equals(KeyboardTrack.class)) {
+                                            KeyboardTrack tmp = (KeyboardTrack) t;
                                             Enum<InstrumentType> tmpIns = tmp.getInstrument();
                                             instrument = tmpIns == null ? InstrumentType.ACOUSTIC_GRAND_PIANO
                                                                             : (InstrumentType) tmpIns;
@@ -181,7 +181,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                                             .findFirst().get();
         currentSong.getTracks().forEach(x -> {
             if (x.getChannel() != 10) {
-                TrackImpl track = (TrackImpl) song.getTracks()
+                KeyboardTrack track = (KeyboardTrack) song.getTracks()
                                                     .stream()
                                                     .filter(trk -> trk.getChannel() == x.getChannel())
                                                     .findFirst()

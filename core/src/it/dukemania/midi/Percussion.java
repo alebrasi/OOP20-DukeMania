@@ -1,5 +1,7 @@
 package it.dukemania.midi;
 
+import java.util.Arrays;
+
 import it.dukemania.audioengine.DrumSamples;
 
 public enum Percussion {
@@ -14,19 +16,9 @@ public enum Percussion {
     private DrumSamples associated;
 
     static {
-        for (Percussion p : Percussion.values()) {
-            p.associated = DrumSamples.Hat;
-            if (p.name().contains("KICK")) {
-                p.associated = DrumSamples.Kick;
-            } else if (p.name().contains("SNARE")) {
-                p.associated = DrumSamples.Snare;
-            } else if (p.name().contains("TOM")) {
-                p.associated = DrumSamples.Tom;
-            } else if (p.name().contains("HAT")) {
-                p.associated = DrumSamples.Hat;
-            }
-        }
-        BASS_DRUM_1.associated = DrumSamples.Kick;
+        Arrays.stream(Percussion.values()).forEach(drum -> drum.associated = Arrays.stream(DrumSamples.values())
+                .filter(x -> drum.name().toUpperCase().contains(x.name().toUpperCase()))
+                .findFirst().orElse(DrumSamples.Empty));
     }
 
     /**
