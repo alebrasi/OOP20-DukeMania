@@ -8,6 +8,9 @@
 \usepackage{xcolor}
 
 
+
+
+
 % Questo commentalo se vuoi scrivere in inglese.
 \usepackage[italian]{babel}
 
@@ -120,6 +123,7 @@ Per impostare correttamente tutti i parametri dei sintetizzatori di tastiera ho 
 \subsubsection{DrumSynth}
 Nel caso del sintetizzatore per le percussioni, le varie istanze di BufferManager sono presenti come campo read only dell'enum DrumSamples. Ho scelto di utilizzare questo enum come pattern "singleton" in quanto non richiede l' istanziazione di oggetto, e perchè le percussioni non cambiano tra i diversi file Midi, a differenza delle note le quali hanno lunghezze diverse.
 L'unico metodo esterno all'interfaccia Synth e' playPercussion, il quale si occupa di ri-iniziare la riproduzione di un elemento della batteria. \\
+Per aggiungere nuove percussioni, in futuro, basterà aggiungere un nuovo valore all'enum e caricare il relativo BufferManager, questo verrà assegnato automaticamente alle percussioni Midi idonee.
 \\ \\ \\
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.7]{\pathgianluca drum_singleton}}
@@ -170,9 +174,52 @@ grafiche vengano istanziate più volte in memoria sprecando spazio inutilmente.
 	\caption{Schema UML del Singleton.}
 	\label{img:singleton}
 \end{figure}
+\clearpage \hfill\break
+\subsection{Laura Leonardi}
+Per quanto riguarda il parsing dei file midi è stata realizzata la classe MidiParser che ha lo scopo di ottenere, a partire da un file .mid, un oggetto di classe Song contenente una serie di informazioni utili per sintesi audio e la generazione delle tracce di gioco. Dalla classe Song saranno infatti ottenibili delle tracce (ParsedTrack), una per strumento più quella dedicata alle percussioni, da cui saranno a loro volta ottenibili le AbstractNotes, ovvero le note che le compongono. La classe MidiParser è stata dotata di un'interfaccia Parser per permettere un futura implementazione di un nuovo parser a partire da un tipo di file differente dal midi.
+
+\subsubsection{Abstract Factory}
+
+\begingroup
+\fontsize{10pt}{12pt}\selectfont
+Le tracce e le note possono essere di due tipologie: normali e percussioni. Per semplificare la costruzione di questi diversi tipi di tracce e note ho pensato di utilizzare il pattern abstract factory, che permette la creazione di famiglie di oggetti della stessa tipologia. Sebbene infatti i campi e i metodi richiamabili dai differenti tipi di tracce e note coincidano solo in parte, ho ritenuto utile l'implementazione di questo pattern per separare la costruzione di queste tipologie di oggetti dal resto del codice, facilitandone così la lettura e l'utilizzo e portando la complessità di questa distinzione fuori dal MidiParser. Nello specifico questo pattern è stato realizzato tramite l'interfaccia AbstractFactory, che viene implementata dalle Concrete Factory PercussionFactoryImpl e FactoryImpl, che a loro volta si occuperanno di creare prodotti, quali PercussionNote o Note (che estendono la classe astratta AbstractNote, contenente i metodi in comune), e PercussionTrack o KeyboardTrack(che estendono la classe astratta ParsedTrack, contenente i metodi in comune). La scelta di utilizzare classi astratte invece di interfacce è stata effettuata per ottimizzare quanto più possibile il riuso del codice, in partcolare le parti riguardanti i campi privati in comune, mantenendo comunque il vincolo della non istanziabiltà dei prodotti dell'abstract factory. Inoltre nonstante la classe PercussionTrack non aggiunga nulla alla classe astratta ParsedTrack si è compiuta questa scelta implementativa per favorire una futura estensione della classe PercussionTrack o una proliferazione di altri tipi di track, cosa che sarebbe resa più difficile dalla sostituzione dell'abstract class ParsedTrack con la classe PercussionTrack. Per quanto riguarda la selezione della factory corretta è stata implementata un'utility class FactoryConfigurator che ritorna la concrete factory corretta a partire dal canale midi.
+\endgroup
 \newpage
-\subsection{membro 4}
-progetto 
+
+
+
+
+
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.38]{\pathlaura umlfactory.jpg}}
+	\caption{Schema UML della Factory.}
+	\label{img:midifactory}
+\end{figure}
+\hfill\break\break\break\break\break\break
+
+\subsubsection{Singleton}
+Nell'implementare le concrete factory ho ritenuto opportuno che non si generassero, per ogni creazione di nota o traccia, nuove istanze di factory, di conseguenza ho applicato il pattern Singleton alle classi PercussionFactoryImpl e FactoryImpl. Il pattern singleton è stato utilizzato anche nella classe MidiParser poiché è sufficiente una sola sua istanza per il corretto funzionamento del programma.
+\newpage
+
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.8]{\pathlaura midiparser.jpg}}
+	\caption{TODO.}
+	\label{img:midiparser}
+\end{figure}  
+\hfill\break\break
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.8]{\pathlaura percfactimpl.jpg}}
+	\caption{TODO.}
+	\label{img:percfactimpl}
+\end{figure}
+\hfill\break\break
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.8]{\pathlaura factimpl.jpg}}
+	\caption{TODO.}
+	\label{img:factimpl}
+\end{figure}
+\clearpage
+
 \subsection{membro 5}
 progetto 
 \newpage
@@ -181,7 +228,7 @@ progetto
 
 \chapter{Sviluppo}
 \section{Testing}
-Abbiamo deciso di eseguire test automatizzati prevalentemente per le classi più complesse. Per quanto riguarda le varie schermate e la gestione di queste, una volta prese in considerazione le limitazioni causate da libGdx, abbiamo preferito eseguire accurati test manuali. \\ \\
+Abbiamo deciso di eseguire test automatizzati prevalentemente per le classi più complesse. Per quanto riguarda le varie schermate e la gestione di queste, una volta prese in considerazione le limitazioni causate da libGdx, abbiamo preferito eseguire accurati test manuali. \\ \\ Per il testing del file midi sono stati utilizzati anche dei test manuali, specialmente nella fase iniziale, con lo scopo di comprendere appieno e con quanta più precisone possibile la struttura del file midi \\
 {\setstretch{0.6}
 \begin{itemize}
 	\item \textbf{testStraightLFO - testSquareLFO - testSineLFO - testIntervalLFO:} per ogni funzione LFO è presente un test per garantirne il corretto funzionamento.	
@@ -192,6 +239,7 @@ Abbiamo deciso di eseguire test automatizzati prevalentemente per le classi più
 	\item \textbf{GameUtilities:} testata l'attribuzione delle difficoltà alle tracce.	
 	\item \textbf{ColumnLogic - noteQueuing:} testate diverse configurazioni di numero di note, sia sovrapposte che non, e colonne.	
 	\item \textbf{ColumnLogic - verifyNote:} testato il calcolo del punteggio in relazione a precisione della nota e combo di note.
+	\item \textbf{testMidiParser:} testata la correttezza della song restituita e degli elementi che la compongono.
 \end{itemize}
 }
 \newpage
@@ -283,13 +331,29 @@ Classi sviluppate singolarmente:
 \hfill\break
 
 \subsection{membro 4}
-ha fatto questo bla bla bla \\ \\
+Studio del protocollo midi e midi parsing, creazione delle tracce e delle note che le compongono, gestione degli strumenti  \\ \\
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
 	\begin{itemize}
-		\item classe 1
-		\item classe 1
-		\item classe 1
+		\item AbstractFactory
+		\item AbstractNote
+		\item FactoryConfigurator
+		\item FactoryImpl
+		\item Instrument
+		\item InstrumentType
+		\item InvalidNoteException
+		\item MainTemp
+		\item MidiParser
+		\item MidiParserImpl
+		\item MidiTrack
+		\item Note
+		\item Percussion
+		\item PercussionFactoryImpl
+		\item PercussionNote
+		\item PercussionTrackImpl
+		\item Song
+		\item TestMidiParser
+		\item TrackImpl
 	\end{itemize}
 }
 \hfill\break
@@ -364,16 +428,19 @@ Utilizzo della classe Pair fornita gentilmente dal professore Viroli
 
 \newpage
 
-\subsection{membro 4}
-commenti
+\subsection{Laura Leonardi}
+Feature avanzate del linguaggio:
 \begin{itemize}
-	\item \textbf{lambda:} tanta roba
-	\item \textbf{stream:} tanta roba
+	\item \textbf{lambda:} usate negli stream
+	\item \textbf{stream:} utilizzati per l'aggiunta e la gestione delle note, per il riempimento di una mappa che associa note a durata massima, per l'associazione tra strumento e sintetizzatore e per l'associazione di percussioni ai relativi DrumSamples e per ottenere tracce correttamente nella classe di testing.
+	\item \textbf{optional:} usati per l'inserimento di note "parziali" in attesa della loro conclusione dettata dal midi.
 \end{itemize}
 librerie utilizzate:
 \begin{itemize}
-	\item \textbf{libgdx:} gestione grafica
+	\item \textbf{javax.sound.midi:} gestione file .mid
 \end{itemize}
+Classi riutilizzate: \\
+Classe generica Pair, fornita dal prof. Viroli.
 \newpage
 
 \subsection{membro 5}
@@ -430,10 +497,9 @@ imparare già da subito ad applicare correttamente i pattern e Csharp. Nella mia
 comporterebbe un notevole aiuto.
 \newpage
 \section{Laura Leonardi}
-\subsection{commenti}
-progetto 
+Personalmente ritengo che in questo progetto sia stata effettuata un'ottima collaborazione tra membri del team, ognuno di quali è sempre stato molto disponibile, inoltre sebbene non possedessi molta esperienza col DVCS sono riuscita comunque a farne uso e a comprenderne la comodità. Un altro lato decisamente positivo del progetto è stata la possibilità di approfondire nuovi argomenti, infatti ho trovato molto interessante lavorare e scoprire il funzionamento del protocollo MIDI, del quale prima di questo progetto, non essendo particolarmente appassionata di musica, non conoscevo neppure l'esistenza. Sono in definitiva soddisfatta dell'esito del progetto.
 \subsection{difficoltà riscontrate}
-progetto 
+Dal mio punto di vista il corso di oop si è rivelato impegnativo ma decisamente utile per quanto riguarda le pratiche di buona programmazione e l'utilizzo di DVCS, nonostante questo ritengo che purtroppo le ore di laboratorio dedicate all'effettiva programmazione siano state un poco ridotte, in particolare per quanto riguarda C\#.
 \newpage
 
 \section{Alessandro Brasini}
