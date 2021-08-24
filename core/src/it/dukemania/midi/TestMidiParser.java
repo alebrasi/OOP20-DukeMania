@@ -68,7 +68,7 @@ class TestMidiParser {
     void testMidiParser() throws InvalidMidiDataException, IOException {
         //int size = 3;
         final File file1 = createFile(3, 1);
-        Parser mp = new MidiParser();
+        Parser mp = MidiParser.getInstance();
         Song song1 = mp.parse(file1);
         assertEquals(song1.getBPM(), 120, 0.00001);
         assertEquals(song1.getTracks().size(), 4);
@@ -77,10 +77,10 @@ class TestMidiParser {
         assertEquals(song1.getTracks().get(3).getNotes().size(), 3);
         song1.getTracks().stream()
                          .filter(t -> t.getChannel() != 10)
-                         .forEach(t -> assertTrue(t instanceof TrackImpl));
-        List<TrackImpl> tracks = song1.getTracks().stream()
+                         .forEach(t -> assertTrue(t instanceof KeyboardTrack));
+        List<KeyboardTrack> tracks = song1.getTracks().stream()
                                                     .filter(t -> t.getChannel() != 10)
-                                                    .map(t -> (TrackImpl) t)
+                                                    .map(t -> (KeyboardTrack) t)
                                                     .collect(Collectors.toList());
         assertEquals(tracks.get(0).getInstrument(), InstrumentType.HONKY_TONK_PIANO);
         assertEquals(tracks.get(1).getInstrument(), InstrumentType.ELECTRIC_PIANO_1);
@@ -99,7 +99,7 @@ class TestMidiParser {
                 + tracks.get(1).getNotes().get(1).getStartTime(), 0.00001);
         assertEquals(song1.getDuration(), tracks.get(1).getNotes().get(2).getDuration().get() 
                 + tracks.get(1).getNotes().get(2).getStartTime(), 0.00001);
-        assertTrue(song1.getTracks().get(3) instanceof PercussionTrackImpl);
+        assertTrue(song1.getTracks().get(3) instanceof PercussionTrack);
         song1.getTracks().get(3).getNotes().forEach(n -> assertTrue(n instanceof PercussionNote));
         assertEquals(((PercussionNote) song1.getTracks().get(3).getNotes().get(0)).getInstrument(), Percussion.CLAVES);
         assertEquals(((PercussionNote) song1.getTracks().get(3).getNotes().get(1)).getInstrument(), Percussion.HIGH_TOM);

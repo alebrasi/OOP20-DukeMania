@@ -23,7 +23,9 @@ public class DrumSynth implements Synth {
      * @param drum the percussion
      */
     public void playPercussion(final DrumSamples drum) {
-        drum.refresh();
+        if (drum != DrumSamples.Empty) {
+            drum.refresh();
+        }
     }
 
 }

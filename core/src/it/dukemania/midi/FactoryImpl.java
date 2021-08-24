@@ -22,7 +22,7 @@ public final class FactoryImpl implements AbstractFactory {
 
     @Override
     public ParsedTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
-        return new TrackImpl(instrument, notes, channel);
+        return new KeyboardTrack(instrument, notes, channel);
     }
 
 }

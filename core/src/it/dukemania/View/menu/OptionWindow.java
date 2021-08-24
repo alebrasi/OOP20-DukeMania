@@ -6,8 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import it.dukemania.Controller.option.OptionWindowController;
 import it.dukemania.Controller.option.OptionWindowControllerImpl;
-import it.dukemania.Model.GameModel;
-import it.dukemania.View.AbstractView;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 
 

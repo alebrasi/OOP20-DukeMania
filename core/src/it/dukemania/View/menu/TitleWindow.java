@@ -7,12 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import it.dukemania.View.AbstractView;
-import it.dukemania.util.storage.Storage;
-import it.dukemania.util.storage.StorageFactoryImpl;
 import it.dukemania.windowmanager.DukeManiaWindowState;
-
-import java.io.IOException;
 
 public class TitleWindow extends AbstractView {
 

@@ -20,14 +20,22 @@ import javax.sound.midi.Track;
 
 import it.dukemania.audioengine.Pair;
 
-public class MidiParser implements Parser {
+public final class MidiParser implements Parser {
     private static final int SET_TEMPO = 0X51;
     private static final int MICROSEC_PER_MIN = 60_000_000;
+    private static MidiParser instance;
 
+    private MidiParser() { }
 
+    public static MidiParser getInstance() {
+        if (instance == null) {
+            instance = new MidiParser();
+        }
+        return instance;
+    }
 
     @Override
-    public final Song parse(final File myMidi) throws InvalidMidiDataException, IOException  {
+    public Song parse(final File myMidi) throws InvalidMidiDataException, IOException  {
         final Sequence sequence = MidiSystem.getSequence(myMidi);
         final double microsecPerTick = (double) sequence.getMicrosecondLength() / sequence.getTickLength();
         if (MidiSystem.getMidiFileFormat(myMidi).getType() == 2) {

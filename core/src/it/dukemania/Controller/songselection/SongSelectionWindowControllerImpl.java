@@ -101,7 +101,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     private void createConfig(final String path) throws InvalidMidiDataException, IOException {
-        Parser parser = new MidiParser();
+        Parser parser = MidiParser.getInstance();
         File songFile = externalStorage.getAsFile(path);
         Song s = parser.parse(songFile);
         String fileHash = getHashString(externalStorage.readFileAsByte(path));
@@ -121,8 +121,8 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                                         String trackName = "Percussion";
                                         DifficultyLevel difficulty = DifficultyLevel.UNKNOWN;
 
-                                        if (t.getClass().equals(TrackImpl.class)) {
-                                            TrackImpl tmp = (TrackImpl) t;
+                                        if (t.getClass().equals(KeyboardTrack.class)) {
+                                            KeyboardTrack tmp = (KeyboardTrack) t;
                                             Enum<InstrumentType> tmpIns = tmp.getInstrument();
                                             instrument = tmpIns == null ? InstrumentType.ACOUSTIC_GRAND_PIANO
                                                                             : (InstrumentType) tmpIns;
@@ -173,7 +173,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void playSong(final SwitchWindowNotifier notifier) throws InvalidMidiDataException, IOException {
-        Parser parser = new MidiParser();
+        Parser parser = MidiParser.getInstance();
         Song song = parser.parse(new File(path));
         ParsedTrack selectedTrack = trackFilter.reduceTrack(song)
                                             .stream()
@@ -181,7 +181,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
                                             .findFirst().get();
         currentSong.getTracks().forEach(x -> {
             if (x.getChannel() != 10) {
-                TrackImpl track = (TrackImpl) song.getTracks()
+                KeyboardTrack track = (KeyboardTrack) song.getTracks()
                                                     .stream()
                                                     .filter(trk -> trk.getChannel() == x.getChannel())
                                                     .findFirst()

@@ -14,7 +14,6 @@ import it.dukemania.Controller.filedialog.DialogResult;
 import it.dukemania.Controller.songselection.SongSelectionWindowController;
 import it.dukemania.Controller.songselection.SongSelectionWindowControllerImpl;
 import it.dukemania.Model.serializers.song.SongInfo;
-import it.dukemania.View.AbstractView;
 import it.dukemania.View.notesGraphics.AssetsManager;
 import it.dukemania.midi.InstrumentType;
 import it.dukemania.windowmanager.DukeManiaWindowState;

@@ -1,8 +1,11 @@
 package it.dukemania.midi;
 
+import java.util.Arrays;
+
 import it.dukemania.audioengine.DrumSamples;
 
 public enum Percussion {
+
     ACOUSTIC_BASS_DRUM, BASS_DRUM_1, SIDE_STICK, ACOUSTIC_SNARE, HAND_CLAP, ELECTRIC_SNARE, LOW_FLOOR_TOM, CLOSED_HI_HAT
     , HIGH_FLOOR_TOM, PEDAL_HI_HAT, LOW_TOM, OPEN_HI_HAT, LOW_MID_TOM, HI_MID_TOM, CRASH_CYMBAL_1, HIGH_TOM, RIDE_CYMBAL_1
     , CHINESE_CYMBAL, RIDE_BELL, TAMBOURINE, SPLASH_CYMBAL, COWBELL, CRASH_CYMBAL_2, VIBRASLAP, RIDE_CYMBAL_2, HI_BONGO
@@ -13,20 +16,9 @@ public enum Percussion {
     private DrumSamples associated;
 
     static {
-        for (Percussion p : Percussion.values()) {
-            p.associated = DrumSamples.Hat;
-            if (p.name().contains("KICK")) {
-                p.associated = DrumSamples.Kick;
-            } else if (p.name().contains("SNARE")) {
-                p.associated = DrumSamples.Snare;
-            } else if (p.name().contains("TOM")) {
-                p.associated = DrumSamples.Tom;
-            }
-        }
-        BASS_DRUM_1.associated = DrumSamples.Kick;
-        LOW_FLOOR_TOM.associated = DrumSamples.Hat;
-        ELECTRIC_SNARE.associated = DrumSamples.Snare;
-        ACOUSTIC_SNARE.associated = DrumSamples.Snare;
+        Arrays.stream(Percussion.values()).forEach(drum -> drum.associated = Arrays.stream(DrumSamples.values())
+                .filter(x -> drum.name().toUpperCase().contains(x.name().toUpperCase()))
+                .findFirst().orElse(DrumSamples.Empty));
     }
 
     /**

@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import it.dukemania.Controller.leaderboard.LeaderboardController;
 import it.dukemania.Controller.leaderboard.LeaderboardControllerImpl;
-import it.dukemania.View.AbstractView;
 import it.dukemania.View.notesGraphics.AssetsManager;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 
