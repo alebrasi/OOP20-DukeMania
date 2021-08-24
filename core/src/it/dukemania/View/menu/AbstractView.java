@@ -1,4 +1,4 @@
-package it.dukemania.View;
+package it.dukemania.View.menu;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
