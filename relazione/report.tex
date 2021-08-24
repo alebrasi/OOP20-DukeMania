@@ -191,7 +191,7 @@ Le tracce e le note possono essere di due tipologie: normali e percussioni. Per 
 
 
 \begin{figure}[!htb]
-	\centerline{\includegraphics[scale=0.38]{\pathlaura umlfactory.jpg}}
+	\centerline{\includegraphics[scale=0.6]{\pathlaura umlfactory.jpg}}
 	\caption{Schema UML della Factory.}
 	\label{img:midifactory}
 \end{figure}
@@ -220,8 +220,91 @@ Nell'implementare le concrete factory ho ritenuto opportuno che non si generasse
 \end{figure}
 \clearpage
 
-\subsection{membro 5}
-progetto 
+\subsection{Alessandro Brasini}
+In questa sezione di design si parlerà del sistema di storage, window-switching, serializzazione e deserializzazione di oggetti (configurazioni di canzoni, preset di sintetizzatori, leaderboards).  
+\subsubsection{Storage}
+All'interno del progetto bisogna inoltre accedere a diverse directory "fisse", tra le quali la cartella di configurazione presente nella home
+directory dell'utente \emph{.dukemania}, degli asset oppure lavorare semplicemente su singoli file.
+L'accesso a tali cartelle deve essere pratico e senza dover immettere ogni volta il percorso preciso del file/directory a cui si vuole accedere,
+bensì vi si vuole accedere introducendo solamente il percorso parziale a partire dalla directory richiesta. \\
+Ad esempio, se si volesse accedere ad un file di configurazione all'interno della cartella delle configurazioni del gioco \\
+(come ad esempio \emph{\//home\//user\//.dukemania\//configs\//synthesizers\_config$.json$}), deve essere sufficiente inserire nel metodo per ottenere il file
+la stringa \\ \emph{configs\//synthesizers\_config$.json$}.
+A tal proposito ho ritenuto opportuno implementare il pattern \textbf{Strategy}.
+In questo caso l'interfaccia rappresentante la Strategy è l'interfaccia funzionale  \\ 
+\emph{Function$<String, FileHandle>$}, la quale esegue il mapping della path troncata (nell'esempio precedente
+\emph{configs\//synthesizers\_config$.json$}) nella path completa (sempre dall'esempio precedente \\
+\emph{\//home\//user\//.dukemania\//configs\//synthesizers\_config$.json$}) rappresentata dall'oggetto FileHandle di LibGDX per
+questioni di praticità. \\ \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathalessandro uml_strategy_storage}}
+	\caption{Rappresentazione UML dell'applicazione del pattern Strategy per il local storage}
+	\label{img:uml_strategy_storage}
+\end{figure}
+\clearpage \hfill\break
+E' stato implementato anche il pattern \textbf{Factory} che, al momento, permette di ottenere oggetti implementati l'interfaccia \textbf{Storage} che lavorano
+sulla cartella degli asset, delle configurazioni e su un file generico presente nel filesystem. 
+Al momento il ruolo di questa factory è solamente quella di passare la corretta Strategy alla classe statica innestata \textbf{LocalStorageImpl} ma, 
+in futuro, questa factory potrà implementare anche metodi per la creazione di oggetti che permettono di accedere a dello storage presente, ad esempio, su un server (un possibile metodo potrà essere getServerStorage()),
+rendendo di conseguenza poco efficace la creazione di una specifica Strategy, in quanto il codice per l'accesso ai dati dovrà
+essere del tutto riadattato. \\
+Come possibile addizione futura a questa Factory è quella dell' aggiunta di un metodo per creare Storage che permettono solo la lettura e scrittura
+senza la possibilità di creazione di cartelle e/o file (o comunque di implementare un comportamento diverso). Di questa aggiunta ne andrebbe a 
+beneficiare la classe di lettura/scrittura delle configurazioni (citata nella sottosezione successiva), in quanto non ha necessariamente bisogno 
+di creare file e/o cartelle.
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathalessandro uml_factory_storage}}
+	\caption{Rappresentazione UML dell'applicazione del pattern Factory per la creazione degli oggetti storage}
+	\label{img:uml_factory_storage}
+\end{figure}
+\clearpage
+\subsubsection{Serializzatori e Deserializzatori}
+Per leggere e scrivere le varie configurazioni delle canzoni, sintetizzatori e leaderboards, in formato JSON, 
+sono stati implementati serializzatori e relativi deserializzatori. La lettura e scrittura di questi oggetti 
+serializzati è demandata alla classe \textbf{ConfigurationsModelImpl}, mentre la serializzazione dei singoli è demandata alle apposite classi presenti
+nel package model.serializers. Queste ultime sono state implementate sfruttando la libreria Jackson e, per ogni classe da serializzare/deserializzare, è stata aggiunta un'annotazione che indica
+quale classe usare per deserializzare la stessa.
+Ritornando alla classe ConfigurationsModelImpl, ho sempre ritenuto opportuno implementare il pattern \textbf{Strategy}, dove l'interfaccia rappresentante
+la Strategy, in questo caso, è \textbf{Storage}.
+In questo modo è possibile scegliere se dover leggere e/o scrivere in locale le configurazioni oppure, nel caso in futuro si voglia leggere/creare
+configurazioni di canzoni preesistenti e accedere ad una leaderbord globale (quindi entrambe presenti su un server), sarà necessario passare la Strategy
+opportuna creata dalla Factory citata nella sottosezione precedente come, ad esempio, getServerStorage(). \\ \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathalessandro uml_configurationsmodel_strategy}}
+	\caption{Rappresentazione UML dell'applicazione del pattern Strategy per il ConfigurationsModel}
+	\label{img:uml_configurationsmodel_strategy}
+\end{figure}
+\clearpage \hfill\break
+\subsubsection{Menu}
+Per quanto riguarda le finestre del menu (e della leaderboard) è stato implementato per ognuno il pattern \textbf{MVC}, dove la View richiama i metodi del Controller
+per aggiornare a schermo i dati da visualizzare e il Controller richiama gli eventuali Model per leggere e/o modificare i dati. \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathalessandro uml_mvc_menu}}
+	\caption{Rappresentazione UML dell'applicazione del pattern MVC di una generica schermata di menù}
+	\label{img:uml_mvc_menu}
+\end{figure}
+\clearpage \hfill\break
+Tutte le view implementano l'interfaccia \textbf{Window} che definisce i metodi necessari per permettere la creazione e renderizzazione della stessa.
+Questi metodi saranno poi richiamati appropriatamente dal WindowManager.
+In fase di scrittura del codice ho notato che molte righe di codice si ripetevano in tutte le view del menu, per questo motivo ho deciso di implementare il pattern \textbf{Template Method},
+dove il metodo template è rappresentato dalla classe astratta AbstractMenuView. Le classi che estendono quest'ultima andranno ad eseguire l'override dei soli metodi che cambiano, nel caso delle 
+view del menu viene eseguito in quasi tutte solamente l'override del metodo pubblico \textbf{create()}, richiamando ovviamente prima la relativa \textbf{super.create()} che contiene
+codice simile a tutte le view del menu.
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathalessandro uml_template_method_menu_views}}
+	\caption{Rappresentazione UML dell'applicazione del Template method per la creazione di menù views}
+	\label{img:uml_template_method_menu_views}
+\end{figure}
+\clearpage \hfill\break
+\subsection{Window Switching}
+L'architettura generale del WindowManager è già stata spiegata in generale nella parte di design dell'architettura nel paragrafo precedente.
+In questa sezione si vuole parlare in modo più dettagliato del suo funzionamento.
+All'interno della classe entry point \textbf{DukeMania} viene istanziato l'oggetto WindowManager al quale vengono associate le varie view del gioco, tutte implementanti l'interfaccia \textbf{Window},
+al relativo enum state (tutti implementati l'interfaccia WindowState) che associa lo stato della view. Ad esempio per la view \emph{TitleWindow} è associato lo stato \emph{DukeManiaWindowState.TITLE}.
+WindowManager, inoltre implementa l'interfaccia \textbf{SwitchWindowNotifier} che contiene come unico contratto il metodo \textbf{switchWindow(WindowState, GameModel)}, che prende in input come 
+argomenti un oggetto implementante WindowState, il quale sostanzialmente dice di implementare un metodo che ritorna un intero associato allo stato, e l'oggetto GameModel che rappresenta il
+modello che ci si passa tra le varie view, che a loro volta passeranno al controller.
+Il metodo switchWindow non fa altro che notificare il WindowManager, mediante un meccanismo di callback, che un controller/view vuole cedere il controllo alla view specificata.
 \newpage
 
 
