@@ -68,7 +68,7 @@ class TestMidiParser {
     void testMidiParser() throws InvalidMidiDataException, IOException {
         //int size = 3;
         final File file1 = createFile(3, 1);
-        Parser mp = new MidiParser();
+        Parser mp = MidiParser.getInstance();
         Song song1 = mp.parse(file1);
         assertEquals(song1.getBPM(), 120, 0.00001);
         assertEquals(song1.getTracks().size(), 4);

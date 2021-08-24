@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class TrackImpl extends PercussionTrackImpl {
+public class TrackImpl extends ParsedTrack {
 
     private Enum<InstrumentType> instrument;
     private final Map<Integer, Long> notesMaxDuration;

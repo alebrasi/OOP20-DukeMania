@@ -101,7 +101,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     }
 
     private void createConfig(final String path) throws InvalidMidiDataException, IOException {
-        Parser parser = new MidiParser();
+        Parser parser = MidiParser.getInstance();
         File songFile = externalStorage.getAsFile(path);
         Song s = parser.parse(songFile);
         String fileHash = getHashString(externalStorage.readFileAsByte(path));
@@ -173,7 +173,7 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
 
     @Override
     public void playSong(final SwitchWindowNotifier notifier) throws InvalidMidiDataException, IOException {
-        Parser parser = new MidiParser();
+        Parser parser = MidiParser.getInstance();
         Song song = parser.parse(new File(path));
         ParsedTrack selectedTrack = trackFilter.reduceTrack(song)
                                             .stream()

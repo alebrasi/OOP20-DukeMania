@@ -7,7 +7,7 @@ import javax.sound.midi.InvalidMidiDataException;
 
 public class MainTemp {
     public static void main(final String[] args) throws InvalidMidiDataException, IOException {
-        final Parser parse = new MidiParser();
+        final Parser parse = MidiParser.getInstance();
         final Song canzone = parse.parse(/*"\\Users\\Laura\\Desktop\\midi_padre\\bellerep.mid");*/
                 new File(
                 "\\Users\\Laura\\Desktop\\OOP"
