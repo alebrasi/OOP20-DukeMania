@@ -55,18 +55,12 @@ public final class AssetsManager {
 
 
     /***
-     * 
+     *
      * @param textureStr
      * @return a specific texture
-     * @throws FileNotFoundException 
+     * @throws NullPointerException
      */
     public Texture getTexture(final String textureStr) throws NullPointerException {
-        /*
-        if (textureAssociations.isEmpty()) {
-            load();
-        }
-
-         */
         if (textureAssociations.get(textureStr) == null) { 
             throw new NullPointerException(); 
         }
@@ -87,25 +81,20 @@ public final class AssetsManager {
     }
 
     /***
-     * 
+     *
      * @param skinStr
      * @return a specific skin
      */
     public Skin getSkin(final String skinStr) throws NullPointerException {
-        /*
-        if (skinAssociations.isEmpty()) {
-            load();
-        }
-
-         */
         if (skinAssociations.get(skinStr) == null) { 
             throw new NullPointerException(); 
         }
         return skinAssociations.get(skinStr);
     }
 
-    /***load all the skins.
-     * */
+    /**
+     * load all the skins.
+     */
     private void loadSkin() {
         skinAssociations.put("skin_menu", generateSkinMenu());
     }
@@ -117,20 +106,15 @@ public final class AssetsManager {
      * @return a specific BitmapFont
      */
     public FreeTypeFontGenerator getBitmapFont(final String fontStr) {
-        /*
-        if (fontAssociations.isEmpty()) {
-            load();
-        }
-
-         */
         if (fontAssociations.get(fontStr) == null) { 
             throw new NullPointerException(); 
         }
         return fontAssociations.get(fontStr);
     }
 
-    /***load all the BitmapFonts.
-     * */
+    /**
+     * load all the BitmapFonts.
+     */
     public void loadBitmapFont() {
         fontAssociations.put("scoreboard_font.TTF", new FreeTypeFontGenerator(Gdx.files.internal("fonts/scoreboard_font.TTF")));
         fontAssociations.put("agency-fb.ttf", new FreeTypeFontGenerator(Gdx.files.internal("fonts/agency-fb.ttf")));
@@ -138,24 +122,19 @@ public final class AssetsManager {
 
     /***
      * 
-     * @param textureStr
+     * @param textureAtlasStr
      * @return a specific textureAtlas
      */
     public TextureAtlas getTextureAtlas(final String textureAtlasStr) {
-        /*
-        if (textureAtlasAssociations.isEmpty()) {
-            load();
-        }
-
-         */
         if (textureAtlasAssociations.get(textureAtlasStr) == null) {
             throw new NullPointerException(); 
         }
         return textureAtlasAssociations.get(textureAtlasStr);
     }
 
-    /***load all the TextureAtlas.
-     * */
+    /**
+     * load all the TextureAtlas.
+     */
     public void loadTextureAtlas() {
         textureAtlasAssociations.put("pinkAndBlueButtons.atlas", new TextureAtlas(Gdx.files.internal("atlas/pinkAndBlueButtons.atlas")));
         textureAtlasAssociations.put("quantum-horizon-ui.atlas", new TextureAtlas(Gdx.files.internal("atlas/quantum-horizon-ui.atlas")));
@@ -168,23 +147,17 @@ public final class AssetsManager {
      * @return a specific json
      */
     public FileHandle getJson(final String jsonStr) {
-        /*
-        if (textureAtlasAssociations.isEmpty()) {
-            load();
-        }
-
-         */
         if (jsonAssociations.get(jsonStr) == null) { 
             throw new NullPointerException(); 
         }
         return jsonAssociations.get(jsonStr);
     }
 
-    /***load all the json files.
-     * */
+    /**
+     * load all the json files.
+     */
     public void loadJson() {
         jsonAssociations.put("quantum-horizon-ui.json", Gdx.files.internal("json/quantum-horizon-ui.json"));
-        //jsonAssociations.put("synthesizers_config.json", new FileHandl("json/synthesizers_config.json"));
     }
 
     private BitmapFont generateFontMenu() {
@@ -221,8 +194,9 @@ public final class AssetsManager {
         return s1;
     }
 
-    /***load all the resources.
-     * */
+    /**
+     * load all the resources.
+     */
     public void loadAll() {
         if (!areLoaded) {
             loadTexture();
@@ -234,8 +208,8 @@ public final class AssetsManager {
         }
     }
 
-    /***release all the resources.
-     * 
+    /**
+     * release all the resources.
      */
     public void dispose() {
         if (areLoaded) {

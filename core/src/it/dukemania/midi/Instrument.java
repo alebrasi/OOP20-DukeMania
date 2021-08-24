@@ -26,27 +26,23 @@ public final class Instrument {
             this.list = new ConfigurationsModelImpl(
                     new StorageFactoryImpl().getConfigurationStorage()).readSynthesizersConfiguration();
         } catch (IOException e2) {
-            // TODO Auto-generated catch block
             e2.printStackTrace();
         }
         try {
             this.synthetizer = calcSynthetizer();
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
         try {
             this.name = calcName();
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
         try {
             this.associatedInstrumentType = calcAssociatedInstrumentType();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

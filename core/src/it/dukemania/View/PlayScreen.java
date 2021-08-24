@@ -1,11 +1,11 @@
-package it.dukemania;
+package it.dukemania.View;
 
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.badlogic.gdx.ApplicationAdapter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;

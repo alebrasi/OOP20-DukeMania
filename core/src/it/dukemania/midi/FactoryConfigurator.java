@@ -1,8 +1,6 @@
 package it.dukemania.midi;
 
 public final class FactoryConfigurator {
-    //private static final PercussionFactoryImpl PERCUSSION_FACTORY = new PercussionFactoryImpl();
-    //private static final FactoryImpl FACTORY = new FactoryImpl();
 
     private FactoryConfigurator() { }
     /**

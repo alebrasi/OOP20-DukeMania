@@ -1,13 +1,11 @@
 package it.dukemania.midi;
 
+import it.dukemania.util.Pair;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaMessage;
@@ -17,8 +15,6 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
-
-import it.dukemania.audioengine.Pair;
 
 public final class MidiParser implements Parser {
     private static final int SET_TEMPO = 0X51;
@@ -67,20 +63,13 @@ public final class MidiParser implements Parser {
                     }
                 }
             }
-            // commentato per lettura output
-            /*
-            notes.forEach(n -> System.out.println(n.getStartTime() + " " + n.getDuration().orElse((double) 0.0) 
-                    + " " + n.getIdentifier() ));
-                    //+ " " + (n.getClass() == Note.class ? ((Note) n).getFrequency() : ((DrumSound) n).getInstrument())));
-            System.out.println();
-            */
         }
         channelMap.forEach((k, v) -> myTracks.add(FactoryConfigurator.getFactory(k).createTrack(v.getX(), v.getY(), k)));
         //rimozione eventuali tracce vuote
         myTracks.removeIf(x -> x.getNotes().size() == 0);
         //rimozione eventuali note rimaste senza durata
         myTracks.forEach(t -> t.getNotes().removeIf(n -> n.getDuration().isEmpty()));
-        myTracks.sort((t1, t2) -> t1.getChannel() - t2.getChannel());
+        myTracks.sort(Comparator.comparingInt(ParsedTrack::getChannel));
         return new Song(myMidi.getName(), sequence.getMicrosecondLength(), myTracks, bpm);
     }
 
@@ -92,7 +81,6 @@ public final class MidiParser implements Parser {
      * @return time in microsec
      */
     private long calcTime(final long tick, final double microsecPerTick) {
-        //System.out.println(tick + " " + microsecPerTick + " " + tick * microsecPerTick + " " + (long) (tick * microsecPerTick));
         return  (long) (tick * microsecPerTick);
     }
 
@@ -133,7 +121,6 @@ public final class MidiParser implements Parser {
             // metto la nota parziale
             try {
                 notes.add(factory.createNote(Optional.empty(), time, data));
-                //notes.add(factory.createNote(Optional.empty(), time, data));
             } catch (InvalidNoteException e) {
             }
         } else {

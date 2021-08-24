@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
-public class TestClass {
+public class TestAudioEngine {
 
     private boolean checkTolerance(final double actual, final double exact) {
         double tolerance = 1e-4;

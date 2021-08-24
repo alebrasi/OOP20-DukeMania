@@ -41,24 +41,19 @@ public class GraphicNoteImpl implements GraphicNote {
 		this.startNote = startNote;
 		this.duration = duration;
 		this.timeOfFall = 0;
-
 	}
 
 	@Override
 	public void updateNote(final float deltaTime, final long startTime) {
 	    this.posyNote -= GraphicNoteImpl.NOTE_SPEED * deltaTime;
-
 	    if (this.posyNote <= GraphicNoteImpl.FINISH_LINE + GraphicNoteImpl.DISPLACEMENT  && this.posyNote >= GraphicNoteImpl.FINISH_LINE - GraphicNoteImpl.DISPLACEMENT) {
 	        this.timeOfFall = Instant.now().toEpochMilli() - startNoteprova;
 	    }
-
-
 	}
 
 	@Override
 	public long getStartTime() {
 		return this.startNote;
-
 	}
 	
 	@Override
@@ -85,7 +80,6 @@ public class GraphicNoteImpl implements GraphicNote {
 	public int getPosxNote() {
 	    return this.posxNote;
 	}
-	
 
     @Override
     public boolean isPressed() {
@@ -95,7 +89,6 @@ public class GraphicNoteImpl implements GraphicNote {
     @Override
     public void setIsPressed(final boolean isPressed) {
         this.isPressed = isPressed;
-
     }
 
     @Override
@@ -118,17 +111,14 @@ public class GraphicNoteImpl implements GraphicNote {
         return this.yNote;
     }
 
-
     @Override
     public int getxNote() {
         return GraphicNoteImpl.XNOTE;
     }
 
-
     @Override
     public void setKeyboard() {
         this.keyboard = Optional.of(new EventsFromKeyboardImpl(this.column));
-
     }
 
     @Override
@@ -149,15 +139,6 @@ public class GraphicNoteImpl implements GraphicNote {
     @Override
     public void setStartNote(final long time) {
         this.startNoteprova = time;
-
     }
-
-
-
-
-
-
-	
-
 
 }

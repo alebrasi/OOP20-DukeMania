@@ -2,6 +2,7 @@ package it.dukemania.midi;
 
 import java.util.List;
 
+
 public class Song {
     private final String title;
     private final double  duration;

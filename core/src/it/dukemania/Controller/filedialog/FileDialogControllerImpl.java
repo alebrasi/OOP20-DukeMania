@@ -32,7 +32,6 @@ public class FileDialogControllerImpl implements FileDialogController {
         //String removeLastDirectoryStrRegex = String.format("^.+%s\\w+%s", this.directorySeparator, this.directorySeparator);
         //TODO Update regex
         String removeLastDirectoryStrRegex = String.format(".+\\%s", this.directorySeparator);
-        System.out.println(removeLastDirectoryStrRegex);
         removeLastDirectoryRegex = Pattern.compile(removeLastDirectoryStrRegex);
     }
 
@@ -47,7 +46,6 @@ public class FileDialogControllerImpl implements FileDialogController {
 
     @Override
     public void stepBackFromCurrentDirectory() {
-        System.out.println(this.currentDirectory);
         Matcher matcher = removeLastDirectoryRegex.matcher(this.currentDirectory.substring(0, this.currentDirectory.length() - 1));
         if (matcher.find()) {
             this.currentDirectory = matcher.group();

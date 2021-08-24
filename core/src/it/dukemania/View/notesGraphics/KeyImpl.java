@@ -17,14 +17,12 @@ public class KeyImpl implements Key {
         this.initialTime = 0;
         this.finalTime = 0;
         this.column = column;
-
     }
 
 
     @Override
     public void startPressing(final long startTime) {
         this.initialTime = Instant.now().toEpochMilli() - startTime;
-
     }
 
     @Override

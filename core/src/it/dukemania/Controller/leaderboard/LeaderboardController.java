@@ -1,7 +1,6 @@
 package it.dukemania.Controller.leaderboard;
 
-import it.dukemania.Model.serializers.leaderboard.SongLeaderBoard;
-import it.dukemania.audioengine.Pair;
+import it.dukemania.util.Pair;
 
 import java.util.List;
 

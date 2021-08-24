@@ -38,13 +38,14 @@ public class Enveloper {
      * @return the volume buffer Manager
      */
     public BufferManager<Float> createBufferManager(final double [] buff) {
-        return new BufferManager<Float>() {
+        return new BufferManager<>() {
             private float actual = 0F;
             private float totalSamples = 0L;
             private int processedSamples = 0;
             private float resetStep = 0;
             private float step2 = 0;
             private int reset = -1;
+
             /**
              * {@inheritDoc}
              */
@@ -55,6 +56,7 @@ public class Enveloper {
                 reset = Settings.ATTENUATION;
                 step2 = 0;
             }
+
             /**
              * {@inheritDoc}
              */
@@ -62,6 +64,7 @@ public class Enveloper {
             public boolean hasNext() {
                 return reset >= 0 || processedSamples < totalSamples || actual > 0;
             }
+
             /**
              * {@inheritDoc}
              */

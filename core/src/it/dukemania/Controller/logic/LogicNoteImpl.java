@@ -11,7 +11,6 @@ public class LogicNoteImpl implements LogicNote {
        this.note = note;
        this.column = column;
        this.height = height;
-       System.out.println("len:" + note.getStartTime());
     }
 
     @Override

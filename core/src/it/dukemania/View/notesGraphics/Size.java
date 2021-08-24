@@ -1,5 +1,7 @@
 package it.dukemania.View.notesGraphics;
 
+import it.dukemania.util.Pair;
+
 public interface Size {
 
     /***

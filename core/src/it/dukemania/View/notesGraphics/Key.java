@@ -6,7 +6,6 @@ public interface Key {
 
     /***
      * set the time when you start to press a button.
-
      */
     void startPressing(long startTime);
 

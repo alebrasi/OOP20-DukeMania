@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import it.dukemania.Model.GameModel;
+import it.dukemania.View.PlayScreen;
 import it.dukemania.View.menu.LeaderboardWindow;
 import it.dukemania.View.menu.OptionWindow;
 import it.dukemania.View.menu.SongSelectionWindow;
@@ -15,7 +16,7 @@ import it.dukemania.windowmanager.WindowManager;
 
 import java.security.NoSuchAlgorithmException;
 
-public class DukeManiaTest extends ApplicationAdapter {
+public class DukeMania extends ApplicationAdapter {
 
     private final WindowManager wdm = new WindowManager();
     private static final String MENU_BACKGROUND_IMAGE_PATH = "DukeMania.png";

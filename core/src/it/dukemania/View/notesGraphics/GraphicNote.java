@@ -117,8 +117,7 @@ public interface GraphicNote {
 
     /***
      * Associate a key to the note.
-     * @param timeOfFall 
-     */
+	 */
     void setKey();
 	
 }

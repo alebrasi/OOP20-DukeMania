@@ -4,9 +4,9 @@ import it.dukemania.Model.GameModel;
 import it.dukemania.Model.serializers.ConfigurationsModel;
 import it.dukemania.Model.serializers.ConfigurationsModelImpl;
 import it.dukemania.Model.serializers.leaderboard.SongLeaderBoard;
-import it.dukemania.audioengine.Pair;
 import it.dukemania.util.storage.Storage;
 import it.dukemania.util.storage.StorageFactoryImpl;
+import it.dukemania.util.Pair;
 
 import java.io.IOException;
 import java.util.*;

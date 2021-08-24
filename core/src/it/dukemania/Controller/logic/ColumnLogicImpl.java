@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import it.dukemania.audioengine.Pair;
 import it.dukemania.audioengine.PlayerAudio;
 import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.Song;
+import it.dukemania.util.Pair;
 
 public class ColumnLogicImpl implements ColumnLogic {
 
@@ -70,7 +70,7 @@ public class ColumnLogicImpl implements ColumnLogic {
 
     private List<Columns> getColumnList() {
         List<Columns> columnList = Arrays.stream(Columns.values()).collect(Collectors.toList());
-        columnList.sort((e1, e2) -> e1.getNumericValue().compareTo(e2.getNumericValue()));
+        columnList.sort(Comparator.comparing(Columns::getNumericValue));
         return columnList;
     }
 
@@ -92,7 +92,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     private Optional<Long> getMaxDuration(final ParsedTrack track) {
         //return the max duration of a note in a track
         return track.getNotes().stream()
-                .max((e1, e2) -> e1.getDuration().get().compareTo(e2.getDuration().get()))
+                .max(Comparator.comparing(e -> e.getDuration().get()))
                 .get()
                 .getDuration();
     }
@@ -150,13 +150,12 @@ public class ColumnLogicImpl implements ColumnLogic {
     public final int verifyNote(final Columns column, final long start, final long end) {
         NoteRange currentRange = noteRanges.stream()
                 .filter(x -> x.getColumn().equals(column))
-                .filter(x -> start < x.getEnd() && end > x.getStart()) 
+                .filter(x -> start < x.getEnd() && end > x.getStart())
                 //the player started pressing before the end of the note and ended pressing after the start of the note
                 .sorted(Comparator.comparingLong(NoteRange::getStart))
                 .findFirst() //take the first range of the compatible with the pressed note
                 .orElse(new NoteRange(column, 0, 1));
         this.noteRanges.remove(currentRange);
-        System.out.println("current r: " + currentRange.getStart());
         return this.context.executeStrategy(column, start, end, currentRange, columnNumber);
     }
 

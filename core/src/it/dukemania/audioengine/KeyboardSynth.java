@@ -1,5 +1,7 @@
 package it.dukemania.audioengine;
 
+import it.dukemania.util.Pair;
+
 import java.util.*;
 import java.util.HashMap;
 import java.util.Map;

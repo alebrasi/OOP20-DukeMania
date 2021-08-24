@@ -1,9 +1,6 @@
 package it.dukemania.Controller.logic;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import it.dukemania.midi.ParsedTrack;
 
@@ -14,7 +11,7 @@ public class GameUtilitiesImpl implements GameUtilities {
     private List<DifficultyLevel> getDifficulties() {
         List<DifficultyLevel> difficulties = Arrays.stream(DifficultyLevel.values())
                 .collect(Collectors.toList());
-        difficulties.sort((e1, e2) -> e1.getNumericValue().compareTo(e2.getNumericValue()));
+        difficulties.sort(Comparator.comparing(DifficultyLevel::getNumericValue));
         return difficulties;
     }
 

@@ -129,11 +129,6 @@ public class SongSelectionWindow extends AbstractView {
                         tblTracks.add(slctInstruments).fillX().uniformX().right().padRight(TABLE_PADDING);
                         tblTracks.row();
                     });
-                    //tblTracks.pack();
-                    //tblConfigSong.getCell(scrollTableTracks).uniformX().fillX();//.width(tblTracks.getWidth() + 100);
-                    /*tblConfigSong.getCell(scrollTableTracks).expandX().fillX().colspan(4);
-                    scrollTableTracks.pack();
-                    tblConfigSong.pack();*/
                 }
             }
         });
@@ -164,7 +159,6 @@ public class SongSelectionWindow extends AbstractView {
                 } catch (InvalidMidiDataException | IOException e) {
                     e.printStackTrace();
                 }
-                //switchWindowNotifier.switchWindow(DukeManiaWindowState.PLAY);
             }
         });
 
@@ -191,11 +185,6 @@ public class SongSelectionWindow extends AbstractView {
         tblConfigSong.add(btnSongSelect);
         tblConfigSong.add(lblFileName).colspan(4);
         tblConfigSong.row();
-        /*
-        tblConfigSong.add(lblSongName).expand().fillX().colspan(4).padBottom(TABLE_PADDING);
-        tblConfigSong.row();
-
-         */
         tblConfigSong.add(lblBPM).expand().fillX().colspan(4);
         tblConfigSong.row();
         tblConfigSong.add(lblConfig).colspan(4).expand().center().padBottom(TABLE_PADDING);
@@ -223,7 +212,6 @@ public class SongSelectionWindow extends AbstractView {
 
         mainMenuContainer.setActor(tblConfigSong);
         mainMenuContainer.setPosition(screenWidth / 2, (screenHeight / 2) + TABLE_CONFIGS_OFFSET_Y);
-        //mainMenuContainer.setDebug(true, true);
         mainStage.addActor(mainMenuContainer);
         Gdx.input.setInputProcessor(mainStage);
     }

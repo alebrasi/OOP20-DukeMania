@@ -6,6 +6,7 @@ import it.dukemania.midi.Instrument;
 import it.dukemania.midi.InstrumentType;
 import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.KeyboardTrack;
+import it.dukemania.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

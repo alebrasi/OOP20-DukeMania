@@ -16,13 +16,9 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
     private final List<Integer> keys = Arrays.asList(Input.Keys.A, Input.Keys.S, Input.Keys.D, 
             Input.Keys.F, Input.Keys.H, Input.Keys.J, Input.Keys.K, Input.Keys.L);
 
-
-
     public EventsFromKeyboardImpl(final Columns column) { 
         this.column = column;
     }
-
-
 
     /**
      * {@inheritDoc}
@@ -31,7 +27,6 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
     public boolean isButtonPressed(final int max) {
         return Gdx.input.isKeyPressed(this.associationKeyColumn(this.column.getNumericValue(), max));
     }
-
 
     /**
      * {@inheritDoc}
@@ -42,9 +37,7 @@ public class EventsFromKeyboardImpl implements EventsFromKeyboard {
         return usedKeys.get(column - 1);
     }
 
-
-
-    /*TASTI
+    /* KEYS
      * 1 - A 
      * 2 - S
      * 3 - D
