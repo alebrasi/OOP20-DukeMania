@@ -2,165 +2,64 @@ package it.dukemania;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import it.dukemania.Model.GameModel;
+import it.dukemania.View.menu.LeaderboardWindow;
+import it.dukemania.View.menu.OptionWindow;
+import it.dukemania.View.menu.SongSelectionWindow;
+import it.dukemania.View.menu.TitleWindow;
+import it.dukemania.View.notesGraphics.AssetsManager;
+import it.dukemania.windowmanager.DukeManiaWindowState;
+import it.dukemania.windowmanager.Window;
+import it.dukemania.windowmanager.WindowManager;
 
-public class DukeMania extends ApplicationAdapter {
-	private FreeTypeFontGenerator generator;
-	private Stage stage;
-	private Stage backStage;
-	private Label.LabelStyle lblStyle;
-	private Image backgroundImage;
-	private TextButton.TextButtonStyle txtBtnStyle;
-	private Skin skin;
-	private Camera camera;
-	
-	@Override
-	public void create () {
-		String TEXTURE_PATH = "textures/quantum-horizon/quantum-horizon-ui.json";
-		String MENU_BACKGROUND_IMAGE_PATH = "DukeMania.png";
-		String FONT_PATH = "fonts/agency-fb.ttf";
+import java.security.NoSuchAlgorithmException;
 
-		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+public class DukeManiaTest extends ApplicationAdapter {
 
-		int fontSize = 50;
-		float fontBorderWidth = 0.5f;
-		Color fontColor = Color.BLACK;
-		float buttonPadding = 20f;
+    private final WindowManager wdm = new WindowManager();
+    private static final String MENU_BACKGROUND_IMAGE_PATH = "DukeMania.png";
+    private final GameModel data = new GameModel();
 
-		Texture img = new Texture(MENU_BACKGROUND_IMAGE_PATH);
-		backgroundImage = new Image(img);
+    @Override
+    public void create() {
+        Skin skin = AssetsManager.getInstance().getSkin("skin_menu");
+        Window songSelectionScreen = null;
+        Window titleScreen = new TitleWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        Window optionScreen = new OptionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        Window leaderBoardScreen = new LeaderboardWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        Window playScreen = new PlayScreen();
+        try {
+            songSelectionScreen = new SongSelectionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            Gdx.app.exit();
+            System.exit(1);
+        }
+        //Add windows
+        wdm.addWindow(titleScreen, DukeManiaWindowState.TITLE);
+        wdm.addWindow(optionScreen, DukeManiaWindowState.OPTIONS);
+        wdm.addWindow(songSelectionScreen, DukeManiaWindowState.SONG_SELECTION);
+        wdm.addWindow(leaderBoardScreen, DukeManiaWindowState.LEADERBOARD);
+        wdm.addWindow(playScreen, DukeManiaWindowState.PLAY);
+        //Switch to the title window
+        wdm.switchWindow(DukeManiaWindowState.TITLE, data);
+    }
 
-		camera = new OrthographicCamera(1920, 1080);
-		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+    @Override
+    public void render() {
+        wdm.render();
+    }
 
-		stage = new Stage(new ExtendViewport(camera.viewportWidth, camera.viewportHeight, camera));
-		backStage = new Stage(new StretchViewport(backgroundImage.getWidth(), backgroundImage.getHeight()));
+    @Override
+    public void resize(final int width, final int height) {
+        wdm.resize(width, height);
+    }
 
-		float screenWidth = stage.getWidth();
-		float screenHeight = stage.getHeight();
+    @Override
+    public void dispose() {
+        wdm.dispose();
+        AssetsManager.getInstance().dispose();
+    }
 
-		generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_PATH));
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = fontSize;
-		parameter.borderWidth = fontBorderWidth;
-		parameter.color = fontColor;
-		BitmapFont menuFont = generator.generateFont(parameter);
-		menuFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-		skin = new Skin();
-		skin.add("font", menuFont);
-		skin.add("title", menuFont);
-		skin.addRegions(new TextureAtlas(Gdx.files.internal("textures/quantum-horizon/quantum-horizon-ui.atlas")));
-		skin.load(Gdx.files.internal(TEXTURE_PATH));
-
-		/*
-		txtBtnStyle = new TextButton.TextButtonStyle();
-		lblStyle = new Label.LabelStyle();
-		*/
-
-		TextButton btnPlay = new TextButton("PLAY", skin);
-		TextButton btnQuit = new TextButton("QUIT", skin);
-		TextButton btnOptions = new TextButton("OPTIONS", skin);
-
-		btnOptions.pack();
-		btnPlay.pack();
-		btnQuit.pack();
-
-		btnPlay.setTransform(true);
-		btnQuit.setTransform(true);
-		btnOptions.setTransform(true);
-
-		btnPlay.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				System.out.println("Play");
-			}
-		});
-
-		btnOptions.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				System.out.println("Options");
-			}
-		});
-
-		btnQuit.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				System.out.println("Quit");
-				Gdx.app.exit();
-				dispose();
-				System.exit(0);
-			}
-		});
-
-		/*
-		lblStyle.font = skin.getFont("title");
-		lblStyle.fontColor = Color.BLACK;
-
-		Label nameLabel = new Label("", lblStyle);
-		TextField nameText = new TextField("", skin);
-		Label addressLabel = new Label("Address:", skin);
-		TextField addressText = new TextField("", skin);
-		*/
-
-		Container<Table> mainMenuContainer = new Container<>();
-		Table table = new Table(skin);
-
-		table.setDebug(false);
-		table.add(btnPlay);
-		table.row();
-		table.add(btnOptions);
-		table.row();
-		table.add(btnQuit);
-
-		table.getCells().forEach(s -> s.padTop(buttonPadding));
-		mainMenuContainer.setActor(table);
-		mainMenuContainer.setPosition(screenWidth / 2, (screenHeight / 2) - byPercent(screenHeight, 0.12f));
-
-		backStage.addActor(backgroundImage);
-		stage.addActor(mainMenuContainer);
-		Gdx.input.setInputProcessor(stage);
-	}
-
-	private float byPercent(float size, float percent) {
-		return size * percent;
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		System.out.println("Resize called " + width + " " + height);
-		skin.getFont("title").getData().setScale(width * 0.002f, height * 0.002f);
-		stage.getViewport().update(width, height);
-		backStage.getViewport().update(width, height);
-		backStage.getViewport().apply();
-		stage.getViewport().apply();
-	}
-
-	@Override
-	public void render () {
-		//Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		backStage.act();
-		stage.act();
-
-		backStage.draw();
-		stage.draw();
-	}
-	
-	@Override
-	public void dispose () {
-		stage.dispose();
-		generator.dispose();
-		System.out.println("Disposed");
-		//img.dispose();
-	}
 }
