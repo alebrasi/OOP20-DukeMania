@@ -24,7 +24,7 @@ public interface LogicNote {
      * 
      * @return the duration of the AbstractNote in microseconds
      */
-    long getNoteDuration();
+    Long getNoteDuration();
 
 }
 
