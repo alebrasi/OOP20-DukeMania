@@ -14,7 +14,7 @@ public class TrackFilterImpl implements TrackFilter {
 
     static final int MAX_NOTE = 600;
     static final int PERCUSSION_CHANNEL = 10;
-    static final long MIN_DURATION = 125000; //microseconds
+    static final long MIN_DURATION = 125_000; //microseconds
 
     @Override
     public final List<ParsedTrack> reduceTrack(final Song song) {
