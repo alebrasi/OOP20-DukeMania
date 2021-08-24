@@ -2,9 +2,6 @@ package it.dukemania.audioengine;
 
 public final class Settings {
 
-    private Settings() {
-
-    }
 
     /**
      * How many samples are played every seconds.
@@ -34,4 +31,10 @@ public final class Settings {
      * The number of attenuations samples, to restart the note.
      */
     public static final int ATTENUATION = 300;
+
+
+    private Settings() {
+
+    }
+
 }

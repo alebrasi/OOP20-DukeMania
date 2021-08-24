@@ -24,12 +24,12 @@ public class DukeMania extends ApplicationAdapter {
 
     @Override
     public final void create() {
-        Skin skin = AssetsManager.getInstance().getSkin("skin_menu");
+        final Skin skin = AssetsManager.getInstance().getSkin("skin_menu");
         Window songSelectionScreen = null;
-        Window titleScreen = new TitleWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
-        Window optionScreen = new OptionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
-        Window leaderBoardScreen = new LeaderboardWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
-        Window playScreen = new PlayScreen();
+        final Window titleScreen = new TitleWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        final Window optionScreen = new OptionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        final Window leaderBoardScreen = new LeaderboardWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
+        final Window playScreen = new PlayScreen();
         try {
             songSelectionScreen = new SongSelectionWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
         } catch (NoSuchAlgorithmException e) {

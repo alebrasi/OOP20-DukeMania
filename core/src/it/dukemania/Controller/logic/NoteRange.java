@@ -2,9 +2,9 @@ package it.dukemania.Controller.logic;
 
 public class NoteRange {
 
-    private Columns column;
-    private long start;
-    private long end;
+    private final Columns column;
+    private final long start;
+    private final long end;
 
     public NoteRange(final Columns column, final long start, final long end) {
         super();

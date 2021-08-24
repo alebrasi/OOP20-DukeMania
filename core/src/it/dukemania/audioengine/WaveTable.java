@@ -28,9 +28,9 @@ public enum WaveTable {
 
 
     static {
-        float initFreq = (float) (1d / (Settings.WAVETABLE_SIZE / Settings.SAMPLE_RATE));
-        float period = Settings.SAMPLE_RATE / initFreq;
-        Random rnd = new Random();
+        final float initFreq = (float) (1d / (Settings.WAVETABLE_SIZE / Settings.SAMPLE_RATE));
+        final float period = Settings.SAMPLE_RATE / initFreq;
+        final Random rnd = new Random();
 
         for (float i = 0; i < Settings.WAVETABLE_SIZE; i++) {
             Triangle.wave[(int) i] = (float) (2 / Math.PI * Math.asin(Math.sin(2 * Math.PI * i / period)) * Settings.MAX_VOLUME);

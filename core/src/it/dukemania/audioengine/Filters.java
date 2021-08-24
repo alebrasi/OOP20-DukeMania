@@ -29,11 +29,11 @@ public final class Filters {
      * @param carrierFreq the frequency of the carrier wave
      */
     public static void frequencyModulation(final double [] carrier, final double [] modulator, final float carrierFreq) {
-        float period = Settings.SAMPLE_RATE / carrierFreq;
+        final float period = Settings.SAMPLE_RATE / carrierFreq;
         if (carrier.length > modulator.length) {
             return;
         }
-        for (float i = 0; i < carrier.length; i++) {
+        for (double i = 0; i < carrier.length; i++) {
             carrier[(int) i] = (float) (1 * (Math.sin(2.0 * Math.PI * carrier[(int) i] 
                     * period + 1 * Math.sin(2 * Math.PI * modulator[(int) i] * period))));
         }

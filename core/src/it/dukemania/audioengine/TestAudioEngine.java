@@ -16,13 +16,13 @@ import java.util.stream.LongStream;
 public class TestAudioEngine {
 
     private boolean checkTolerance(final double actual, final double exact) {
-        double tolerance = 1e-4;
+        final double tolerance = 1e-4;
         return Math.abs(actual - exact) < tolerance;
     }
 
     @Test
     public void drumSynthTest() {
-        DrumSynth ds = new DrumSynth();
+        final DrumSynth ds = new DrumSynth();
 
         // test if the synth registers the play drum input properly
         ds.playPercussion(DrumSamples.Snare);
@@ -50,7 +50,7 @@ public class TestAudioEngine {
 
     @Test
     public void testBuilder() {
-        SynthBuilderImpl builder = new SynthBuilderImpl();
+        final SynthBuilderImpl builder = new SynthBuilderImpl();
 
         builder.setWavetables(new WaveTable[]{WaveTable.Saw});
         builder.setOffsets(new double[]{1.0, 2.0});
@@ -76,15 +76,15 @@ public class TestAudioEngine {
     @Test
     public void testKeyboardSynth() throws Exception {
         final float atkVol = 0.8f;
-        SynthBuilderImpl builder = new SynthBuilderImpl();
-        Enveloper env = new Enveloper(100l, atkVol, 100l);
+        final SynthBuilderImpl builder = new SynthBuilderImpl();
+        final Enveloper env = new Enveloper(100l, atkVol, 100l);
         builder.setEnveloper(env);
         builder.setWavetables(new WaveTable[]{WaveTable.Saw});
         builder.setOffsets(new double[]{1});
-        List<Pair<Integer, Long>> notes = new ArrayList<>();
+        final List<Pair<Integer, Long>> notes = new ArrayList<>();
         notes.add(new Pair<>(100, 10000l));
         notes.add(new Pair<>(200, 100000l));
-        KeyboardSynth ks = builder.build(notes);
+        final KeyboardSynth ks = builder.build(notes);
 
         Assertions.assertEquals(0, ks.checkKeys());
         ks.playTimedNote(100, 1000000l);
@@ -92,9 +92,9 @@ public class TestAudioEngine {
         Assertions.assertEquals(0, IntStream.range(0, Settings.ATTENUATION).mapToDouble(x -> ks.getSample()).sum());
         Assertions.assertTrue(ks.getSample() != 0);
 
-        List<Double> allValues = IntStream.range(0, 300000).mapToDouble(x -> ks.getSample()).boxed().collect(Collectors.toList());
-        double max = allValues.stream().mapToDouble(Double::doubleValue).max().orElse(0);
-        double min = allValues.stream().mapToDouble(Double::doubleValue).min().orElse(0);
+        final List<Double> allValues = IntStream.range(0, 300000).mapToDouble(x -> ks.getSample()).boxed().collect(Collectors.toList());
+        final double max = allValues.stream().mapToDouble(Double::doubleValue).max().orElse(0);
+        final double min = allValues.stream().mapToDouble(Double::doubleValue).min().orElse(0);
         Assertions.assertTrue(max <= atkVol && min >= -atkVol);
 
         IntStream.range(0, 10000).forEach(x -> ks.getSample());

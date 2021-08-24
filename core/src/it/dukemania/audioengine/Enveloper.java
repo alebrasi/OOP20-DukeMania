@@ -39,11 +39,11 @@ public class Enveloper {
      */
     public BufferManager<Float> createBufferManager(final double [] buff) {
         return new BufferManager<>() {
-            private float actual = 0F;
-            private float totalSamples = 0L;
-            private int processedSamples = 0;
-            private float resetStep = 0;
-            private float step2 = 0;
+            private float actual;
+            private float totalSamples;
+            private int processedSamples;
+            private float resetStep;
+            private float step2;
             private int reset = -1;
 
             /**
@@ -51,7 +51,7 @@ public class Enveloper {
              */
             @Override
             public void refresh(final long ttl) {
-                totalSamples = (ttl * Settings.SAMPLESPERMILLI) + Settings.ATTENUATION;
+                totalSamples = ttl * Settings.SAMPLESPERMILLI + Settings.ATTENUATION;
                 resetStep = actual / (Settings.ATTENUATION);
                 reset = Settings.ATTENUATION;
                 step2 = 0;

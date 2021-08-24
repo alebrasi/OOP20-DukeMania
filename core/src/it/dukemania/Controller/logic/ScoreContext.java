@@ -2,7 +2,7 @@ package it.dukemania.Controller.logic;
 
 public class ScoreContext {
 
-    private ScoreStrategy strategy;
+    private final ScoreStrategy strategy;
 
     public ScoreContext(final ScoreStrategy strategy) {
         this.strategy = strategy;

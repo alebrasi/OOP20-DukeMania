@@ -75,7 +75,7 @@ public class PlayScreen implements Window {
     private Song song;
     private ParsedTrack selectedTrack;
     private List<GraphicNote> notes;
-    private final ColumnLogic logic;
+    private ColumnLogic logic;
     private SwitchWindowNotifier switchWindowNotifier;
     //constant
     private static final int BUTTON_DIM = 120;
@@ -102,7 +102,7 @@ public class PlayScreen implements Window {
         shift = new ComputingShiftImpl();
         posySpark = PlayScreen.BUTTON_DIM - this.shift.getNoteShift();
         finishLine = PlayScreen.BUTTON_DIM;
-        logic = new ColumnLogicImpl(this.numberOfColumns);
+
 
     }
 
@@ -113,13 +113,13 @@ public class PlayScreen implements Window {
     @Override
     public void create() {
 
-
-        notes = new ArrayList<>();
-        buttons = new ArrayList<>();
-        layout = new GlyphLayout();
+        this.logic = new ColumnLogicImpl(this.numberOfColumns);
+        this.notes = new ArrayList<>();
+        this.buttons = new ArrayList<>();
+        this.layout = new GlyphLayout();
         final OrthographicCamera camera = new OrthographicCamera();
 
-        dimensions = new SizeImpl(this.numberOfColumns);
+        this.dimensions = new SizeImpl(this.numberOfColumns);
         final Texture background = assetManager.getTexture("blueBackground.png");
         final Image backgroundImage = new Image(background);
         this.textureNote = assetManager.getTexture("note.png");

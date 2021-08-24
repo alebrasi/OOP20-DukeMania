@@ -25,7 +25,7 @@ public class TestLogic {
 
     private List<AbstractNote> createNotes(final int quantity) { 
         //generate notes for testing
-        List<AbstractNote> testNotes = new ArrayList<>();
+        final List<AbstractNote> testNotes = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
             testNotes.add(new Note(Optional.of(2_000_000L), i, 0));
         }
@@ -52,7 +52,7 @@ public class TestLogic {
 
     @org.junit.Test
     public void testTrackFilter() {
-        List<ParsedTrack> testTracks = new ArrayList<>();
+        final List<ParsedTrack> testTracks = new ArrayList<>();
         List<AbstractNote> testNotes = createNotes(TrackFilterImpl.MAX_NOTE);
         testTracks.add(FactoryConfigurator.getFactory(1).createTrack(null, testNotes, 0));
 
@@ -68,7 +68,7 @@ public class TestLogic {
 
         //test with 2 tracks (10 and MAX_NOTE + 1 notes)
         testTracks.add(FactoryConfigurator.getFactory(1).createTrack(null, testNotes.subList(0, 10), 0)); 
-        List<ParsedTrack> filteredTracks = this.trackFilter.reduceTrack(new Song("title", 0, testTracks, 0));
+        final List<ParsedTrack> filteredTracks = this.trackFilter.reduceTrack(new Song("title", 0, testTracks, 0));
         assertTrue(filteredTracks.get(0).getNotes().size() == 10);
         assertTrue(filteredTracks.get(1).getNotes().size() <= TrackFilterImpl.MAX_NOTE);
 
@@ -82,8 +82,8 @@ public class TestLogic {
 
     @org.junit.Test
     public void testGameUtilities() {
-        int difficulties = DifficultyLevel.values().length - 1;
-        List<ParsedTrack> testTracksDiff = new ArrayList<>();
+        final int difficulties = DifficultyLevel.values().length - 1;
+        final List<ParsedTrack> testTracksDiff = new ArrayList<>();
 
         //test for every difficultylevel
         testTracksDiff.add(FactoryConfigurator.getFactory(1).createTrack(null,
@@ -98,7 +98,7 @@ public class TestLogic {
                 createNotes(TrackFilterImpl.MAX_NOTE / difficulties * DifficultyLevel.VERY_DIFFICULT.getNumericValue()), 0));
         //test special case: track with more notes than MAX_NOTE
         testTracksDiff.add(FactoryConfigurator.getFactory(1).createTrack(null, createNotes(TrackFilterImpl.MAX_NOTE + 1), 0));
-        Map<ParsedTrack, DifficultyLevel> trackmap = this.gameUtilities.generateTracksDifficulty(testTracksDiff);
+        final Map<ParsedTrack, DifficultyLevel> trackmap = this.gameUtilities.generateTracksDifficulty(testTracksDiff);
         assertEquals(trackmap.get(testTracksDiff.get(0)), DifficultyLevel.VERY_EASY);
         assertEquals(trackmap.get(testTracksDiff.get(1)), DifficultyLevel.EASY);
         assertEquals(trackmap.get(testTracksDiff.get(2)), DifficultyLevel.NORMAL);
@@ -109,7 +109,7 @@ public class TestLogic {
 
     @org.junit.Test
     public void testColumnLogic() {
-        List<AbstractNote> testNotes = new ArrayList<>();
+        final List<AbstractNote> testNotes = new ArrayList<>();
 
         //test with only a note
         testNotes.add(FactoryConfigurator.getFactory(1).createNote(Optional.of(2L), 1, 0));

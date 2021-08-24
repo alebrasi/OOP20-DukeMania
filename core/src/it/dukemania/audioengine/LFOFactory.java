@@ -59,8 +59,8 @@ public final class LFOFactory {
      * @return the lfo function
      */
     public static Function<Long, Float> straightLineLFO(final float targetMult, final int duration) {
-        float sampleDuration = (float) duration * Settings.SAMPLESPERMILLI;
-        float step = (targetMult - 1f) / sampleDuration;
+        final float sampleDuration = (float) duration * Settings.SAMPLESPERMILLI;
+        final float step = (targetMult - 1f) / sampleDuration;
         return x -> 1 + (step * (x % sampleDuration));
     }
 
@@ -72,7 +72,7 @@ public final class LFOFactory {
      * @return the lfo function
      */
     public static Function<Long, Float> squareLFO(final float multMax, final float multMin, final int duration) {
-        float sampleDuration = (float) duration * Settings.SAMPLESPERMILLI;
+        final float sampleDuration = (float) duration * Settings.SAMPLESPERMILLI;
         return x -> x % sampleDuration < sampleDuration / 2 ? multMax : multMin;
     }
 
@@ -83,8 +83,8 @@ public final class LFOFactory {
      * @return the lfo function
      */
     public static Function<Long, Float> buildIntervals(final float [] multipliers, final int duration) {
-        int sampleDuration = (int) (duration * Settings.SAMPLESPERMILLI);
-        int single = sampleDuration / multipliers.length;
+        final int sampleDuration = (int) (duration * Settings.SAMPLESPERMILLI);
+        final int single = sampleDuration / multipliers.length;
         return x -> multipliers[(int) ((x % sampleDuration) / single)];
     }
 
@@ -96,11 +96,11 @@ public final class LFOFactory {
      * @return the lfo function
      */
     public static Function<Long, Float> sineLFO(final float multMax, final float multMin, final int duration) {
-        float sampleDuration = (float) duration * Settings.SAMPLESPERMILLI;
-        float initFreq = (float) (1d / (sampleDuration / Settings.SAMPLE_RATE));
-        float period = Settings.SAMPLE_RATE / initFreq;
-        float half = (multMax - multMin) / 2;
-        float start = sampleDuration / 4;
+        final float sampleDuration = (float) duration * Settings.SAMPLESPERMILLI;
+        final float initFreq = (float) (1d / (sampleDuration / Settings.SAMPLE_RATE));
+        final float period = Settings.SAMPLE_RATE / initFreq;
+        final float half = (multMax - multMin) / 2;
+        final float start = sampleDuration / 4;
         return x -> (float) (multMin + half + Math.sin(2.0 * Math.PI * (x + start) / period) * half);
     }
 

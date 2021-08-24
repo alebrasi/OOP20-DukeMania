@@ -19,11 +19,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public final class AssetsManager {
     private static AssetsManager instance;
     private boolean areLoaded;
-    private Map<String, Texture> textureAssociations = new HashMap<>();
-    private Map<String, Skin> skinAssociations = new HashMap<>();
-    private Map<String, FreeTypeFontGenerator> fontAssociations = new HashMap<>();
-    private Map<String, TextureAtlas> textureAtlasAssociations = new HashMap<>();
-    private Map<String, FileHandle> jsonAssociations = new HashMap<>();
+    private final Map<String, Texture> textureAssociations = new HashMap<>();
+    private final Map<String, Skin> skinAssociations = new HashMap<>();
+    private final Map<String, FreeTypeFontGenerator> fontAssociations = new HashMap<>();
+    private final Map<String, TextureAtlas> textureAtlasAssociations = new HashMap<>();
+    private final Map<String, FileHandle> jsonAssociations = new HashMap<>();
 
 
 
@@ -54,11 +54,11 @@ public final class AssetsManager {
      *
      * @param textureStr
      * @return a specific texture
-     * @throws NullPointerException
+     * 
      */
-    public Texture getTexture(final String textureStr) throws NullPointerException {
+    public Texture getTexture(final String textureStr) {
         if (textureAssociations.get(textureStr) == null) { 
-            throw new NullPointerException(); 
+            throw new IllegalArgumentException(); 
         }
         return textureAssociations.get(textureStr);
     }
@@ -81,9 +81,9 @@ public final class AssetsManager {
      * @param skinStr
      * @return a specific skin
      */
-    public Skin getSkin(final String skinStr) throws NullPointerException {
+    public Skin getSkin(final String skinStr) {
         if (skinAssociations.get(skinStr) == null) { 
-            throw new NullPointerException(); 
+            throw new IllegalArgumentException(); 
         }
         return skinAssociations.get(skinStr);
     }
@@ -103,7 +103,7 @@ public final class AssetsManager {
      */
     public FreeTypeFontGenerator getBitmapFont(final String fontStr) {
         if (fontAssociations.get(fontStr) == null) { 
-            throw new NullPointerException(); 
+            throw new IllegalArgumentException(); 
         }
         return fontAssociations.get(fontStr);
     }
@@ -123,7 +123,7 @@ public final class AssetsManager {
      */
     public TextureAtlas getTextureAtlas(final String textureAtlasStr) {
         if (textureAtlasAssociations.get(textureAtlasStr) == null) {
-            throw new NullPointerException(); 
+            throw new IllegalArgumentException(); 
         }
         return textureAtlasAssociations.get(textureAtlasStr);
     }
@@ -140,13 +140,13 @@ public final class AssetsManager {
 
 
     /***
-     * 
+     * @throws
      * @param jsonStr
      * @return a specific json
      */
     public FileHandle getJson(final String jsonStr) {
         if (jsonAssociations.get(jsonStr) == null) { 
-            throw new NullPointerException(); 
+            throw new IllegalArgumentException(); 
         }
         return jsonAssociations.get(jsonStr);
     }

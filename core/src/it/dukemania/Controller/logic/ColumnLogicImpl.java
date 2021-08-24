@@ -69,16 +69,16 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     private List<Columns> getColumnList() {
-        List<Columns> columnList = Arrays.stream(Columns.values()).collect(Collectors.toList());
+        final List<Columns> columnList = Arrays.stream(Columns.values()).collect(Collectors.toList());
         columnList.sort(Comparator.comparing(Columns::getNumericValue));
         return columnList;
     }
 
     private List<List<AbstractNote>> generateNoteRanges(final List<List<AbstractNote>> list) {
         // used to verify the pressed notes during gameplay
-        List<Columns> columnList = getColumnList();
+        final List<Columns> columnList = getColumnList();
         noteRanges = list.stream().map(t -> {
-                Columns column = columnList.remove(0);
+                final Columns column = columnList.remove(0);
                 return t.stream().map(r -> {
                         return new NoteRange(column, r.getStartTime(), r.getStartTime()
                         + r.getDuration().get().intValue());
@@ -123,14 +123,14 @@ public class ColumnLogicImpl implements ColumnLogic {
                     .collect(Collectors.toList()))); //add the first 2 groups in the first removing the second
         }
 
-        List<Columns> columnList = getColumnList();
+        final List<Columns> columnList = getColumnList();
         return (generateNoteRanges(notesForNoteType.stream()
                 .map(x -> x.getY())
                 .peek(x -> x.removeAll(overlappingNotes(x))) // remove all overlapping notes
                 .collect(Collectors.toList()))) // create the ranges for the gameplay
                 .stream()
                 .map(x -> {
-                    Columns currentColumn = columnList.remove(0);
+                    final Columns currentColumn = columnList.remove(0);
                     return x.stream()
                             .map(y -> 
                             new LogicNoteImpl(y, currentColumn,

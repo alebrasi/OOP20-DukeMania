@@ -60,8 +60,8 @@ public enum DrumSamples implements Iterator<Float> {
      * Load the Snare sample Iterator.
      */
     static void getSnare() {
-        Random rnd = new Random();
-        double [] buff = IntStream.range(0, 20000).mapToDouble(x -> rnd.nextFloat()).toArray();
+        final Random rnd = new Random();
+        final double [] buff = IntStream.range(0, 20000).mapToDouble(x -> rnd.nextFloat()).toArray();
         Filters.sampleNHold(buff, 10);
         Snare.sampleBuffer = new Enveloper(10L, 1f, 300L).createBufferManager(buff);
     }
@@ -70,8 +70,8 @@ public enum DrumSamples implements Iterator<Float> {
      * Load the Hat sample Iterator.
      */
     static void getHat() {
-        Random rnd = new Random();
-        double [] buff = IntStream.range(0, 7000).mapToDouble(x -> rnd.nextFloat()).toArray();
+        final Random rnd = new Random();
+        final double [] buff = IntStream.range(0, 7000).mapToDouble(x -> rnd.nextFloat()).toArray();
         Hat.sampleBuffer = new Enveloper(10L, 1f, 25L).createBufferManager(buff);
     }
 
@@ -96,7 +96,7 @@ public enum DrumSamples implements Iterator<Float> {
     static void getTom() {
         double pos = 0;
         final double step = (Settings.WAVETABLE_SIZE * (1000)) / Settings.SAMPLE_RATE;
-        Function<Long, Float> lfoOsc1 = LFOFactory.straightLineLFO(0.01f, 160);
+        final Function<Long, Float> lfoOsc1 = LFOFactory.straightLineLFO(0.01f, 160);
         double[] buff = new double[10000];
         for (int i = 0; i < buff.length; i++) {
             pos = pos + step * lfoOsc1.apply((long) i);
@@ -109,7 +109,7 @@ public enum DrumSamples implements Iterator<Float> {
      * Load the empty drumSample.
      */
     static void getEmpty() {
-        double[] buff = new double[10000];
+        final double[] buff = new double[10000];
         Empty.sampleBuffer = new Enveloper(10L, 1f, 100L).createBufferManager(buff);
     }
 

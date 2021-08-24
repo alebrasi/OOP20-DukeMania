@@ -24,7 +24,7 @@ public class GameUtilitiesImpl implements GameUtilities {
         return tracks.stream()
                 .collect(Collectors
                         .toMap(x -> x, x -> { 
-                            int numberOfDifficulties = DifficultyLevel.values().length - 1;
+                            final int numberOfDifficulties = DifficultyLevel.values().length - 1;
                             Optional<DifficultyLevel> difficulty = getDifficulties().stream()
                                     .filter(y -> 
                                     x.getNotes().size() <= TrackFilterImpl.MAX_NOTE / numberOfDifficulties * y.getNumericValue())

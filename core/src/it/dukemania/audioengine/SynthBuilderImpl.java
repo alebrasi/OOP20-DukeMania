@@ -16,6 +16,9 @@ public class SynthBuilderImpl implements SynthBuilder {
 
     private Enveloper env;
     private WaveTable[] waves;
+    private double [] offsets;
+    private Optional<Function<Long, Float>> noteLFO = Optional.empty();
+    private Optional<Function<Long, Float>> volumeLFO = Optional.empty();
 
     /**
      * Returns the enveloper.
@@ -41,9 +44,6 @@ public class SynthBuilderImpl implements SynthBuilder {
         return offsets;
     }
 
-    private double [] offsets;
-    private Optional<Function<Long, Float>> noteLFO = Optional.empty();
-    private Optional<Function<Long, Float>> volumeLFO = Optional.empty();
     /**
      * {@inheritDoc}
      */

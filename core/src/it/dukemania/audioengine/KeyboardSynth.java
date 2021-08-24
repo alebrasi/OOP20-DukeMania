@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 public class KeyboardSynth implements Synth {
+    private final Map<Integer, BufferManager<Float>> keys = new HashMap<>();
 
     // create a bufferManager for a ceratin note in a certain track in a certain song
     private static BufferManager<Float> createNoteBuffer(final Enveloper env,
@@ -21,13 +22,13 @@ public class KeyboardSynth implements Synth {
                                                          final Function<Long, Float> volumeLFO,
                                                          final double [] offsets) {
         double[] steps = Arrays.stream(offsets)
-                                .map(x -> ((Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE))
+                                .map(x -> (Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE)
                                 .toArray();
         final double[] positions = new double[steps.length];
-        long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 1000);
+        final long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 1000);
         double [] buff = LongStream.range(0, total).mapToDouble(
             k -> {
-                float noteLfoVal = noteLFO.apply(k);
+                final float noteLfoVal = noteLFO.apply(k);
                 return IntStream.range(0, steps.length).mapToDouble(x -> {
                     positions[x] = positions[x] + steps[x] * noteLfoVal;
                     return waves[x].getAt((int) (positions[x] % Settings.WAVETABLE_SIZE));
@@ -37,7 +38,6 @@ public class KeyboardSynth implements Synth {
         return env.createBufferManager(buff);
     }
 
-    private final Map<Integer, BufferManager<Float>> keys = new HashMap<>();
 
     /**
      * costructor of KeyboardSynth, usually called by a builder.
@@ -58,7 +58,7 @@ public class KeyboardSynth implements Synth {
             final int numA4 = 69;
             final int numNote = 12;
             final double freqA4 = 440;
-            float freq = (float) (Math.pow(2, (double) (x.getX() - numA4) / numNote) * freqA4);
+            final float freq = (float) (Math.pow(2, (double) (x.getX() - numA4) / numNote) * freqA4);
             keys.put(x.getX(), createNoteBuffer(env, freq, x.getY(), waves, nlfo, vlfo, offsets));
         });
     }

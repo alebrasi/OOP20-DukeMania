@@ -17,9 +17,10 @@ public class Engine {
     private static final AudioDevice AD = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
     private final float [] buffer = new float[Settings.BUFFER_LENGHT];
 
-    private float step = 0, vol = 0;
-    private int old = 0;
-    private int att = 0;
+    private float step;
+    private float vol;
+    private int old;
+    private int att;
 
     /**
      * Returns a synthesizer from the synthesizer list a a give position.
@@ -35,10 +36,10 @@ public class Engine {
      */
     public void playBuffer() {
 
-        int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
+        final int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
         if (old > 0 && old != num) {
             att = 100;
-            step = ((regulateVolume(num)) - vol) / att;
+            step = (regulateVolume(num) - vol) / att;
         } else {
             vol = regulateVolume(num);
         }
@@ -60,16 +61,16 @@ public class Engine {
      */
 
     public Synth addSynth(final ParsedTrack track) {
-        var actualTrack = (KeyboardTrack) track;
-        List<Pair<Integer, Long>> notes = new ArrayList<>();
+        final var actualTrack = (KeyboardTrack) track;
+        final List<Pair<Integer, Long>> notes = new ArrayList<>();
         actualTrack.getNotesMaxDuration().forEach((key, value) -> {
-            notes.add(new Pair<>(key, (value / 1000)));
+            notes.add(new Pair<>(key, value / 1000));
         });
 
-        Instrument serializedInstrument = new Instrument((InstrumentType) actualTrack.getInstrument());
+        final Instrument serializedInstrument = new Instrument((InstrumentType) actualTrack.getInstrument());
 
         try {
-            var synth = serializedInstrument.getSynthetizer().build(notes);
+            final var synth = serializedInstrument.getSynthetizer().build(notes);
             synthetizers.add(synth);
             return synth;
         } catch (Exception e) {
@@ -84,7 +85,7 @@ public class Engine {
      * @return the drum synthesizer added
      */
     public Synth addDrum() {
-        var asd = new DrumSynth();
+        final var asd = new DrumSynth();
         synthetizers.add(asd);
         return asd;
     }
