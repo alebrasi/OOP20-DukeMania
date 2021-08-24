@@ -10,7 +10,7 @@ public enum DrumSamples implements Iterator<Float> {
     /**
      * A standard Drum Kick.
      */
-    Kick,
+    Bass,
     /**
      * A drum snare or hand clap.
      */
@@ -22,11 +22,15 @@ public enum DrumSamples implements Iterator<Float> {
     /**
      * A standard tom drum.
      */
-    Tom;
+    Tom,
+    /**
+     * Empty buffer for unused.
+     */
+    Empty;
+
     /**
      * An iterator containing the pre-loaded drum samples.
      */
-
     private BufferManager<Float> sampleBuffer;
 
     /**
@@ -82,7 +86,7 @@ public enum DrumSamples implements Iterator<Float> {
         for (int i = 0; i < buff.length; i++) {
             buff[i] = WaveTable.Square.getAt((int) ((pos = pos + step * lfoOsc1.apply((long) i)) % Settings.WAVETABLE_SIZE));
         }
-        Kick.sampleBuffer = new Enveloper(10l, 1f, 100l).createBufferManager(buff);
+        Bass.sampleBuffer = new Enveloper(10l, 1f, 100l).createBufferManager(buff);
     }
 
     /**
@@ -99,10 +103,19 @@ public enum DrumSamples implements Iterator<Float> {
         Tom.sampleBuffer = new Enveloper(10l, 1f, 100l).createBufferManager(buff);
     }
 
+    /**
+     * Load the empty drumSample.
+     */
+    static void getEmpty() {
+        double[] buff = new double[10000];
+        Empty.sampleBuffer = new Enveloper(10l, 1f, 100l).createBufferManager(buff);
+    }
+
     static {
         getSnare();
         getHat();
         getKick();
         getTom();
+        getEmpty();
     }
 }

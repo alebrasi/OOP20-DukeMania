@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -42,9 +41,9 @@ public class TestClass {
         LongStream.range(0, 1000000).forEach(x -> ds.getSample());
         Assertions.assertEquals(0, ds.checkKeys());
 
-        ds.playPercussion(DrumSamples.Kick);
+        ds.playPercussion(DrumSamples.Bass);
         IntStream.range(0, 1000).forEach(x -> ds.getSample());
-        ds.playPercussion(DrumSamples.Kick);
+        ds.playPercussion(DrumSamples.Bass);
         Assertions.assertTrue(IntStream.range(0, Settings.ATTENUATION - 1).mapToDouble(x -> ds.getSample()).sum() != 0);
         Assertions.assertTrue(checkTolerance(ds.getSample(), 0.0));
         Assertions.assertTrue(ds.getSample() > 0.0);
