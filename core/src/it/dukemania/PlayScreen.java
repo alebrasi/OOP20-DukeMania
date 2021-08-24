@@ -262,7 +262,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
                 if (!n.getKeyboard().get().isButtonPressed(this.numberOfColumns) && n.isPressed()) {
                     n.setIsPressed(false);
                     n.getKey().get().finishPressing(this.startTime);
-                    this.score += this.logic.verifyNote(n.getColumn(), n.getKey().get().getInitialTime() * 1000 - this.shift.getTimeShift(), (n.getKey().get().getFinalTime()) * 1000 - this.shift.getTimeShift());
+                    this.score += this.logic.verifyNote(n.getColumn(), n.getKey().get().getInitialTime() * 1000, (n.getKey().get().getFinalTime()) * 1000);
                 }
 
             }

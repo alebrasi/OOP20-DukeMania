@@ -11,7 +11,6 @@ public class ComputingShiftImpl implements ComputingShift {
     private static final int SPARK_HEIGHT = 70;
     private static final int DURATION_OFFSET = 5500;
     private static final int NOTE_START_OFFSET = 2500;
-    private static final int TIME_SHIFT = 250_000;
     private static final int SHIFT_5_COLUMN = 20;
     private static final int SHIFT_6_COLUMN = 9;
 
