@@ -27,8 +27,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     private ScoreContext context;
 
     public ColumnLogicImpl(final int columnNumber) {
-        this.columnNumber = (columnNumber <= COLUMN_MAX_CAP && columnNumber >= COLUMN_MIN_CAP)
-                        ? columnNumber : COLUMN_MIN_CAP;
+        setColumnNumber(columnNumber);
         this.noteRanges = new ArrayList<>();
         contextInit();
     }
