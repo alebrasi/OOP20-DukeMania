@@ -23,6 +23,8 @@ import javax.sound.midi.Track;
 
 import org.junit.jupiter.api.Test;
 
+import it.dukemania.audioengine.DrumSamples;
+
 class TestMidiParser {
 
     /**
@@ -103,6 +105,8 @@ class TestMidiParser {
         song1.getTracks().get(3).getNotes().forEach(n -> assertTrue(n instanceof PercussionNote));
         assertEquals(((PercussionNote) song1.getTracks().get(3).getNotes().get(0)).getInstrument(), Percussion.CLAVES);
         assertEquals(((PercussionNote) song1.getTracks().get(3).getNotes().get(1)).getInstrument(), Percussion.HIGH_TOM);
+        assertEquals(((PercussionNote) song1.getTracks().get(3).getNotes().get(1)).getInstrument().getAssociated(),
+                DrumSamples.Tom);
         assertEquals(tracks.get(1).getNotesMaxDuration(), new HashMap<>(Map.of(
             tracks.get(1).getNotes().get(1).getIdentifier(), tracks.get(1).getNotes().get(1).getDuration().get(),
             tracks.get(1).getNotes().get(2).getIdentifier(), tracks.get(1).getNotes().get(2).getDuration().get(),

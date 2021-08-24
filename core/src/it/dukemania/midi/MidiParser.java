@@ -27,6 +27,10 @@ public final class MidiParser implements Parser {
 
     private MidiParser() { }
 
+    /**
+     * this method makes sure that exist only one instance of midiParser and returns it.
+     * @return an instance of MidiParser
+     */
     public static MidiParser getInstance() {
         if (instance == null) {
             instance = new MidiParser();
@@ -71,21 +75,20 @@ public final class MidiParser implements Parser {
             System.out.println();
             */
         }
-        // CREO LA SONG
-        //TODO nel test controlla come si comporta con due tracce diverse con lo stesso canale
         channelMap.forEach((k, v) -> myTracks.add(FactoryConfigurator.getFactory(k).createTrack(v.getX(), v.getY(), k)));
-        myTracks.removeIf(x -> x.getNotes().size() == 0);               //rimozione eventuali tracce vuote
+        //rimozione eventuali tracce vuote
+        myTracks.removeIf(x -> x.getNotes().size() == 0);
         //rimozione eventuali note rimaste senza durata
         myTracks.forEach(t -> t.getNotes().removeIf(n -> n.getDuration().isEmpty()));
         myTracks.sort((t1, t2) -> t1.getChannel() - t2.getChannel());
-        return new Song(myMidi.getName(), sequence.getMicrosecondLength(), myTracks, bpm);    // per titolo da nomefile
+        return new Song(myMidi.getName(), sequence.getMicrosecondLength(), myTracks, bpm);
     }
 
 
     /**
      * this method calculate time in microseconds.
-     * @param tick
-     * @param microsecPerTick
+     * @param tick the time expressed in midi tick for which we will calculate the time in microseconds
+     * @param microsecPerTick the number of microseconds that compose a tick
      * @return time in microsec
      */
     private long calcTime(final long tick, final double microsecPerTick) {
@@ -95,8 +98,8 @@ public final class MidiParser implements Parser {
 
     /**
      * this method calculate bpm.
-     * @param data
-     * @return bpm
+     * @param data the byte array that rapresent the bpm
+     * @return bpm as a decimal double
      */
     private static double calcBpm(final byte[] data) {
         final ByteBuffer microsecPerBeat = ByteBuffer.allocate(Integer.BYTES);
@@ -106,8 +109,8 @@ public final class MidiParser implements Parser {
     }
 
     /**
-     * this method tells if sm is a useful message.
-     * @param sm
+     * this method tells if the short message given is a message that contains a note or an instrument event.
+     * @param sm the short message to analyze
      * @return a boolean which is true if the message is a note or instrument message
      */
     private static boolean isNoteOrInsrument(final MidiMessage sm) {
@@ -117,11 +120,11 @@ public final class MidiParser implements Parser {
 
 
     /**
-     * this method add a note to its track.
-     * @param sm
-     * @param notes
-     * @param factory
-     * @param time
+     * this method add a note to the given list.
+     * @param sm the short message which contain the note event info
+     * @param notes the list of notes in which the note will be added
+     * @param factory the correct factory for the note creation
+     * @param time the time in which the event take place in microseconds 
      */
     private static void addNote(final ShortMessage sm, final List<AbstractNote> notes, final AbstractFactory factory, 
             final long time) {

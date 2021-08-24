@@ -95,7 +95,6 @@ public class PlayScreen implements Window {
         batch.dispose();
         backgroundBatch.dispose();
         this.startTime = 0;
-        super.dispose();
     }
 
     public PlayScreen() {
