@@ -86,6 +86,8 @@ Il Model principale, rappresentato da GameModel, conterrà le configurazioni di 
 La classe WindowManager implementa l'interfaccia SwitchWindowNotifier, il cui compito principale e' quello di notificare il WindowManager, segnalandogli che un controller di una View vuole sostituire la finestra attiva.
 Tutte le View implementano l'interfaccia Window, la quale le rende predisposte a ricevere i dati del Model, e ad utilizzare lo SwitchWindowNotifier tramite il proprio controller.
 Utilizzando questa strategia è semplice aggiungere nuove View e definirne il comportamento.
+Un sistema di window-switching è già implementato in LibGDX ma, al fine di rendere il più riutilizzabile possibile e platform-indipendent 
+questa meccanica, è stato deciso di implementare una versione generale che può essere applicata a qualsiasi tipo di libreria grafica.
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.7]{\pathgenerale architettura.png}}
 	\caption{Schema UML dell'architettura MVC.}
@@ -115,13 +117,25 @@ Per impostare correttamente tutti i parametri dei sintetizzatori di tastiera ho 
 \end{figure}
 \clearpage
 \subsubsection{DrumSynth}
-Nel caso del sintetizzatore per le percussioni, le varie istanze di BufferManager sono presenti come campo read only dell'enum DrumSamples. Ho scelto di utilizzare questo enum come pattern "singleton" in quanto non richiede l' istanziazione di oggetto, e perchè le percussioni non cambiano tra i diversi file Midi, a differenza delle note di diversa lunghezza.
+Nel caso del sintetizzatore per le percussioni, le varie istanze di BufferManager sono presenti come campo read only dell'enum DrumSamples. Ho scelto di utilizzare questo enum come pattern "singleton" in quanto non richiede l' istanziazione di oggetto, e perchè le percussioni non cambiano tra i diversi file Midi, a differenza delle note le quali hanno lunghezze diverse.
 L'unico metodo esterno all'interfaccia Synth e' playPercussion, il quale si occupa di ri-iniziare la riproduzione di un elemento della batteria. \\
 \\ \\ \\
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.7]{\pathgianluca drum_singleton}}
 	\caption{Schema UML del Singleton Drum Samples.}
 	\label{img:drumSingleton}
+\end{figure}
+\clearpage
+\subsubsection{Creazione delle note e timbri sonori}
+Durante il caricamento, i sintetizzatori utilizzano l'enum Wavetables, contenente le varie forme audio utilizzabili assumibili dalle note; queste forme sono caricate all'avvio in array, i quali possono essere letti in intervalli più o meno distaccati per simulare le varie frequenze.
+Per differenziare i timbri sonori faccio uso degli LFO, funzioni adibite al cambio del tono e del volume nel tempo. Ho deciso di utilizzare il pattern "static factory" a causa della necessità di essere utilizzata senza istanze.
+Per aggiungere funzioni LFO in futuro, e avere ancora più varietà del suono,
+SynthBuilder utilizza una strategy con "Function Long,Float" come interfaccia funzionale, la funzione che rappresenta l'LFO. 
+\\ \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathgianluca wavetables}}
+	\caption{Schema UML dell'interazione tra LFOFactory, keyboardSynth e Wavetable.}
+	\label{img:wavetables}
 \end{figure}
 \clearpage
 \subsection{membro 2}
@@ -178,9 +192,13 @@ Per il DVCS è stato utilizzato git, in quanto è stato il Software spiegato a l
 \newpage
 
 \subsection*{Suddivisione del lavoro}
-\subsection{membro 1}
-Sviluppo del Motore Audio, ideazione della gestione delle note, studi matematici per la rappresentazione di onde audio a partire da funzioni.
-Gestione dei volumi delle note e delle percussioni, sviluppo di filtri e funzioni per garantire varietà tra i timbri sonori. \\ \\
+\subsection{Gianluca Migliarini}
+
+In questo progetto, mi sono dedicato principalmente della riproduzione audio.
+Gli oggetti principali del mio package sono i Synth, i quali sono in grado, alla chiamata di un metodo, di restituire un campione audio ottenuto dalla somma di tutte le note o percussioni che stanno suonando simultaneamente.
+La classe Engine, si occupa di ottenere i campioni dai vari sintetizzatori, comporre il buffer audio, regolarne il volume e riprodurlo in uscita.
+Mi sono inoltre dedicato allo sviluppo di delle classi LFOFactory ed Enveloper, per, rispettivamente aggiungere varietà ai timbri sonori e per regolare il volume delle singole note in entrata e in uscita al fine di eliminare i "click" audio, sgradevoli all'udito.
+Infine, per semplificare la gestione delle forme audio da caricare nelle note, ho sviluppato l'enum read-only WaveTable. \\ \\
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
 	\begin{itemize}
@@ -191,7 +209,6 @@ Classi sviluppate singolarmente:
 		\item Filters
 		\item KeyboardSynth
 		\item LFOFactory
-		\item PlayerAudio
 		\item Settings
 		\item SynthBuilder
 		\item WaveTable
@@ -203,7 +220,11 @@ problemi
 \newpage
 
 \subsection{membro 2}
-ha fatto questo bla bla bla \\ \\
+Per questo progetto mi sono focalizzato principalmente sugli aspetti di logica del gioco, comprendenti la gestione di tracce e note e della precisione, sia nell'aspetto audio-video che nel calcolo dei punteggi di gioco. Per quanto concerne l'aspetto delle tracce la classe fondamentale da me implementata è TrackFilterImpl che, fornita in input una Song, ottenuta dal midiParser, riduce il numero di note presenti in ogni sua traccia in modo da renderle giocabili. Ho provato diverse strategie per ridurre il numero delle note in modo da ottenere tracce con una distribuzione di note uniforme nel tempo e con quantitativi di note quanto più possibile differente per fornire più scelta al giocatore. Questa classe è stata particolarmente facile da integrare in quanto si occupa di elaborare dati già esistenti e a restituirli come era stato previsto in fase di progettazione. Per le note e il calcolo del punteggio ho realizzato un unica classe principale ColumnLogicImpl che divide le note nelle varie colonne grafiche eliminando le eventuali collisioni e, utilizzando la classe secondaria NoteRange, permette di fornire un punteggio per ogni nota premuta durante il gioco sulla base della configurazione del calcolo scelta tra le classi di calcolo del punteggio. Anche in questo caso l'obiettivo è stato quello di ottenere una distribuzione uniforme tra le varie colonne delle note e di fornire un attribuzione del punteggio che considerasse eventuali imprecisioni sulla pressione delle note durante il gioco. Questa classe è stata particolarmente difficile da finalizzare per una divergenza di classi/interfacce tra la parte logica e grafica, ed è stato quindi necessario creare una classe intermediaria LogicNoteImpl e dei metodi aggiuntivi in grado di fornire i dati mancanti per permettere un integrazione tra le due parti.  
+In merito agli aspetti di precisione audio-video ho sviluppato la classe PlayerAudio che suona le note in base al tempo trascorso dall'inizio della traccia, ottimizzando la latenza tra ciò che appare a schermo e l'audio di gioco creando una relazione tra l'aspetto grafico e quello audio.
+L'integrazione di questa classe non ha generato particolari problemi se non la necessità di avere una conoscenza superficiale del funzionamento delle altre classi presenti nell'audioengine.
+L'ultima parte sviluppata singolarmente è quella relativa alla classe GameUtilitiesImpl, utilizzata per attribuire a ogni traccia restituita dal trackFilter una difficoltà basata sul numero di note.
+ \\ \\
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
 	\begin{itemize}
