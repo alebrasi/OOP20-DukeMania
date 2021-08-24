@@ -23,7 +23,7 @@ public class DukeMania extends ApplicationAdapter {
     private final GameModel data = new GameModel();
 
     @Override
-    public void create() {
+    public final void create() {
         Skin skin = AssetsManager.getInstance().getSkin("skin_menu");
         Window songSelectionScreen = null;
         Window titleScreen = new TitleWindow(MENU_BACKGROUND_IMAGE_PATH, skin);
@@ -48,17 +48,17 @@ public class DukeMania extends ApplicationAdapter {
     }
 
     @Override
-    public void render() {
+    public final void render() {
         wdm.render();
     }
 
     @Override
-    public void resize(final int width, final int height) {
+    public final void resize(final int width, final int height) {
         wdm.resize(width, height);
     }
 
     @Override
-    public void dispose() {
+    public final void dispose() {
         wdm.dispose();
         AssetsManager.getInstance().dispose();
     }

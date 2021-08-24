@@ -26,7 +26,6 @@ public enum WaveTable {
 
     private final float [] wave = new float [(int) Settings.WAVETABLE_SIZE];
 
-    //Sine.wave[(int) i] =        (float) (1*(Math.sin(2.0 * Math.PI * Sine.wave[(int) i] * period + 1 * Math.sin(2*Math.PI*rnd.nextFloat()*period)) * Settings.MAX_VOLUME));
 
     static {
         float initFreq = (float) (1d / (Settings.WAVETABLE_SIZE / Settings.SAMPLE_RATE));
@@ -34,11 +33,11 @@ public enum WaveTable {
         Random rnd = new Random();
 
         for (float i = 0; i < Settings.WAVETABLE_SIZE; i++) {
-            Triangle.wave[(int) i] =    (float) (2 / Math.PI * Math.asin(Math.sin(2 * Math.PI * i / period)) * Settings.MAX_VOLUME);
-            Saw.wave[(int) i] =         (float) (-2 / Math.PI * Math.atan(1 / Math.tan(Math.PI * i / period)) * Settings.MAX_VOLUME);
-            Sine.wave[(int) i] =        (float) (Math.sin(2.0 * Math.PI * i / period) * Settings.MAX_VOLUME);
-            Square.wave[(int) i] =      (float) (i < period / 2 ? 1 : -1 * Settings.MAX_VOLUME);
-            Noise.wave[(int) i] =       rnd.nextFloat();
+            Triangle.wave[(int) i] = (float) (2 / Math.PI * Math.asin(Math.sin(2 * Math.PI * i / period)) * Settings.MAX_VOLUME);
+            Saw.wave[(int) i] =      (float) (-2 / Math.PI * Math.atan(1 / Math.tan(Math.PI * i / period)) * Settings.MAX_VOLUME);
+            Sine.wave[(int) i] =     (float) (Math.sin(2.0 * Math.PI * i / period) * Settings.MAX_VOLUME);
+            Square.wave[(int) i] =   (float) (i < period / 2 ? 1 : -1 * Settings.MAX_VOLUME);
+            Noise.wave[(int) i] =    rnd.nextFloat();
         }
     }
 

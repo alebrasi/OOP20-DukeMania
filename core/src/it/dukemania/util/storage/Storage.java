@@ -3,7 +3,6 @@ package it.dukemania.util.storage;
 import com.badlogic.gdx.files.FileHandle;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface Storage {

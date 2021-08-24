@@ -14,7 +14,8 @@ public class SongInfo {
     private final double bpm;
     private final String songHash;
 
-    public SongInfo(final String title, final String songHash, final double duration, final List<TrackInfo> tracks, final double bpm) {
+    public SongInfo(final String title, final String songHash, final double duration, final List<TrackInfo> tracks,
+            final double bpm) {
         this.title = title;
         this.duration = duration;
         this.tracks = tracks;

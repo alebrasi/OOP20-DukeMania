@@ -8,6 +8,11 @@ import java.io.IOException;
 
 public class TrackSerializer extends StdSerializer<TrackInfo> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 9011388367001622959L;
+
     public TrackSerializer() {
         this(null);
     }

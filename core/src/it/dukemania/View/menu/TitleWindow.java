@@ -11,7 +11,7 @@ import it.dukemania.windowmanager.DukeManiaWindowState;
 
 public class TitleWindow extends AbstractView {
 
-    public TitleWindow(String backgroundPath, Skin skin) {
+    public TitleWindow(final String backgroundPath, final Skin skin) {
         super(backgroundPath, skin);
     }
 

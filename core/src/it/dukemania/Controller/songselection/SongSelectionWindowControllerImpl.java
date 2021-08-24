@@ -1,12 +1,10 @@
 package it.dukemania.Controller.songselection;
 
-import com.badlogic.gdx.files.FileHandle;
 import it.dukemania.Controller.logic.*;
 import it.dukemania.Model.GameModel;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.ConfigurationsModelImpl;
 import it.dukemania.Model.serializers.song.TrackInfo;
-import it.dukemania.Model.serializers.synthesizer.SynthInfo;
 import it.dukemania.audioengine.*;
 import it.dukemania.midi.*;
 import it.dukemania.util.storage.Storage;
@@ -18,8 +16,6 @@ import it.dukemania.windowmanager.SwitchWindowNotifier;
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -38,7 +34,6 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     private final StorageFactory storageFactory = new StorageFactoryImpl();
     private final Storage externalStorage = storageFactory.getExternalStorage();
     private final Storage configurationStorage = storageFactory.getConfigurationStorage();
-    private final Storage assetStorage = storageFactory.getAssetStorage();
 
     private SongInfo currentSong;
     private final List<SongInfo> songsConfigurations;
@@ -52,7 +47,6 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     private final ConfigurationsModelImpl configurationModel = new ConfigurationsModelImpl(configurationStorage);
 
     private String path;
-    private Song selectedSong;
     private final GameModel data;
 
     public SongSelectionWindowControllerImpl(final GameModel data) throws NoSuchAlgorithmException {

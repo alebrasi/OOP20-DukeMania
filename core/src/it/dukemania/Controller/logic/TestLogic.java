@@ -27,7 +27,7 @@ public class TestLogic {
         //generate notes for testing
         List<AbstractNote> testNotes = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
-            testNotes.add(new Note(Optional.of(2000000L), i, 0));
+            testNotes.add(new Note(Optional.of(2_000_000L), i, 0));
         }
         return testNotes;
     }

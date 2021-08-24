@@ -1,11 +1,9 @@
 package it.dukemania.audioengine;
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import it.dukemania.util.Pair;
 import org.junit.Test;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -14,7 +14,8 @@ public class TrackInfo {
     private final DifficultyLevel difficulty;
 
 
-    public TrackInfo(final int channel, final String trackName, final InstrumentType instrument, final DifficultyLevel difficulty) {
+    public TrackInfo(final int channel, final String trackName, final InstrumentType instrument, 
+            final DifficultyLevel difficulty) {
         this.trackName = trackName;
         this.instrument = instrument;
         this.trackID = channel;

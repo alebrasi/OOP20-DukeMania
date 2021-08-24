@@ -12,6 +12,11 @@ import java.io.IOException;
 
 public class EnveloperDeserializer extends StdDeserializer<Enveloper> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 466673112602165533L;
+
     public EnveloperDeserializer() {
         this(null);
     }
@@ -21,7 +26,8 @@ public class EnveloperDeserializer extends StdDeserializer<Enveloper> {
     }
 
     @Override
-    public Enveloper deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Enveloper deserialize(final JsonParser p, final DeserializationContext ctxt) 
+            throws IOException, JsonProcessingException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
 

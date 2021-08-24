@@ -17,6 +17,11 @@ import java.util.List;
 
 public class SynthesizerInfoDeserializer extends StdDeserializer<SynthInfo> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2612924517909551295L;
+
     public SynthesizerInfoDeserializer() {
         this(null);
     }
@@ -26,7 +31,8 @@ public class SynthesizerInfoDeserializer extends StdDeserializer<SynthInfo> {
     }
 
     @Override
-    public SynthInfo deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public SynthInfo deserialize(final JsonParser p, final DeserializationContext ctxt) 
+            throws IOException, JsonProcessingException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
         ObjectMapper mapper = new ObjectMapper();
@@ -38,7 +44,8 @@ public class SynthesizerInfoDeserializer extends StdDeserializer<SynthInfo> {
         JavaType listTrackType = mapper.constructType(new TypeReference<List<InstrumentType>>() {
         });
 
-        List<InstrumentType> associatedInstruments = mapper.readValue(mapper.treeAsTokens(node.get("associatedInstruments")), listTrackType);
+        List<InstrumentType> associatedInstruments = mapper.readValue(mapper
+                                                                 .treeAsTokens(node.get("associatedInstruments")), listTrackType);
 
         return new SynthInfo(node.get("presetName").asText(), synth, associatedInstruments);
     }

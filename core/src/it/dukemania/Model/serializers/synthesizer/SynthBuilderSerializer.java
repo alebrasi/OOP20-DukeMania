@@ -9,6 +9,11 @@ import java.io.IOException;
 
 public class SynthBuilderSerializer extends StdSerializer<SynthBuilderImpl> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4194353165221206372L;
+
     public SynthBuilderSerializer() {
         this(null);
     }
@@ -18,7 +23,8 @@ public class SynthBuilderSerializer extends StdSerializer<SynthBuilderImpl> {
     }
 
     @Override
-    public void serialize(final SynthBuilderImpl value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+    public void serialize(final SynthBuilderImpl value, final JsonGenerator gen, final SerializerProvider provider)
+            throws IOException {
 
         float[] args = {0.2f, 3.2f};
 

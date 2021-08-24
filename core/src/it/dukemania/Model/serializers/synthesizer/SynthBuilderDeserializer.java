@@ -17,6 +17,11 @@ import java.util.function.Function;
 
 public class SynthBuilderDeserializer extends StdDeserializer<SynthBuilderImpl> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1025096348936099734L;
+
     public SynthBuilderDeserializer() {
         this(null);
     }
@@ -26,7 +31,8 @@ public class SynthBuilderDeserializer extends StdDeserializer<SynthBuilderImpl> 
     }
 
     @Override
-    public SynthBuilderImpl deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public SynthBuilderImpl deserialize(final JsonParser p, final DeserializationContext ctxt) 
+            throws IOException, JsonProcessingException {
         SynthBuilderImpl synth = new SynthBuilderImpl();
 
         ObjectCodec codec = p.getCodec();

@@ -17,48 +17,49 @@ public class ComputingShiftImpl implements ComputingShift {
 
     //this method calculates the displacement of the position of the buttons as a function of the number of columns
     @Override
-    public int calculateShifting(final int numberOfColumns) {
-        return numberOfColumns == 4 || numberOfColumns == 8 ? 0 : numberOfColumns == Columns.COLUMN_5.getNumericValue() ? ComputingShiftImpl.SHIFT_5_COLUMN : numberOfColumns == Columns.COLUMN_7.getNumericValue() 
+    public final int calculateShifting(final int numberOfColumns) {
+        return numberOfColumns == 4 || numberOfColumns == 8 ? 0 : numberOfColumns == Columns.COLUMN_5.getNumericValue() 
+                ? ComputingShiftImpl.SHIFT_5_COLUMN : numberOfColumns == Columns.COLUMN_7.getNumericValue() 
                 ? 4 : ComputingShiftImpl.SHIFT_6_COLUMN;
     }
 
     @Override
-    public int getNoteShift() {
+    public final int getNoteShift() {
         return ComputingShiftImpl.NOTE_SHIFT;
     }
 
     @Override
-    public int getSparksHeight() {
+    public final int getSparksHeight() {
         return ComputingShiftImpl.SPARK_SPACE;
     }
 
     @Override
-    public int getScoreboardHeight() {
+    public final int getScoreboardHeight() {
         return ComputingShiftImpl.SCOREBOARD_HEIGHT;
     }
 
     @Override
-    public float getFontAccuracy() {
+    public final float getFontAccuracy() {
         return ComputingShiftImpl.FONT_ACCURACY;
     }
 
     @Override
-    public int getHorizontalSparkShift() {
+    public final int getHorizontalSparkShift() {
         return ComputingShiftImpl.HORIZONTAL_SPARK_SHIFT;
     }
 
     @Override
-    public int getySpark() {
+    public final int getySpark() {
         return ComputingShiftImpl.SPARK_HEIGHT;
     }
 
     @Override
-    public int getDurationOffset() {
+    public final int getDurationOffset() {
         return ComputingShiftImpl.DURATION_OFFSET;
     }
 
     @Override
-    public int getNoteStartOffset() {
+    public final int getNoteStartOffset() {
         return ComputingShiftImpl.NOTE_START_OFFSET;
     }
 

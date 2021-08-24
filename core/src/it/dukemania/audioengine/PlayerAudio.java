@@ -1,6 +1,5 @@
 package it.dukemania.audioengine;
 
-import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.Song;
 
 import java.time.Instant;
@@ -10,16 +9,16 @@ import java.util.List;
 public class PlayerAudio implements Player {
 
     private final Engine audioEngine = new Engine();
-    private final List<PlayableTrack<AbstractNote>> trak = new ArrayList<>();
+    private final List<PlayableTrack> playableTracks = new ArrayList<>();
     private long startMillis;
 
     /**
-     * Create the audio player that will play a Song parsed froma midi file.
-     * @param canzone the song
+     * Create the audio player that will play a Song parsed from a MIDI file.
+     * @param song the song
      */
-    public PlayerAudio(final Song canzone) {
+    public PlayerAudio(final Song song) {
 
-        canzone.getTracks().forEach(track -> trak.add(new PlayableTrack<>() {
+        song.getTracks().forEach(track -> playableTracks.add(new PlayableTrack() {
 
             private final Synth synthesizer = track.getChannel() == 10 ? audioEngine.addDrum() : audioEngine.addSynth(track);
             private int curr;
@@ -48,7 +47,7 @@ public class PlayerAudio implements Player {
     @Override
     public final void playNotes() {
         this.startMillis = this.startMillis == 0 ? Instant.now().toEpochMilli() : this.startMillis;
-        trak.stream()
+        playableTracks.stream()
         .filter(PlayableTrack::hasNext)
         .forEach(x -> x.update(Instant.now().toEpochMilli() - this.startMillis));
         audioEngine.playBuffer();

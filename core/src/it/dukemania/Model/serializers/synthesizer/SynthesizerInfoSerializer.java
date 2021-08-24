@@ -8,6 +8,11 @@ import java.io.IOException;
 
 public class SynthesizerInfoSerializer extends StdSerializer<SynthInfo> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5380652927214390448L;
+
     public SynthesizerInfoSerializer() {
         this(null);
     }

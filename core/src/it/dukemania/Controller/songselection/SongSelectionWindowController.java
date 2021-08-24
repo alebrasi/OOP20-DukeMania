@@ -1,7 +1,6 @@
 package it.dukemania.Controller.songselection;
 
 import it.dukemania.Model.serializers.song.SongInfo;
-import it.dukemania.Model.serializers.song.TrackInfo;
 import it.dukemania.midi.InstrumentType;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
 

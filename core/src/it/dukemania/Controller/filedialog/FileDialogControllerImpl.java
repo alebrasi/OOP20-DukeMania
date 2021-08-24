@@ -46,7 +46,8 @@ public class FileDialogControllerImpl implements FileDialogController {
 
     @Override
     public void stepBackFromCurrentDirectory() {
-        Matcher matcher = removeLastDirectoryRegex.matcher(this.currentDirectory.substring(0, this.currentDirectory.length() - 1));
+        Matcher matcher = removeLastDirectoryRegex.matcher(this.currentDirectory
+                                                    .substring(0, this.currentDirectory.length() - 1));
         if (matcher.find()) {
             this.currentDirectory = matcher.group();
         }

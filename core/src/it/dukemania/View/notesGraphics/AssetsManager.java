@@ -27,13 +27,9 @@ public final class AssetsManager {
 
 
 
-    //private final String ATLAS_PATH = "textures/quantum-horizon-ui.atlas";
-    private final String TEXTURE_JSON_PATH = "json/quantum-horizon-ui.json";
-    private final String MENU_BACKGROUND_IMAGE_PATH = "DukeMania.png";
-    private final String FONT_PATH = "fonts/agency-fb.ttf";
-    private final static int fontSize = 50;
+    private static final int FONT_SIZE_MENU = 50;
     private static float fontBorderWidth = 0.5f;
-    private final static Color fontColor = Color.BLACK;
+    private static final Color FONT_COLOR = Color.BLACK;
     private static FreeTypeFontGenerator generator;
     private static final int FONT_SIZE = 40;
 
@@ -136,11 +132,13 @@ public final class AssetsManager {
      * load all the TextureAtlas.
      */
     public void loadTextureAtlas() {
-        textureAtlasAssociations.put("pinkAndBlueButtons.atlas", new TextureAtlas(Gdx.files.internal("atlas/pinkAndBlueButtons.atlas")));
-        textureAtlasAssociations.put("quantum-horizon-ui.atlas", new TextureAtlas(Gdx.files.internal("atlas/quantum-horizon-ui.atlas")));
+        textureAtlasAssociations.put("pinkAndBlueButtons.atlas",
+                new TextureAtlas(Gdx.files.internal("atlas/pinkAndBlueButtons.atlas")));
+        textureAtlasAssociations.put("quantum-horizon-ui.atlas",
+                new TextureAtlas(Gdx.files.internal("atlas/quantum-horizon-ui.atlas")));
     }
-    
-    
+
+
     /***
      * 
      * @param jsonStr
@@ -163,9 +161,9 @@ public final class AssetsManager {
     private BitmapFont generateFontMenu() {
         generator = getBitmapFont("agency-fb.ttf");
         final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = fontSize;
+        parameter.size = FONT_SIZE_MENU;
         parameter.borderWidth = fontBorderWidth;
-        parameter.color = fontColor;
+        parameter.color = FONT_COLOR;
         final BitmapFont font = generator.generateFont(parameter);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 

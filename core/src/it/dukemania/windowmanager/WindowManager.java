@@ -8,20 +8,20 @@ public class WindowManager implements SwitchWindowNotifier {
     private final HashMap<Integer, Window> windows = new HashMap<>();
     private Window currentWindow;
 
-    public void render() {
+    public final void render() {
         currentWindow.render();
     }
 
-    public void resize(final int width, final int height) {
+    public final void resize(final int width, final int height) {
         currentWindow.resize(width, height);
     }
 
-    public void addWindow(final Window window, final WindowState associatedState) {
+    public final void addWindow(final Window window, final WindowState associatedState) {
         window.setWindowListener(this);
         windows.put(associatedState.getStateValue(), window);
     }
 
-    public void switchWindow(final WindowState state, final GameModel data) {
+    public final void switchWindow(final WindowState state, final GameModel data) {
         Window prevWindow = currentWindow;
         currentWindow = windows.get(state.getStateValue());
         currentWindow.receiveData(data);
@@ -33,7 +33,7 @@ public class WindowManager implements SwitchWindowNotifier {
 
     }
 
-    public void dispose() {
+    public final void dispose() {
         currentWindow.dispose();
     }
 }

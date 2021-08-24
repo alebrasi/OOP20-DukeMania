@@ -2,8 +2,9 @@ package it.dukemania.audioengine;
 
 import it.dukemania.util.Pair;
 
-import java.util.*;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -19,7 +20,9 @@ public class KeyboardSynth implements Synth {
                                                          final Function<Long, Float> noteLFO,
                                                          final Function<Long, Float> volumeLFO,
                                                          final double [] offsets) {
-        double[] steps = Arrays.stream(offsets).map(x -> ((Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE)).toArray();
+        double[] steps = Arrays.stream(offsets)
+                                .map(x -> ((Settings.WAVETABLE_SIZE * (x * freq)) / Settings.SAMPLE_RATE))
+                                .toArray();
         final double[] positions = new double[steps.length];
         long total = (long) (time * Settings.SAMPLESPERMILLI + env.getTime() + 1000);
         double [] buff = LongStream.range(0, total).mapToDouble(

@@ -14,7 +14,7 @@ import java.util.List;
 public class Engine {
 
     private final List<Synth> synthetizers = new ArrayList<>();
-    private static final AudioDevice ad = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
+    private static final AudioDevice AD = Gdx.audio.newAudioDevice((int) Settings.SAMPLE_RATE, true);
     private final float [] buffer = new float[Settings.BUFFER_LENGHT];
 
     private float step = 0, vol = 0;
@@ -31,7 +31,7 @@ public class Engine {
     }
 
     /**
-     * Calculates and plays a bufffer to the LibGDX audio device.
+     * Calculates and plays a buffer to the LibGDX audio device.
      */
     public void playBuffer() {
 
@@ -48,7 +48,7 @@ public class Engine {
             buffer[i] = (float) (synthetizers.stream().mapToDouble(Synth::getSample).sum()) * vol;
         }
 
-        ad.writeSamples(buffer, 0, buffer.length);
+        AD.writeSamples(buffer, 0, buffer.length);
         old = num;
 
     }
@@ -56,6 +56,7 @@ public class Engine {
     /**
      * Add a standard keyboard synthesizer to the synthesizer list.
      * @param track the track that the synth will play
+     * @return the synth 
      */
 
     public Synth addSynth(final ParsedTrack track) {

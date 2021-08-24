@@ -34,7 +34,8 @@ public final class Filters {
             return;
         }
         for (float i = 0; i < carrier.length; i++) {
-            carrier[(int) i] = (float) (1 * (Math.sin(2.0 * Math.PI * carrier[(int) i] * period + 1 * Math.sin(2 * Math.PI * modulator[(int) i] * period))));
+            carrier[(int) i] = (float) (1 * (Math.sin(2.0 * Math.PI * carrier[(int) i] 
+                    * period + 1 * Math.sin(2 * Math.PI * modulator[(int) i] * period))));
         }
     }
 

@@ -6,11 +6,13 @@ public interface Key {
 
     /***
      * set the time when you start to press a button.
+     * @param startTime
      */
     void startPressing(long startTime);
 
     /***
      * set the time when you finish to press a button.
+     * @param startTime
      */
     void finishPressing(long startTime);
 

@@ -8,6 +8,11 @@ import java.io.IOException;
 
 public class SongSerializer extends StdSerializer<SongInfo> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2497154748688506017L;
+
     public SongSerializer() {
         this(null);
     }

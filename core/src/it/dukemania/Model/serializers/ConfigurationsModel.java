@@ -1,6 +1,5 @@
 package it.dukemania.Model.serializers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import it.dukemania.Model.serializers.leaderboard.SongLeaderBoard;
 import it.dukemania.Model.serializers.song.SongInfo;
 import it.dukemania.Model.serializers.synthesizer.SynthInfo;

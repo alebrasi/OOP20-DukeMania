@@ -30,7 +30,8 @@ public final class LFOFactory {
         SQUARE
     }
 
-    public static Function<Long, Float> composedLFO(final Function<Long, Float> valueFunction, final Function<Long, Float> activateFunction) {
+    public static Function<Long, Float> composedLFO(final Function<Long, Float> valueFunction, final Function<Long,
+            Float> activateFunction) {
         return x -> (valueFunction.apply(x)) * (activateFunction.apply(x));
     }
 

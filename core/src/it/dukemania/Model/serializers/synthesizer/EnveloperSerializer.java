@@ -9,6 +9,11 @@ import java.io.IOException;
 
 public class EnveloperSerializer extends StdSerializer<Enveloper> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1127038567677217806L;
+
     public EnveloperSerializer() {
         this(null);
     }

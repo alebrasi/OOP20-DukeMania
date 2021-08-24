@@ -9,13 +9,16 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import it.dukemania.Model.serializers.song.TrackInfo;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class SongLeaderBoardDeserializer extends StdDeserializer<SongLeaderBoard> {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3313707952470700797L;
 
     public SongLeaderBoardDeserializer() {
         this(null);
@@ -26,7 +29,8 @@ public class SongLeaderBoardDeserializer extends StdDeserializer<SongLeaderBoard
     }
 
     @Override
-    public SongLeaderBoard deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public SongLeaderBoard deserialize(final JsonParser p, final DeserializationContext ctxt) 
+            throws IOException, JsonProcessingException {
 
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);

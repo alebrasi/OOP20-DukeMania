@@ -1,6 +1,8 @@
 package it.dukemania.Model.serializers.song;
 
-import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
@@ -13,6 +15,11 @@ import java.util.List;
 
 public class SongDeserializer extends StdDeserializer<SongInfo> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5051112879681763904L;
+
     public SongDeserializer() {
         this(null);
     }
@@ -22,7 +29,8 @@ public class SongDeserializer extends StdDeserializer<SongInfo> {
     }
 
     @Override
-    public SongInfo deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public SongInfo deserialize(final JsonParser p, final DeserializationContext ctxt) 
+            throws IOException, JsonProcessingException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
 
@@ -35,6 +43,7 @@ public class SongDeserializer extends StdDeserializer<SongInfo> {
 
         List<TrackInfo> tracks = mapper.readValue(mapper.treeAsTokens(trackNode), listTrackType);
 
-        return new SongInfo(node.get("songName").asText(), node.get("fileHash").asText(), node.get("duration").asDouble(), tracks, node.get("BPM").asDouble());
+        return new SongInfo(node.get("songName").asText(), node.get("fileHash").asText(), 
+                node.get("duration").asDouble(), tracks, node.get("BPM").asDouble());
     }
 }

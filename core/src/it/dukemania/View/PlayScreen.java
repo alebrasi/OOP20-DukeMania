@@ -76,7 +76,6 @@ public class PlayScreen implements Window {
     private ParsedTrack selectedTrack;
     private List<GraphicNote> notes;
     private final ColumnLogic logic;
-    private String songHash;
     private SwitchWindowNotifier switchWindowNotifier;
     //constant
     private static final int BUTTON_DIM = 120;
@@ -129,8 +128,10 @@ public class PlayScreen implements Window {
         this.scoreboard.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         this.batch = new SpriteBatch();
         this.backgroundBatch = new SpriteBatch();
-        final Viewport buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
-        final Viewport stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(), camera);
+        final Viewport buttonsViewport = new ExtendViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(),
+                camera);
+        final Viewport stageViewport = new StretchViewport(this.dimensions.getSize().getX(), this.dimensions.getSize().getY(),
+                camera);
 
 
         this.buttonsStage = new Stage(buttonsViewport, this.batch);
@@ -234,7 +235,8 @@ public class PlayScreen implements Window {
         this.layout.setText(fontScoreboard, Integer.toString(this.score));
         final float fontWidth = this.layout.width;
         final float fontHeight = this.layout.height; 
-        this.fontScoreboard.draw(batch, Integer.toString(this.score), this.dimensions.getSize().getX() / 2 - fontWidth / 2, this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
+        this.fontScoreboard.draw(batch, Integer.toString(this.score), this.dimensions.getSize().getX() / 2 - fontWidth / 2,
+                this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
         this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - this.shift.getScoreboardHeight(),
                 this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
 
@@ -245,7 +247,9 @@ public class PlayScreen implements Window {
 
         final long actualTime = Instant.now().toEpochMilli() - this.startTime;
         //returns the notes that are playing right now
-        final List<GraphicNote> notesPlaying = this.notes.stream().filter(n -> (n.getStartTime()) <= actualTime).collect(Collectors.toList());
+        final List<GraphicNote> notesPlaying = this.notes.stream()
+                                                            .filter(n -> (n.getStartTime()) <= actualTime)
+                                                            .collect(Collectors.toList());
 
 
         //drawing of each note
@@ -270,7 +274,8 @@ public class PlayScreen implements Window {
                 if (!n.getKeyboard().get().isButtonPressed(this.numberOfColumns) && n.isPressed()) {
                     n.setIsPressed(false);
                     n.getKey().get().finishPressing(this.startTime);
-                    this.score += this.logic.verifyNote(n.getColumn(), n.getKey().get().getInitialTime() * 1000, (n.getKey().get().getFinalTime()) * 1000);
+                    this.score += this.logic.verifyNote(n.getColumn(), n.getKey().get().getInitialTime() * 1000,
+                            (n.getKey().get().getFinalTime()) * 1000);
                 }
 
             }
@@ -319,7 +324,6 @@ public class PlayScreen implements Window {
         this.data = data;
         this.song = data.getSelectedSong();
         this.selectedTrack = data.getSelectedTrack();
-        this.songHash = data.getSongHash();
         this.numberOfColumns = data.getNumColumns();
     }
 

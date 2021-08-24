@@ -13,6 +13,11 @@ import java.io.IOException;
 
 public class TrackDeserializer extends StdDeserializer<TrackInfo> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5100891130978673514L;
+
     public TrackDeserializer() {
         this(null);
     }

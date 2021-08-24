@@ -1,20 +1,18 @@
 package it.dukemania.audioengine;
 
-import it.dukemania.midi.AbstractNote;
 
 public interface Player {
 
     /**
-     * A PlayableTrack rapresents a track as an Observable, with the method update, all the tracks update their status.
-     * @param <AbstractNote> AbstractNote contains the information of the Note to play
+     * A PlayableTrack represents a track as an Observable, with the method update, all the tracks update their status.
      */
-    interface PlayableTrack<AbstractNote> {
+    interface PlayableTrack {
         boolean hasNext();
         void update(long millis);
     }
 
     /**
-     * Checks and plays all the notes whose startTime is inferios than the total milliseconds
+     * Checks and plays all the notes whose startTime is inferiors than the total milliseconds
      * that have passed from the total elapsed time,
      * then plays a buffer in the AudioEngine.
      */

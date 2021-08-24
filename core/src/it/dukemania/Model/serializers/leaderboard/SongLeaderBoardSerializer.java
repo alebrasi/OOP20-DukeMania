@@ -8,6 +8,11 @@ import java.io.IOException;
 
 public class SongLeaderBoardSerializer extends StdSerializer<SongLeaderBoard> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6106135137007156342L;
+
     public SongLeaderBoardSerializer() {
         this(null);
     }
@@ -17,7 +22,8 @@ public class SongLeaderBoardSerializer extends StdSerializer<SongLeaderBoard> {
     }
 
     @Override
-    public void serialize(final SongLeaderBoard value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+    public void serialize(final SongLeaderBoard value, final JsonGenerator gen, final SerializerProvider provider)
+            throws IOException {
         gen.writeStartObject();
         gen.writeObjectField("songHash", value.getSongHash());
         gen.writeObjectField("scores", value.getUsersScore());
