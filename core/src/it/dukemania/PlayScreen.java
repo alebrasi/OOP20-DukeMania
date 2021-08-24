@@ -40,7 +40,7 @@ import it.dukemania.View.notesGraphics.Note;
 import it.dukemania.View.notesGraphics.NoteImpl;
 import it.dukemania.View.notesGraphics.Size;
 import it.dukemania.View.notesGraphics.SizeImpl;
-import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.Song;
 import it.dukemania.windowmanager.DukeManiaWindowState;
 import it.dukemania.windowmanager.SwitchWindowNotifier;
@@ -82,7 +82,7 @@ public class PlayScreen extends ApplicationAdapter implements Window {
     private float deltaTime = 0;
     private List<TextButton> buttons;
     private Song song;
-    private MidiTrack selectedTrack;
+    private ParsedTrack selectedTrack;
     private List<Note> notes;
     private final ColumnLogic logic;
     //private PlayerAudio player;
@@ -227,8 +227,15 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 
     private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
-        final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 610, dimensions.getSize().getX(), 
-                dimensions.getSize().getY() - 190); //magic numbers
+        final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 600, dimensions.getSize().getX(), 
+                dimensions.getSize().getY() - 200); //magic numbers
+
+
+        /*renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(Color.RED);
+        renderer.rect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
+        renderer.circle(30, clipBounds.y, 3);
+        renderer.end();*/
 
         this.batch.flush();
         ScissorStack.pushScissors(clipBounds);
@@ -236,11 +243,6 @@ public class PlayScreen extends ApplicationAdapter implements Window {
         this.batch.flush();
         ScissorStack.popScissors();
 
-        /*renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(Color.RED);
-        renderer.rect(clipBoundsprova.x, clipBoundsprova.y, clipBoundsprova.width, clipBoundsprova.height);
-        renderer.circle(30, clipBounds.y, 3);
-        renderer.end();*/
 
     }
 
@@ -329,12 +331,8 @@ public class PlayScreen extends ApplicationAdapter implements Window {
 
 
             //change the style of the buttons if they are clicked
-            for (int i = 0; i < this.numberOfColumns; i++) {
-                if (!n.getKeyboard().get().isButtonPressed(i + 1, this.numberOfColumns)) {
-                    this.buttons.get(i).setStyle(this.styleUp);
-                } else {
-                    this.buttons.get(i).setStyle(this.styleDown);
-                }
+            if (n.getKeyboard().get().isButtonPressed(n.getColumn().getNumericValue(), this.numberOfColumns)) {
+                this.buttons.get(n.getColumn().getNumericValue() - 1).setStyle(this.styleDown);
             }
 
         }

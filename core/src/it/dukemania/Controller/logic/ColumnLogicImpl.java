@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import it.dukemania.audioengine.Pair;
 import it.dukemania.audioengine.PlayerAudio;
 import it.dukemania.midi.AbstractNote;
-import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.Song;
 
 public class ColumnLogicImpl implements ColumnLogic {
@@ -90,7 +90,7 @@ public class ColumnLogicImpl implements ColumnLogic {
         return list;
     }
 
-    private Optional<Long> getMaxDuration(final MidiTrack track) {
+    private Optional<Long> getMaxDuration(final ParsedTrack track) {
         //return the max duration of a note in a track
         return track.getNotes().stream()
                 .max((e1, e2) -> e1.getDuration().get().compareTo(e2.getDuration().get()))
@@ -108,7 +108,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     }
 
     @Override
-    public final List<LogicNote> noteQueuing(final MidiTrack track) {
+    public final List<LogicNote> noteQueuing(final ParsedTrack track) {
         List<Pair<Integer, List<AbstractNote>>> notesForNoteType = track.getNotes().stream()
                 .collect(Collectors.groupingBy(
                         AbstractNote::getIdentifier, Collectors.toList()))

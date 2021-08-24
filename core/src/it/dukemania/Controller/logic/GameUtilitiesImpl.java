@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.ParsedTrack;
 
 
 
@@ -19,7 +19,7 @@ public class GameUtilitiesImpl implements GameUtilities {
     }
 
     @Override
-    public final Map<MidiTrack, DifficultyLevel> generateTracksDifficulty(final List<MidiTrack> tracks) {
+    public final Map<ParsedTrack, DifficultyLevel> generateTracksDifficulty(final List<ParsedTrack> tracks) {
         return tracks.stream()
                 .collect(Collectors
                         .toMap(x -> x, x -> { 

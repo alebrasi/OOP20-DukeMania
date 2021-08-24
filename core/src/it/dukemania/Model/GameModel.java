@@ -1,22 +1,22 @@
 package it.dukemania.Model;
 
-import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.Song;
 
 public class GameModel {
     private String songHash;
     private String playerName = "P1";
     private Song selectedSong;
-    private MidiTrack selectedTrack;
+    private ParsedTrack selectedTrack;
     private int numColumns;
     private int score;
 
 
-    public MidiTrack getSelectedTrack() {
+    public ParsedTrack getSelectedTrack() {
         return selectedTrack;
     }
 
-    public void setSelectedTrack(final MidiTrack selectedTrack) {
+    public void setSelectedTrack(final ParsedTrack selectedTrack) {
         this.selectedTrack = selectedTrack;
     }
 

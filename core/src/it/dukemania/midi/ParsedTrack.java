@@ -2,7 +2,7 @@ package it.dukemania.midi;
 
 import java.util.List;
 
-public interface MidiTrack {
+public interface ParsedTrack {
 
     /**
      * this method return the list of the notes that compose the track.

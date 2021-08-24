@@ -7,8 +7,8 @@ import javax.sound.midi.InvalidMidiDataException;
 
 public class MainTemp {
     public static void main(final String[] args) throws InvalidMidiDataException, IOException {
-        final MidiParser parse = new MidiParserImpl();
-        final Song canzone = parse.parseMidi(/*"\\Users\\Laura\\Desktop\\midi_padre\\bellerep.mid");*/
+        final Parser parse = new MidiParser();
+        final Song canzone = parse.parse(/*"\\Users\\Laura\\Desktop\\midi_padre\\bellerep.mid");*/
                 new File(
                 "\\Users\\Laura\\Desktop\\OOP"
                 + "\\DukeMania-Testing\\res\\This-Game_-_Konomi-Suzuki.mid"));

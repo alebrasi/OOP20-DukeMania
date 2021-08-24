@@ -21,7 +21,7 @@ public final class FactoryImpl implements AbstractFactory {
     }
 
     @Override
-    public MidiTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
+    public ParsedTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
         return new TrackImpl(instrument, notes, channel);
     }
 

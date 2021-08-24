@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import it.dukemania.midi.AbstractNote;
 import it.dukemania.midi.FactoryConfigurator;
-import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.Song;
 import it.dukemania.midi.TrackImpl;
 
@@ -17,7 +17,7 @@ public class TrackFilterImpl implements TrackFilter {
     static final long MIN_DURATION = 125000; //microseconds
 
     @Override
-    public final List<MidiTrack> reduceTrack(final Song song) {
+    public final List<ParsedTrack> reduceTrack(final Song song) {
         return song.getTracks().stream()
                 .filter(x -> x.getChannel() != PERCUSSION_CHANNEL)//remove unplayable tracks
                 .map(x -> FactoryConfigurator.getFactory(x.getChannel()).createTrack(((TrackImpl) x).getInstrument(),

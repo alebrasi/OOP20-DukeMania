@@ -5,7 +5,7 @@ import java.util.List;
 public class Song {
     private final String title;
     private final double  duration;
-    private final List<MidiTrack> tracks;
+    private final List<ParsedTrack> tracks;
     private final double bpm;                  //potrebbe essere un int, controllare eventuali valori di default
 
 
@@ -16,7 +16,7 @@ public class Song {
      * @param tracks
      * @param bPM
      */
-    public Song(final String title, final double duration, final List<MidiTrack> tracks, final double bPM) {
+    public Song(final String title, final double duration, final List<ParsedTrack> tracks, final double bPM) {
         super();
         this.title = title;
         this.duration = duration;
@@ -52,7 +52,7 @@ public class Song {
      * this method return the tracks that compose the song.
      * @return a list of MidiTracks 
      */
-    public final List<MidiTrack> getTracks() {
+    public final List<ParsedTrack> getTracks() {
         return tracks;
     }
 

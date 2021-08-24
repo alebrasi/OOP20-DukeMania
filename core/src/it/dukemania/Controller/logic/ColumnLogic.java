@@ -1,7 +1,7 @@
 package it.dukemania.Controller.logic;
 
 import java.util.List;
-import it.dukemania.midi.MidiTrack;
+import it.dukemania.midi.ParsedTrack;
 import it.dukemania.midi.Song;
 
 
@@ -45,7 +45,7 @@ public interface ColumnLogic {
      * @param track the track to play
      * @return a list of LogicNote distributed in the columns
      */
-    List<LogicNote> noteQueuing(MidiTrack track);
+    List<LogicNote> noteQueuing(ParsedTrack track);
 
     /**
      * Call this method before playing a new track to reset combo variable.
