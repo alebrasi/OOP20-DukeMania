@@ -18,8 +18,8 @@ import java.security.NoSuchAlgorithmException;
 public class DukeManiaTest extends ApplicationAdapter {
 
     private final WindowManager wdm = new WindowManager();
-    private final String MENU_BACKGROUND_IMAGE_PATH = "DukeMania.png";
-    private GameModel data = new GameModel();
+    private static final String MENU_BACKGROUND_IMAGE_PATH = "DukeMania.png";
+    private final GameModel data = new GameModel();
 
     @Override
     public void create() {
@@ -36,19 +36,14 @@ public class DukeManiaTest extends ApplicationAdapter {
             Gdx.app.exit();
             System.exit(1);
         }
-
-
+        //Add windows
         wdm.addWindow(titleScreen, DukeManiaWindowState.TITLE);
         wdm.addWindow(optionScreen, DukeManiaWindowState.OPTIONS);
         wdm.addWindow(songSelectionScreen, DukeManiaWindowState.SONG_SELECTION);
         wdm.addWindow(leaderBoardScreen, DukeManiaWindowState.LEADERBOARD);
         wdm.addWindow(playScreen, DukeManiaWindowState.PLAY);
+        //Switch to the title window
         wdm.switchWindow(DukeManiaWindowState.TITLE, data);
-        titleScreen.setWindowListener(wdm);
-        optionScreen.setWindowListener(wdm);
-        songSelectionScreen.setWindowListener(wdm);
-        playScreen.setWindowListener(wdm);
-        leaderBoardScreen.setWindowListener(wdm);
     }
 
     @Override

@@ -17,11 +17,11 @@ public class WindowManager implements SwitchWindowNotifier {
     }
 
     public void addWindow(final Window window, final WindowState associatedState) {
+        window.setWindowListener(this);
         windows.put(associatedState.getStateValue(), window);
     }
 
     public void switchWindow(final WindowState state, final GameModel data) {
-        //TODO Do dispose?
         Window prevWindow = currentWindow;
         currentWindow = windows.get(state.getStateValue());
         currentWindow.receiveData(data);
@@ -34,7 +34,6 @@ public class WindowManager implements SwitchWindowNotifier {
     }
 
     public void dispose() {
-        //windows.forEach((i, w) -> w.dispose());
         currentWindow.dispose();
     }
 }
