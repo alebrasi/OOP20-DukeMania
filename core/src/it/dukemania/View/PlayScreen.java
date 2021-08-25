@@ -144,7 +144,7 @@ public class PlayScreen implements Window {
         final Skin skin = new Skin();
         final TextureAtlas atlas = assetManager.getTextureAtlas("pinkAndBlueButtons.atlas");
 
-        logic.initAudio(song);
+
         skin.addRegions(atlas);
 
         this.fontScoreboard = assetManager.generateFontScoreboard();
@@ -179,6 +179,7 @@ public class PlayScreen implements Window {
 
         //adding elements on the stage
         this.stage.addActor(backgroundImage);
+        logic.initAudio(song);
 
         Gdx.graphics.setResizable(false);
         Gdx.graphics.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
@@ -189,7 +190,7 @@ public class PlayScreen implements Window {
         return new GraphicNoteImpl(this.dimensions.getSize().getY(),
             noteLogic.getColumn(),
             (noteLogic.getNoteDuration().intValue()) / this.shift.getDurationOffset(),
-            noteLogic.getNoteStarts() / 1000 - this.shift.getNoteStartOffset(),
+            noteLogic.getNoteStarts() / 1000 - this.shift.getNoteStartOffset() + 500,
             noteLogic.getNoteDuration() / 1000,
             (int) this.buttons.get(0).getHeight(), this.posXButtons
         );
@@ -295,14 +296,11 @@ public class PlayScreen implements Window {
         //removal of notes that are terminated
         notesPlaying.removeIf(x -> (x.getStartTime()  + x.getDuration()) / (long) Math.pow(10, 3) >= actualTime);
 
-        //player.playNotes();
         if ((song.getDuration() / 1000) + 1000 < (Instant.now().toEpochMilli() - startTime)) {
             data.setScore(score);
             switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, data);
             this.startTime = 0;
             this.score = 0;
-        } else {
-            logic.play();
         }
 
 

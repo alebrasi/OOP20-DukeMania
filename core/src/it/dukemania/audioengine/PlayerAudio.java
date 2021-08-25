@@ -49,11 +49,11 @@ public class PlayerAudio implements Player {
     }
 
     @Override
-    public final void playNotes() {
+    public final boolean playNotes() {
         this.startMillis = this.startMillis == 0 ? Instant.now().toEpochMilli() : this.startMillis;
         removeEndedTracks();
         playableTracks.forEach(x -> x.update(Instant.now().toEpochMilli() - this.startMillis));
-        audioEngine.playBuffer();
+        return audioEngine.playBuffer() == 0 && playableTracks.size() == 0;
     }
 
 }

@@ -22,19 +22,11 @@ public class Engine {
     private int old;
     private int att;
 
-    /**
-     * Returns a synthesizer from the synthesizer list a a give position.
-     * @param pos the specified position
-     * @return the synthesizer
-     */
-    public Synth getSynth(final int pos) {
-        return synthetizers.get(pos);
-    }
 
     /**
      * Calculates and plays a buffer to the LibGDX audio device.
      */
-    public void playBuffer() {
+    public int playBuffer() {
 
         final int num = synthetizers.stream().mapToInt(Synth::checkKeys).sum();
         if (old > 0 && old != num) {
@@ -51,6 +43,7 @@ public class Engine {
 
         AD.writeSamples(buffer, 0, buffer.length);
         old = num;
+        return num;
 
     }
 
@@ -59,7 +52,6 @@ public class Engine {
      * @param track the track that the synth will play
      * @return the synth 
      */
-
     public Synth addSynth(final ParsedTrack track) {
         final var actualTrack = (KeyboardTrack) track;
         final List<Pair<Integer, Long>> notes = new ArrayList<>();
