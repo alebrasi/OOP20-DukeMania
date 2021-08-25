@@ -160,7 +160,7 @@ Dopo che ogni traccia è stata filtrata queste vengono mostrate a schermo con l'
 \end{figure}
 \clearpage \hfill\break
 \subsubsection{Incolonnamento delle note e passaggio alla grafica}
-Dopo che viene scelta una traccia da giocare è necessario posizionare le note nelle colonne presenti nell'enum Columns. In questo processo vengono anche generati i range che poi saranno sfruttati nel calcolo del punteggio. Dopo aver incolonnato le colonne queste vengono convertite da AbstractNote a LogicNote. Questo passaggio viene svolto tramite un pattern adapter ed è necessario applicarlo per permettere la compatibilità con la grafica del gioco. \\ \\ \\ \\
+Dopo che viene scelta una traccia da giocare è necessario posizionare le note nelle colonne presenti nell'enum Columns. In questo processo vengono anche generati i range che poi saranno sfruttati nel calcolo del punteggio. Dopo aver incolonnato le colonne queste vengono convertite tramite un pattern adapter. In questo caso il pattern, invece che connettere due interfacce, si occupa di rendere compatibili una classe astratta AbstractNote e un interfaccia LogicNote. Tramite questo adattamento è possibile connettere gli aspetti logici c e grafici del progetto. \\ \\ \\ \\
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.7]{\pathserafino adapter.jpg}}
 	\caption{Schema UML dell'adapter.}
@@ -174,6 +174,18 @@ Per ogni nota premuta dal giocatore viene calcolato un punteggio. Viene prima de
 	\centerline{\includegraphics[scale=0.7]{\pathserafino Strategy.jpg}}
 	\caption{Schema UML della strategy per il calcolo del punteggio.}
 	\label{img:calcpunteggio}
+\end{figure}
+\clearpage \hfill\break
+
+\subsubsection{Observer - PlayerAudio}
+Per garantire una corretta gestione delle tracce ho deciso di implementare, nella classe PlayerAudio, il pattern observer. Ho scelto questo pattern in quanto, a causa del framerate variabile sui vari dispositivi, risulta comodo avere un singolo metodo per notificare tutte le tracce (gli Observer) di suonare le note il cui tempo di inizio è inferiore o uguale a quello scandito dalla chiamata di Player, l'Observable.
+La lista di observer "playableTracks" viene riempita dal costruttore una volta passata la canzone. Gli observer vengono caricati come istanze anonime di PlayableTrack, interfaccia contenente il metodo per essere notificata dall'Observable e per controllare se un'altra nota puo' essere suonata.
+Ad ogni chiamata del metodo playNotes, verranno rimosse le tracce non più utilizzabili e tutte quelle rimanenti verranno notificate di suonare, se possibile, delle note.
+ \\ \\ \\ \\
+\begin{figure}[!htb]
+	\centerline{\includegraphics[scale=0.7]{\pathserafino observer.jpg}}
+	\caption{Schema UML per la gestione del player audio tramite observer.}
+	\label{img:observer}
 \end{figure}
 \clearpage \hfill\break
 
@@ -237,19 +249,19 @@ Nell'implementare le concrete factory ho ritenuto opportuno che non si generasse
 
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.8]{\pathlaura midiparser.jpg}}
-	\caption{Classe MidiParser.}
+	\caption{Schema UML del singleton MidiParser.}
 	\label{img:midiparser}
 \end{figure}  
 \hfill\break\break
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.8]{\pathlaura percfactimpl.jpg}}
-	\caption{Classe PercussionFactoryImpl.}
+	\caption{Schema UML del singleton PercussionFactoryImpl.}
 	\label{img:percfactimpl}
 \end{figure}
 \hfill\break\break
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.8]{\pathlaura factimpl.jpg}}
-	\caption{classe FactoryImpl.}
+	\caption{Schema UML del singleton FactoryImpl.}
 	\label{img:factimpl}
 \end{figure}
 \clearpage
@@ -330,7 +342,7 @@ codice simile a tutte le view del menu.
 	\label{img:uml_template_method_menu_views}
 \end{figure}
 \clearpage \hfill\break
-\subsection{Window Switching}
+\subsubsection{Window Switching}
 L'architettura generale del WindowManager è già stata spiegata in generale nella parte di design dell'architettura nel paragrafo precedente.
 In questa sezione si vuole parlare in modo più dettagliato del suo funzionamento.
 All'interno della classe entry point \textbf{DukeMania} viene istanziato l'oggetto WindowManager al quale vengono associate le varie view del gioco, tutte implementanti l'interfaccia \textbf{Window},
@@ -418,23 +430,10 @@ Classi sviluppate singolarmente:
 
 
 \subsection{Sofia Tosi}
-In questa sezione si parlerà di grafica. La classe principale è PlayScreen, il cuore della View relativa al game, attraverso la
-quale vengono richiamate tutte le altre classi implementate dalla sottoscritta e alcune classi dei miei compagni. 
-Questa classe, alla quale ho dedicato più tempo, mi ha messo alla prova e mi ha stimolato a voler conoscere cose nuove. Infatti per implementarla
-mi sono servita della libreria grafica Libgdx, con la quale non avevo mai lavorato. Un'idea che mi è balenata in mente mentre la implementavo, che non si è 
-manifestata durante l'analisi svolta all'inizio del progetto, è quella di creare una classe a parte, EventsFromKeyboardImpl, 
-per gestire i comandi di input. EventsFromKeyboardImpl, come vuole suggerire il nome, è stata pensata per essere compatibile con una tastiera per pc. 
-Nulla vieta di avvalersi di un'altra periferica. Infatti, ho cercato di limitare al massimo le dipendenze in PlayScreen in modo tale che risulti semplice sostituirla, 
-avendo a disposizione un'altra classe compatibile con un'altra periferica.
-Ho ritenuto opportuno implementare AssetsManager per gestire le risorse grafiche. Questa classe permette di caricare in memoria tutte gli asset grafici in una
-sola volta. Sarà poi il compito di PlayScreen richiamarli singolarmente, al momento opportuno, e mostrarli a video.
-Tra i miei compagni del gruppo, quello con cui ho dovuto interagire di più è Serafino Pandolfini, ed è stato proprio da quest'interazione che è scaturita la classe
-KeyImpl. Lo scopo di KeyImpl è proprio quello di fornirgli dei metodi per poter ottenere il tempo di inizio e di fine nel quale l'utente preme un tasto.
-Una classe fondamentale da utilizzare in PlayScreen è GraphicNoteImpl. GraphicNoteImpl rappresenta la nota dal punto di vista grafico. In questa classe sono presenti i metodi per disegnare la nota, per disegnare le scintille che compaiono sulla nota quando l'utente la
-preme al momento giusto. Nonostante sia una classe che implementa metodi legati alla grafica si è cercato di limitare l'uso di libgdx, per ridurre il più
-possibile le dipendenze. Un'ultima classe che merita di essere citata è senza dubbio SizeImpl, la quale adatta la GUI alla dimensione dello schermo del pc sul quale viene 
-lanciata l'applicazione.
-Per collaborare io e i miei compagni abbiamo deciso di stabilire insieme come dovevano essere strutturate le interfacce e, successivamente, abbiamo implementato il codice basandoci sulle decisioni prese. Nonostante ciò, sono sorte delle problematiche che abbiamo dovuto risolvere insieme in un secondo momento (ad esempio, la lunghezza del suono di ogni nota non corrispondeva all'altezza della texture mostrata a video).  
+Per questo progetto mi sono focalizzato principalmente sugli aspetti di logica del gioco, comprendenti la gestione di tracce e note e della precisione, sia nell'aspetto audio-video che nel calcolo dei punteggi di gioco. Per quanto concerne l'aspetto delle tracce la classe fondamentale da me implementata è TrackFilterImpl che, fornita in input una Song, ottenuta dal midiParser, riduce il numero di note presenti in ogni sua traccia in modo da renderle giocabili. Ho provato diverse strategie per ridurre il numero delle note in modo da ottenere tracce con una distribuzione di note uniforme nel tempo e con quantitativi di note quanto più possibile differente per fornire più scelta al giocatore. Questa classe è stata particolarmente facile da integrare in quanto si occupa di elaborare dati già esistenti e a restituirli come era stato previsto in fase di progettazione. Per le note e il calcolo del punteggio ho realizzato un unica classe principale ColumnLogicImpl che divide le note nelle varie colonne, organizzate come un'enum, grafiche eliminando le eventuali collisioni e, utilizzando la classe secondaria NoteRange, permette di fornire un dato per confrontare le note premute dal giocatore e assegnarle un punteggio. Questa sezione è stata particolarmente difficile da costruire per una divergenza di classi/interfacce tra la parte logica e grafica, ed è stato quindi necessario creare una classe intermediaria LogicNoteImpl e dei metodi aggiuntivi in grado di fornire i dati mancanti per permettere un integrazione tra le due parti.  
+In merito agli aspetti di precisione audio-video ho sviluppato la classe PlayerAudio che suona le note in base al tempo trascorso dall'inizio della traccia, ottimizzando la latenza tra ciò che appare a schermo e l'audio di gioco creando una relazione tra l'aspetto grafico e quello audio.
+L'integrazione di questa classe non ha generato particolari problemi se non la necessità di avere una conoscenza superficiale del funzionamento delle altre classi presenti nell'audioengine.
+L'ultima parte sviluppata singolarmente è quella relativa alla classe GameUtilitiesImpl, utilizzata per attribuire a ogni traccia restituita dal trackFilter una difficoltà, ottenuta da una enum, basata sul numero di note. 
 \\ \\
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
@@ -450,36 +449,31 @@ Classi sviluppate singolarmente:
 }
 \hfill\break
 
-\subsection{Laura Leonardi}
-Studio del protocollo midi e midi parsing, creazione delle tracce e delle note che le compongono, gestione degli strumenti  \\ \\
+\subsection{Laura Leonardi}}
+In questo progetto mi sono dedicata al midi parsing, ovvero la restituzione, a partire da un file midi, di una classe Song contenente informazioni generali sulla canzone e composta da tracce. Queste ultime sono identificate da un numero di canale e dallo strumento utilizzato, e sono a loro volta composte da note, dotate di attributi quali durata, tempo di inizio e identificatore. Vi sono inoltre un tipo particolare di tracce e corrispettive note, ovvero tracce e note di tipo percussione. in questo caso la traccia non sarà associata ad uno strumento, bensì saranno le note ad essere identificate, invece che da una frequenza, da un tipo particolare di percussione. Per quanto riguarda il collegamento tra gli elementi dell'enum Percussion a DrumSamples e l'associazione di Instrument al rispettivo SynthBuilderImpl ho agito in collaborazione con gli autori delle classi non di mia pertinenza, specialmente per comprendere meglio il modo con cui interfacciarmi ad esse. Dal mio punto di vista durante lo sviluppo non sono sorti grossi problemi, se non qualche aggiunta di metodo del tutto ordinaria.\\ \\
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
-	\begin{itemize}
-		\item AbstractFactory
-		\item AbstractNote
-		\item FactoryConfigurator
-		\item FactoryImpl
-		\item Instrument
-		\item InstrumentType
-		\item InvalidNoteException
-		\item MainTemp
-		\item MidiParser
-		\item MidiParserImpl
-		\item MidiTrack
-		\item Note
-		\item Percussion
-		\item PercussionFactoryImpl
-		\item PercussionNote
-		\item PercussionTrackImpl
-		\item Song
-		\item TestMidiParser
-		\item TrackImpl
-	\end{itemize}
+\begin{itemize}
+	\item AbstractNote
+	\item FactoryConfigurator
+	\item FactoryImpl
+	\item Instrument
+	\item InvalidNoteException
+	\item MidiParser
+	\item ParsedTrack
+	\item Note
+	\item PercussionFactoryImpl
+	\item PercussionNote
+	\item PercussionTrack
+	\item Song
+	\item TestMidiParser
+	\item KeyboardTrack
+\end{itemize}
 }
 \hfill\break
 \newpage
 
-\subsection*{Alessandro Brasini}
+\subsection{Alessandro Brasini}
 All'interno del progetto mi sono occupato di sviluppare le view e relativi controller per le varie schermate del menù; realizzazione di serializzatori e 
 deserializzatori custom per le configurazioni delle canzoni salvate, leaderboard e preset dei sintetizzatori; gestione dell'accesso ai file di configurazione;
 implementazione della core architecture.
@@ -641,15 +635,19 @@ Ritengo infine che le uniche problematiche inerenti al corso siano dovute dalla 
 	\caption{La schermata iniziale del gioco.}
 	\label{img:title}
 \end{figure}
+\clearpage \hfill\break
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.6]{\pathguida songconfig}}
 	\caption{La schermata di configurazione della partita.}
 	\label{img:select}
 \end{figure}
+\clearpage \hfill\break
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.3]{\pathguida game}}
 	\caption{La schermata di gioco.}
 	\label{img:game}
-\end{figure}
+\end{figure} \\ \\
+Known Issue: su Linux, a causa di un problema di resize di libGdx, la finestra di gioco potrebbe scomparire se trascinata con il mouse.
+
 
 \end{document}
