@@ -47,8 +47,6 @@ public abstract class AbstractView implements Window {
     protected GameModel data;
 
     private Texture backgroundTexture;
-    //private static final int VIEWPORT_WIDTH = 2560;
-    //private static final int VIEWPORT_HEIGHT = 1440;
     private static final int VIEWPORT_WIDTH = Gdx.graphics.getWidth() * 4;
     private static final int VIEWPORT_HEIGHT = Gdx.graphics.getHeight() * 4;
     private final String backgroundPath;

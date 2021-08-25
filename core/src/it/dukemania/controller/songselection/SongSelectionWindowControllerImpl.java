@@ -60,23 +60,6 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         songsConfigurations = getSongsConfiguration();
         this.data = data;
         this.switchWindowNotifier = notifier;
-        /*
-        URI uri = null;
-        Path myPath = null;
-        try {
-            uri = getClass().getResource("/").toURI();
-            if (uri.getScheme().equals("jar")) {
-                FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
-                myPath = fileSystem.getPath("/");
-            } else {
-                myPath = Paths.get(uri);
-            }
-            Files.walk(myPath, 1).forEach(s -> System.out.println(s));
-        } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
-        }
-
-         */
     }
 
     @Override
@@ -226,7 +209,6 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         try {
             songs = configurationModel.readSongsConfiguration();
         } catch (IOException e) {
-            //e.printStackTrace();
             return new ArrayList<>();
         }
         return songs;
