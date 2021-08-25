@@ -1,6 +1,7 @@
 package it.dukemania.View.notesGraphics;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import it.dukemania.Controller.logic.Columns;
 
@@ -12,7 +13,7 @@ public class GraphicNoteImpl implements GraphicNote {
     private final int yNote; //texture's dimension
     private static final Double NOTE_SPEED = 200.0;
     private final Columns column;
-    private static final int FINISH_LINE = 108;
+    private final int finishLine;
     private static final int DISPLACEMENT = 5;
     private final int posxSparks;
     private final int xSparks;
@@ -29,12 +30,10 @@ public class GraphicNoteImpl implements GraphicNote {
 
 
     public GraphicNoteImpl(final int heightpos, final Columns letter, final int height, final long startNote,
-            final long duration, final int numberOfColumns) {
+            final long duration, final int yButton, final List<Integer> posXButtons) {
         this.yNote = height;
         this.column = letter;
-        final Size dimensions = new SizeImpl(numberOfColumns);
-        this.posxNote = (letter.getNumericValue() - 1) * dimensions.getSize().getX() / numberOfColumns 
-                + this.shift.calculateShifting(numberOfColumns) * letter.getNumericValue() + this.shift.getNoteShift();
+        this.posxNote = posXButtons.get(letter.getNumericValue() - 1) + yButton / 2 - GraphicNoteImpl.XNOTE / 2;
         this.posyNote = heightpos;
         this.posxSparks = this.posxNote - this.shift.getHorizontalSparkShift();
         this.xSparks = 100;
@@ -42,13 +41,14 @@ public class GraphicNoteImpl implements GraphicNote {
         this.startNote = startNote;
         this.duration = duration;
         this.timeOfFall = 0;
+        this.finishLine = yButton;
     }
 
     @Override
     public final void updateNote(final float deltaTime, final long startTime) {
         this.posyNote -= GraphicNoteImpl.NOTE_SPEED * deltaTime;
-        if (this.posyNote <= GraphicNoteImpl.FINISH_LINE + GraphicNoteImpl.DISPLACEMENT 
-                && this.posyNote >= GraphicNoteImpl.FINISH_LINE - GraphicNoteImpl.DISPLACEMENT) {
+        if (this.posyNote <= this.finishLine + GraphicNoteImpl.DISPLACEMENT 
+                && this.posyNote >= this.finishLine - GraphicNoteImpl.DISPLACEMENT) {
             this.timeOfFall = Instant.now().toEpochMilli() - startNoteprova;
         }
     }

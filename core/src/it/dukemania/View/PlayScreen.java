@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import it.dukemania.Controller.logic.ColumnLogic;
 import it.dukemania.Controller.logic.ColumnLogicImpl;
+import it.dukemania.Controller.logic.Columns;
 import it.dukemania.Controller.logic.LogicNote;
 import it.dukemania.Model.GameModel;
 import it.dukemania.View.notesGraphics.AssetsManager;
@@ -64,7 +65,7 @@ public class PlayScreen implements Window {
     private SpriteBatch batch;
     private SpriteBatch backgroundBatch;
 
-
+    private final List<Integer> posXButtons = new ArrayList<>();
     private final int posySpark;
     private final int finishLine;
     private int score;
@@ -161,11 +162,13 @@ public class PlayScreen implements Window {
         //placement of the buttons 
         for (int i = 0; i < this.numberOfColumns; i++) {
             this.buttons.add(new TextButton("", this.styleUp));
-            this.buttons.get(i).setSize(PlayScreen.BUTTON_DIM, PlayScreen.BUTTON_DIM);  //set the size of the buttons
+            this.buttons.get(i).setSize(this.dimensions.getSize().getX() / this.numberOfColumns > PlayScreen.BUTTON_DIM ?  PlayScreen.BUTTON_DIM : this.dimensions.getSize().getX() / this.numberOfColumns, this.dimensions.getSize().getX() / this.numberOfColumns  > PlayScreen.BUTTON_DIM ? PlayScreen.BUTTON_DIM : this.dimensions.getSize().getX() / this.numberOfColumns);  //set the size of the buttons
             this.buttons.get(i).setPosition(i * this.dimensions.getSize().getX() / this.numberOfColumns 
-                    + this.shift.calculateShifting(this.numberOfColumns) * i, 0);  //set the position of each button
+                    + this.shift.calculateShifting(this.numberOfColumns) / Columns.COLUMN_5.getNumericValue() * i, 0);  //set the position of each button
             this.buttonsStage.addActor(this.buttons.get(i));
+            posXButtons.add((int) this.buttons.get(i).getX());
         }
+
 
         this.logic.setColumnNumber(this.numberOfColumns);
         this.logic.contextInit();
@@ -188,25 +191,20 @@ public class PlayScreen implements Window {
             (noteLogic.getNoteDuration().intValue()) / this.shift.getDurationOffset(),
             noteLogic.getNoteStarts() / 1000 - this.shift.getNoteStartOffset(),
             noteLogic.getNoteDuration() / 1000,
-            this.numberOfColumns
+            (int) this.buttons.get(0).getHeight(), this.posXButtons
         );
     }
 
 
     private void drawNote(final int posxNote, final int posyNote, final int xNote, final int yNote) {
-        final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - 600, dimensions.getSize().getX(), 
-                dimensions.getSize().getY() - 200);
-
-
-
+        final Rectangle clipBounds = new Rectangle(0, dimensions.getSize().getY() - this.dimensions.getSize().getY() * 5 / 6, dimensions.getSize().getX(), 
+                dimensions.getSize().getY() - dimensions.getSize().getY() * 5 / 18);
 
         this.batch.flush();
         ScissorStack.pushScissors(clipBounds);
         this.batch.draw(this.textureNote, posxNote, posyNote, xNote, yNote, 0, 1, 1, 0);
         this.batch.flush();
         ScissorStack.popScissors();
-
-
     }
 
     private void isSparked(final GraphicNote n) {
