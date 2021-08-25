@@ -83,7 +83,7 @@ public final class MidiParser implements Parser {
         //remove eventual tracks without notes
         myTracks.removeIf(x -> x.getNotes().size() == 0);
         myTracks.sort(Comparator.comparingInt(ParsedTrack::getChannel));
-        return new Song(myMidi.getName(), sequence.getMicrosecondLength(), myTracks, bpm);
+        return new Song(myMidi.getName(), sequence.getMicrosecondLength() + TIME_OFFSET, myTracks, bpm);
     }
 
 
