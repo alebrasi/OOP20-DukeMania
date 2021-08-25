@@ -2,8 +2,8 @@ package it.dukemania.audioengine;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import it.dukemania.Model.serializers.synthesizer.SynthBuilderDeserializer;
-import it.dukemania.Model.serializers.synthesizer.SynthBuilderSerializer;
+import it.dukemania.model.serializers.synthesizer.SynthBuilderDeserializer;
+import it.dukemania.model.serializers.synthesizer.SynthBuilderSerializer;
 import it.dukemania.util.Pair;
 
 import java.util.List;

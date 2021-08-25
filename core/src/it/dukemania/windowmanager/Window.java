@@ -1,6 +1,6 @@
 package it.dukemania.windowmanager;
 
-import it.dukemania.Model.GameModel;
+import it.dukemania.model.GameModel;
 
 public interface Window {
     void create();

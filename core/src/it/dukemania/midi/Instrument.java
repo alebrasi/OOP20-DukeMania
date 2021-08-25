@@ -3,8 +3,8 @@ package it.dukemania.midi;
 import java.io.IOException;
 import java.util.List;
 
-import it.dukemania.Model.serializers.ConfigurationsModelImpl;
-import it.dukemania.Model.serializers.synthesizer.SynthInfo;
+import it.dukemania.model.serializers.ConfigurationsModelImpl;
+import it.dukemania.model.serializers.synthesizer.SynthInfo;
 import it.dukemania.audioengine.SynthBuilderImpl;
 import it.dukemania.util.storage.StorageFactoryImpl;
 
