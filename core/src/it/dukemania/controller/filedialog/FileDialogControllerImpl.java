@@ -28,8 +28,6 @@ public class FileDialogControllerImpl implements FileDialogController {
         this.rootDirectory = System.getProperty("user.home") + directorySeparator;
         this.currentDirectory = this.rootDirectory;
         this.setFilter(filter);
-        //String removeLastDirectoryStrRegex = String.format("^.+%s\\w+%s", this.directorySeparator, this.directorySeparator);
-        //TODO Update regex
         String removeLastDirectoryStrRegex = String.format(".+\\%s", this.directorySeparator);
         removeLastDirectoryRegex = Pattern.compile(removeLastDirectoryStrRegex);
     }

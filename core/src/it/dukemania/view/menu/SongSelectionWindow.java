@@ -49,7 +49,7 @@ public class SongSelectionWindow extends AbstractView {
     }
 
     @Override
-    public void create() {
+    public final void create() {
         super.create();
         Texture tableBackgroundTexture = AssetsManager.getInstance().getTexture("background.png");
         try {
@@ -74,11 +74,11 @@ public class SongSelectionWindow extends AbstractView {
         Label lblSongName = new Label("", skin);
         Label lblBPM = new Label("", skin);
         Label lblDifficultyLevel = new Label("Difficulty", skin);
-        Label lblNumCols = new Label("Choose the number of columns", skin);
+        Label lblNumCols = new Label("Number of columns", skin);
         TextButton btnBackToTitle = new TextButton("Back to title screen", skin);
         TextButton btnSaveSongConfigs = new TextButton("Save configuration", skin);
         TextButton btnPlayTrack = new TextButton("Play Track", skin);
-        SelectBox<Integer> slctNumCols = new SelectBox<Integer>(skin);
+        SelectBox<Integer> slctNumCols = new SelectBox<>(skin);
         slctNumCols.setItems(controller.getNumOfCols());
 
         btnPlayTrack.setTouchable(Touchable.disabled);
@@ -92,7 +92,6 @@ public class SongSelectionWindow extends AbstractView {
         fd.setFilter("\\\\*.mid");
         ButtonGroup<CheckBox> playableTracks = new ButtonGroup<>();
 
-        //TODO Fix layout
         fd.setResultListener((res, fileName, filePath) -> {
             if (res.equals(DialogResult.OK)) {
                 playableTracks.clear();
@@ -192,7 +191,7 @@ public class SongSelectionWindow extends AbstractView {
 
         //Sets the layout of the song table configuration
         tblConfigSong.add(btnSongSelect);
-        tblConfigSong.add(lblFileName).colspan(4);
+        tblConfigSong.add(lblFileName).colspan(4).left();
         tblConfigSong.row();
         tblConfigSong.add(lblBPM).expand().fillX().colspan(4);
         tblConfigSong.row();
@@ -205,15 +204,14 @@ public class SongSelectionWindow extends AbstractView {
         tblConfigSong.row();
         tblConfigSong.add(scrollTableTracks).expandX().fillX().colspan(4).height(TABLE_TRACKS_HEIGHT);
         tblConfigSong.row();
-        tblConfigSong.add(lblNumCols).padLeft(TABLE_PADDING);
-        tblConfigSong.add(slctNumCols);
+        tblConfigSong.add(lblNumCols).padLeft(TABLE_PADDING).padTop(TABLE_PADDING);
+        tblConfigSong.add(slctNumCols).padTop(TABLE_PADDING);
         tblConfigSong.row();
         tblConfigSong.add(btnBackToTitle).expandX().left().padLeft(TABLE_PADDING);
         tblConfigSong.add(btnSaveSongConfigs).expandX().colspan(3).right().padRight(TABLE_PADDING);
         tblConfigSong.row();
         tblConfigSong.add(btnPlayTrack).expandX().colspan(4).fillX();
 
-        //TODO Dispose texture and rename file
         NinePatch patch = new NinePatch(tableBackgroundTexture, 0, 0, 0, 0);
         NinePatchDrawable drawablePatch = new NinePatchDrawable(patch);
         patch.setColor(new Color(1, 1, 1, TABLE_BACKGROUND_OPACITY));
