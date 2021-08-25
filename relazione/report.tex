@@ -55,13 +55,13 @@ dalla quale viene presa ispirazione, offrire all'utente la possibilità di impor
 	\item L'applicativo deve offrire un gameplay su varie colonne, il giocatore dovrà premere le note sulla rispettiva colonna a ritmo di musica per ottenere punti.
 	\item L'applicativo deve memorizzare una scoreboard con tutti i punteggi delle varie partite relative alla canzone selezionata.
 	\item La traccia giocabile viene scelta dall'utente dalla lista delle tracce componenti la canzone.
-	\item L'applicativo deve "semplificare" le traccie musicali complesse rendendole giocabili, segnalando un grado di difficoltà
+	\item L'applicativo deve "semplificare" le traccie musicali complesse rendendole giocabili, segnalando un grado di difficoltà.
 \end{itemize}
 
 \subsubsection{Requisiti non funzionali}
 \begin{itemize}
-	\item L'applicativo deve funzionare correttamente sia su Windows sia su sistemi basati su Unix
-	\item La fluidità del gameplay e la qualità dell'audio non devono essere compromesse dalla pesantezza del file midi (ovviamente se non troppo complesso)
+	\item L'applicativo deve funzionare correttamente sia su Windows sia su sistemi basati su Unix.
+	\item La fluidità del gameplay e la qualità dell'audio non devono essere compromesse dalla pesantezza del file midi (ovviamente se non troppo complesso).
 \end{itemize}
 \endgroup
 \newpage
@@ -160,7 +160,7 @@ Dopo che ogni traccia è stata filtrata queste vengono mostrate a schermo con l'
 \end{figure}
 \clearpage \hfill\break
 \subsubsection{Incolonnamento delle note e passaggio alla grafica}
-Dopo che viene scelta una traccia da giocare è necessario posizionare le note nelle colonne presenti nell'enum Columns. In questo processo vengono anche generati i range che poi saranno sfruttati nel calcolo del punteggio. Dopo aver incolonnato le colonne queste vengono convertite tramite un pattern adapter. In questo caso il pattern, invece che connettere due interfacce, si occupa di rendere compatibili una classe astratta AbstractNote e un interfaccia LogicNote. Tramite questo adattamento è possibile connettere gli aspetti logici c e grafici del progetto. \\ \\ \\ \\
+Dopo che viene scelta una traccia da giocare è necessario posizionare le note nelle colonne presenti nell'enum Columns. In questo processo vengono anche generati i range che poi saranno sfruttati nel calcolo del punteggio. Dopo aver incolonnato le colonne queste vengono convertite tramite un pattern adapter. In questo caso il pattern, invece che connettere due interfacce, si occupa di rendere compatibili una classe astratta AbstractNote e un interfaccia LogicNote. Tramite questo adattamento è possibile connettere gli aspetti logici e grafici del progetto. \\ \\ \\ \\
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.7]{\pathserafino adapter.jpg}}
 	\caption{Schema UML dell'adapter.}
@@ -364,8 +364,8 @@ Abbiamo deciso di eseguire test automatizzati prevalentemente per le classi più
 	\begingroup
 	\fontsize{10pt}{12pt}\selectfont	
 	\item \textbf{testStraightLFO - testSquareLFO - testSineLFO - testIntervalLFO:} per ogni funzione LFO è presente un test per garantirne il corretto funzionamento.	
-	\item \textbf{TestKeyboardSynth:} testato la correttezza del conto di quante note stanno suonando al momento, il metodo per ottenere il campione audio, il metodo per risuonare una nota.	
-	\item \textbf{DrumSynthTest:} testato la correttezza del conto di quante percussioni stanno suonando al momento, il metodo per ottenere il campione audio, il metodo per risuonare una percussione.	
+	\item \textbf{TestKeyboardSynth:} testata la correttezza del conto di quante note stanno suonando al momento, il metodo per ottenere il campione audio, il metodo per risuonare una nota.	
+	\item \textbf{DrumSynthTest:} testata la correttezza del conto di quante percussioni stanno suonando al momento, il metodo per ottenere il campione audio, il metodo per risuonare una percussione.	
 	\item \textbf{TestBuilder:} testate le eccezioni e il corretto funzionamento di metodo per ritornare l'istanza di KeyboardSynth.
 	\item \textbf{TrackFilter:} testate singole tracce con numeri diversi di note e liste di tracce richiedenti filtraggi differenti.	
 	\item \textbf{GameUtilities:} testata l'attribuzione delle difficoltà alle tracce.	
@@ -482,7 +482,7 @@ Il processo di integrazione della mia parte con le altre è stato relativamente 
 tra le varie classi sviluppate dai miei colleghi. Le parti in cui si necessitava di una integrazione, come quella per integrare la schermata di PlayScreen,
 è stata risolta facendo implementare a quest'ultima l'interfaccia Window, mentre per il passaggio dei dati tra le varie Window è stata implementata la 
 classe GameModel, la quale racchiude tutti i dati attuali della partita (nome del giocatore, traccia e canzone selezionata, punteggio, hash della canzone e il numero di 
-colonne sul quale vuole giocare).
+colonne sul quale vuole giocare). \\
 Package sviluppati:
 \begin{itemize}
 	\item \textbf{it.dukemania.controller.filedialog}
@@ -509,7 +509,7 @@ Feature avanzate del linguaggio:
 	\item \textbf{lambda:} usate per caricare gli iteratori delle note per ogni traccia e i buffer dei campioni audio nei sintetizzatori di tastiere.
 	\item \textbf{stream:} usati per controllare lo stato di tutti i sintetizzatori e sommare i vari campioni di questi ultimi.
 	\item \textbf{optional:} usati per i campi opzionali nel builder dei sintetizzatori di tastiera. 
-	\item \textbf{function:} usate per gestire gli LFO
+	\item \textbf{function:} usate per gestire gli LFO.
 \end{itemize}
 Librerie utilizzate:
 \begin{itemize}
@@ -541,7 +541,7 @@ librerie utilizzate:
 	\item \textbf{libgdx:} libreria grafica Libgdx: studio autonomo di tale libreria per realizzare l'interfaccia di gioco.
 \end{itemize}
 Classi riutilizzate: \\ \\
-Utilizzo della classe Pair fornita gentilmente dal professore Viroli
+Utilizzo della classe Pair fornita gentilmente dal professore Viroli.
 \newpage
 
 \subsection{Laura Leonardi}
@@ -577,7 +577,7 @@ Librerie utilizzate:
 
 
 
-\chapter{Commenti Finali}
+\chapter{Difficoltà, Commenti Finali e Autovalutazione}
 
 
 \section{Gianluca Migliarini}
@@ -614,6 +614,7 @@ imparare già da subito ad applicare correttamente i pattern e C\#. Nella mia mo
 comporterebbe un notevole aiuto.
 \newpage
 \section{Laura Leonardi}
+\subsection{commenti}
 Personalmente ritengo che in questo progetto sia stata effettuata un'ottima collaborazione tra membri del team, ognuno di quali è sempre stato molto disponibile, inoltre sebbene non possedessi molta esperienza col DVCS sono riuscita comunque a farne uso e a comprenderne la comodità. Un altro lato decisamente positivo del progetto è stata la possibilità di approfondire nuovi argomenti, infatti ho trovato molto interessante lavorare e scoprire il funzionamento del protocollo MIDI, del quale prima di questo progetto, non essendo particolarmente appassionata di musica, non conoscevo neppure l'esistenza. Sono in definitiva soddisfatta dell'esito del progetto.
 \subsection{difficoltà riscontrate}
 Dal mio punto di vista il corso di oop si è rivelato impegnativo ma decisamente utile per quanto riguarda le pratiche di buona programmazione e l'utilizzo di DVCS, nonostante questo ritengo che purtroppo le ore di laboratorio dedicate all'effettiva programmazione siano state un poco ridotte, in particolare per quanto riguarda C\#.
@@ -648,7 +649,7 @@ Ritengo infine che le uniche problematiche inerenti al corso siano dovute dalla 
 	\caption{La schermata di gioco.}
 	\label{img:game}
 \end{figure} \\ \\
-Known Issue: su Linux, a causa di un problema di resize di libGdx, la finestra di gioco potrebbe scomparire se trascinata con il mouse.
+Known Issue: su Linux, a causa di un problema di resize di libGdx, la finestra di gioco potrebbe scomparire se trascinata con il mouse. \\ A causa del peso del metodo di render e della necessità di sincronizzare il video all'audio, su alcuni dispositivi quest'ultimo potrebbe risultare sgradevole.
 
 
 \end{document}

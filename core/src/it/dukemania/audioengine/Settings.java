@@ -3,10 +3,22 @@ package it.dukemania.audioengine;
 public final class Settings {
 
 
+    private static final float DEFAULT_SAMPLE_RATE = 22100;
+    private static final int DEFAULT_BUFFER_SIZE = 512;
+
+    /**
+     * The available sample rates.
+     */
+    public static final Integer[] AVAILABLE_SAMPLE_RATES = { 11000, 22100, 44100, 128000, 192000 };
+    /**
+     * The available buffer sizes.
+     */
+    public static final Integer[] AVAILABLE_BUFFER_SIZES = { 128, 256, 512, 1024, 2048, 4096, 8192 };
+
     /**
      * How many samples are played every seconds.
      */
-    public static final float SAMPLE_RATE = 22100;
+    public static float SAMPLE_RATE = DEFAULT_SAMPLE_RATE;
     /**
      * The size of each sample.
      */
@@ -18,7 +30,7 @@ public final class Settings {
     /**
      * How many samples copmpose a buffer.
      */
-    public static final int BUFFER_LENGHT = 512;
+    public static int BUFFER_LENGHT = DEFAULT_BUFFER_SIZE;
     /**
      * How many samples are played every millisecond.
      */

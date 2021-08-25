@@ -1,6 +1,6 @@
 [ {
   "presetName" : "default",
-  "associatedInstruments" : [ "CELESTA", "GLOCKENSPIEL", "MARIMBA" ],
+  "associatedInstruments" : [ ],
   "values" : {
     "enveloper" : {
       "attackMS" : 10,
@@ -12,7 +12,7 @@
   }
 }, {
   "presetName" : "simple_saw",
-  "associatedInstruments" : [ "ACOUSTIC_GRAND_PIANO", "BRIGHT_ACOUSTIC_PIANO", "ELECTRIC_GRAND_PIANO" ],
+  "associatedInstruments" : [ "DRAWBAR_ORGAN", "PERCUSSIVE_ORGAN", "ROCK_ORGAN", "CHURCH_ORGAN", "REED_ORGAN", "ACCORDION", "HARMONICA", "TANGO_ACCORDION" ],
   "values" : {
     "enveloper" : {
       "attackMS" : 10,
@@ -20,6 +20,127 @@
       "releaseMS" : 100
     },
     "wavetables" : [ "Saw", "Saw", "Saw" ],
-    "offsets" : [ 1.0, 1.005, 0.997 ]
+    "offsets" : [ 1.0, 1.005, 0.997 ],
+	 "volumeLFO":{
+		"type":"INTERVALS",
+		"arguments":[
+		   0.8
+		],
+		"duration":100
+	 }
   }
-} ]
+}, {
+  "presetName" : "gameboy_lead",
+  "associatedInstruments" : [ "SOPRANO_SAX", "ALTO_SAX", "TENOR_SAX", "BARITONE_SAX", "OBOE", "ENGLISH_HORN", "BASSOON", "CLARINET" ],
+  "values" : {
+    "enveloper" : {
+      "attackMS" : 10,
+      "attackVolume" : 1.0,
+      "releaseMS" : 100
+    },
+    "wavetables" : [ "Square" ],
+    "offsets" : [ 1.0 ],
+	 "noteLFO":{
+		"type":"SQUARE",
+		"arguments":[
+		   2.0,1.0
+		],
+		"duration":50
+	 },
+	 "volumeLFO":{
+		"type":"INTERVALS",
+		"arguments":[
+		   0.3
+		],
+		"duration":100
+	 }
+  }
+}, {
+  "presetName" : "spooky",
+  "associatedInstruments" : [ "VIOLIN", "VIOLA", "CELLO", "CONTRABASS", "TREMOLO_STRINGS", "PIZZICATO_STRINGS", "ORCHESTRAN_HARP", "TIMPANI" ],
+  "values" : {
+    "enveloper" : {
+      "attackMS" : 10,
+      "attackVolume" : 1.0,
+      "releaseMS" : 100
+    },
+    "wavetables" : [ "Sine" ],
+    "offsets" : [ 1.0 ],
+	 "noteLFO":{
+		"type":"SINE",
+		"arguments":[
+		   1.02,0.98
+		],
+		"duration":150
+	 }
+  }
+},{
+  "presetName" : "sub_bass",
+  "associatedInstruments" : [ "ACOUSTIC_BASS", "ELECTRIC_BASS_F", "ELECTRIC_BASS_P", "FRETLESS_BASS", "SLAP_BASS_1", "SLAP_BASS_2", "SYNTH_BASS_1", "SYNTH_BASS_2" ],
+  "values" : {
+    "enveloper" : {
+      "attackMS" : 10,
+      "attackVolume" : 1.0,
+      "releaseMS" : 100
+    },
+    "wavetables" : [ "Triangle" ],
+    "offsets" : [ 1.0 ]
+  }
+},{
+  "presetName" : "single_saw",
+  "associatedInstruments" : [ "TRUMPET", "TROMBONE", "TUBA", "MUTED_TRUMPET", "FRENCH_HORN", "BRASS_SECTION", "SYNTH_BRASS_1", "SYNTH_BRASS_2" ],
+  "values" : {
+    "enveloper" : {
+      "attackMS" : 10,
+      "attackVolume" : 1.0,
+      "releaseMS" : 100
+    },
+    "wavetables" : [ "Triangle" ],
+    "offsets" : [ 1.0 ]
+  }
+},{
+  "presetName" : "single_square",
+  "associatedInstruments" : [ "LEAD_1", "LEAD_2", "LEAD_3", "LEAD_4", "LEAD_5", "LEAD_6", "LEAD_7", "LEAD_8", "PAD_1", "PAD_2", "PAD_3", "PAD_4", "PAD_5", "PAD_6", "PAD_7", "PAD_8", "FX_1", "FX_2", "FX_3", "FX_4", "FX_5", "FX_6", "FX_7", "FX_8" ],
+  "values" : {
+    "enveloper" : {
+      "attackMS" : 10,
+      "attackVolume" : 1.0,
+      "releaseMS" : 100
+    },
+    "wavetables" : [ "Triangle" ],
+    "offsets" : [ 1.0 ],
+	 "volumeLFO":{
+		"type":"INTERVALS",
+		"arguments":[
+		   0.4
+		],
+		"duration":100
+	 }
+  }
+} , {
+  "presetName" : "sine_saw",
+  "associatedInstruments" : [ "STRING_ENSEMBLE_1", "STRING_ENSEMBLE_2", "SYNTH_STRINGS_1", "SYNTH_STRINGS_2", "CHOIR_AAHS", "VOICE_OOHS", "SYNTH_VOICE", "ORCHESTRA_HIT" ],
+  "values" : {
+    "enveloper" : {
+      "attackMS" : 10,
+      "attackVolume" : 1.0,
+      "releaseMS" : 100
+    },
+    "wavetables" : [ "Triangle", "Triangle", "Triangle" ],
+    "offsets" : [ 1.0, 1.005, 0.997 ],
+	 "noteLFO":{
+		"type":"SINE",
+		"arguments":[
+		   1.01,0.99
+		],
+		"duration":150
+	 },
+	 "volumeLFO":{
+		"type":"INTERVALS",
+		"arguments":[
+		   1.3
+		],
+		"duration":100
+	 }
+  }
+}]
