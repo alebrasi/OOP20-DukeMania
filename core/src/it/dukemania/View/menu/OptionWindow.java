@@ -17,6 +17,7 @@ import it.dukemania.windowmanager.DukeManiaWindowState;
 public class OptionWindow extends AbstractView {
 
     private OptionWindowController controller;
+    private static final int OPTION_WINDOW_OFFSET = 200;
 
     public OptionWindow(final String backgroundPath, final Skin skin) {
         super(backgroundPath, skin);
@@ -60,7 +61,7 @@ public class OptionWindow extends AbstractView {
 
         Container<Table> mainMenuContainer = new Container<>();
         mainMenuContainer.setActor(table);
-        mainMenuContainer.setPosition(screenWidth / 2, (screenHeight / 2) - 200);
+        mainMenuContainer.setPosition(screenWidth / 2, (screenHeight / 2) - OPTION_WINDOW_OFFSET);
         mainStage.addActor(mainMenuContainer);
         Gdx.input.setInputProcessor(mainStage);
     }

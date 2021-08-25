@@ -43,7 +43,6 @@ public class SongSelectionWindow extends AbstractView {
     private static final int TABLE_PADDING = 30;
     private static final float TABLE_BACKGROUND_OPACITY = 0.3f;
     private static final float TABLE_TRACKS_HEIGHT = 200f;
-    private Texture tableBackgroundTexture;
 
     public SongSelectionWindow(final String backgroundPath, final Skin skin) throws NoSuchAlgorithmException {
         super(backgroundPath, skin);
@@ -52,7 +51,7 @@ public class SongSelectionWindow extends AbstractView {
     @Override
     public void create() {
         super.create();
-        tableBackgroundTexture = AssetsManager.getInstance().getTexture("background.png");
+        Texture tableBackgroundTexture = AssetsManager.getInstance().getTexture("background.png");
         try {
             controller = new SongSelectionWindowControllerImpl(switchWindowNotifier, data);
         } catch (NoSuchAlgorithmException e) {
