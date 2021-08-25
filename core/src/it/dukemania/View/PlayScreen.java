@@ -66,7 +66,7 @@ public class PlayScreen implements Window {
     private SpriteBatch backgroundBatch;
 
     private final List<Integer> posXButtons = new ArrayList<>();
-    private final int posySpark;
+    private int posySpark;
     private final int finishLine;
     private int score;
     private long startTime;
@@ -101,7 +101,6 @@ public class PlayScreen implements Window {
         notes = new ArrayList<>();
         buttons = new ArrayList<>();
         shift = new ComputingShiftImpl();
-        posySpark = PlayScreen.BUTTON_DIM - this.shift.getNoteShift();
         finishLine = PlayScreen.BUTTON_DIM;
 
 
@@ -144,7 +143,7 @@ public class PlayScreen implements Window {
         final Skin skin = new Skin();
         final TextureAtlas atlas = assetManager.getTextureAtlas("pinkAndBlueButtons.atlas");
 
-        logic.initAudio(song);
+
         skin.addRegions(atlas);
 
         this.fontScoreboard = assetManager.generateFontScoreboard();
@@ -168,7 +167,7 @@ public class PlayScreen implements Window {
             this.buttonsStage.addActor(this.buttons.get(i));
             posXButtons.add((int) this.buttons.get(i).getX());
         }
-
+        this.posySpark = (int) this.buttons.get(0).getHeight() -  this.shift.getSparksHeight() / 2;
 
         this.logic.setColumnNumber(this.numberOfColumns);
         this.logic.contextInit();
@@ -179,6 +178,7 @@ public class PlayScreen implements Window {
 
         //adding elements on the stage
         this.stage.addActor(backgroundImage);
+        logic.initAudio(song);
 
         Gdx.graphics.setResizable(false);
         Gdx.graphics.setWindowedMode(dimensions.getSize().getX(), dimensions.getSize().getY());
@@ -189,7 +189,7 @@ public class PlayScreen implements Window {
         return new GraphicNoteImpl(this.dimensions.getSize().getY(),
             noteLogic.getColumn(),
             (noteLogic.getNoteDuration().intValue()) / this.shift.getDurationOffset(),
-            noteLogic.getNoteStarts() / 1000 - this.shift.getNoteStartOffset(),
+            noteLogic.getNoteStarts() / 1000 - this.shift.getNoteStartOffset() + 500,
             noteLogic.getNoteDuration() / 1000,
             (int) this.buttons.get(0).getHeight(), this.posXButtons
         );
@@ -260,6 +260,12 @@ public class PlayScreen implements Window {
             }
             n.updateNote(deltaTime, this.startTime);
 
+            //draw the score and the scoreboard
+            this.fontScoreboard.draw(batch, Integer.toString(this.score), this.dimensions.getSize().getX() / 2 - fontWidth / 2,
+                    this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
+            this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - this.shift.getScoreboardHeight(),
+                    this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
+
             //it returns the time when the user starts to press a key
             if (n.getKeyboard().get().isButtonPressed(this.numberOfColumns) && !n.isPressed()) {
                 n.setIsPressed(true);
@@ -301,8 +307,6 @@ public class PlayScreen implements Window {
             switchWindowNotifier.switchWindow(DukeManiaWindowState.LEADERBOARD, data);
             this.startTime = 0;
             this.score = 0;
-        } else {
-            logic.play();
         }
 
 
