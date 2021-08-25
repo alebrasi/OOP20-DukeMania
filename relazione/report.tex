@@ -7,11 +7,6 @@
 \usepackage{wrapfig}
 \usepackage{xcolor}
 
-
-
-
-
-% Questo commentalo se vuoi scrivere in inglese.
 \usepackage[italian]{babel}
 
 \usepackage[italian]{cleveref}
@@ -194,6 +189,7 @@ Infine, per non rendere dipendente l'audio dal metodo di render, questo viene de
 
 
 \subsection{Sofia Tosi}
+\subsubsection{Adapter - EventsFromKeyboard}
 Questo paragrafo illustra il design relativo alla gestione dell'input e degli assets.
 In seguito ad un'attenta valutazione, si è deciso di far interfacciare l'utente all'applicazione DukeMania tramite l'utilizzo di
 una tastiera per pc. 
@@ -210,6 +206,7 @@ e sostituire la classe dell'adapter con un altro adapter che interagisca con una
 	\label{img:adapter}
 \end{figure}
 \clearpage \hfill\break
+\subsubsection{Singleton - AssetsManager}
 Un'altra peculiare classe che merita di essere citata è l'AssetsManager che, come dice il nome, si dedica all'organizzazione degli assets, ovvero tutte le risorse grafiche
 necessarie per il corretto funzionamento dell'applicazione. Queste risorse, che possono essere, ad esempio, le texture degli elementi nella GUI o i file con i font utilizzati,
 vengono caricate una sola volta in memoria.
@@ -415,7 +412,22 @@ sia nell’aspetto audio-video che nel calcolo dei punteggi di gioco. Per quanto
 concerne l’aspetto delle tracce, la classe fondamentale da me implementata
 è TrackFilterImpl che, fornita in input una Song, ottenuta dal midiParser,
 riduce il numero di note presenti in ogni sua traccia in modo da renderle giocabili. Questa classe è stata particolarmente facile da integrare in quanto
-si occupa di elaborare dati gi`a esistenti e a restituirli come era stato previsto
+si occupa di elaborare dati già esistenti e a restituirli come era stato previsto
+in fase di progettazione. Per le note e il calcolo del punteggio ho realizzato un
+unica classe principale ColumnLogicImpl che divide le note nelle varie colonne
+grafiche eliminando le eventuali collisioni e, utilizzando la classe secondaria
+NoteRange, permette di fornire un punteggio per ogni nota premuta durante
+il gioco sulla base delle classi di calcolo del punteggio. Questa classe è stata particolarmente difficile da
+finalizzare per una divergenza di classi/interfacce tra la parte logica e grafica,
+ed è stato quindi necessario creare una classe intermediaria LogicNoteImpl, la rispettiva interfaccia e
+dei metodi aggiuntivi in grado di fornire i dati mancanti per permettere un
+integrazione tra le due parti. In merito agli aspetti di precisione audio-video
+ho sviluppato la classe PlayerAudio che suona le note in base al tempo trascorso dall’inizio della traccia, ottimizzando la latenza tra ciò che appare a
+schermo e l’audio di gioco creando una relazione tra l’aspetto grafico e quello
+audio. L’integrazione di questa classe non ha generato particolari problemi se
+non la necessità di avere una conoscenza superficiale del funzionamento delle
+altre classi presenti nell’AudioEngine. L’ultima parte sviluppata singolarmente è quella relativa alla classe GameUtilitiesImpl, utilizzata per attribuire a
+ogni traccia restituita dal trackFilter una difficoltà basata sul numero di note.
  \\ \\
 Classi sviluppate singolarmente:
 {\setstretch{0.6}
@@ -530,9 +542,11 @@ Librerie utilizzate:
 \begin{itemize}
 	\item \textbf{libgdx:} utilizzata per Gdx.audio.newAudioDevice, necessario per riprodurre sul dispositivo audio hardware il buffer di campioni.
 \end{itemize}
-Classi riutilizzate: \\
-Per comodità ho deciso di riutilizzare la classe generica Pair, introdotta dal prof. Viroli durante il corso.
-\\ \\ A causa della mia inespertezza sulla sintesi audio dal punto di vista matematico, mi sono ritrovato spesso a consultare vari forum online, in particolare, quello che mi è stato più di aiuto è il forum di JUCE (https://forum.juce.com/) un framework in c++ per la gestione dell'audio.
+ Classi riutilizzate:
+\begin{itemize}
+	\item \textbf{Pair:} Per comodità, ho riutilizzato la classe generica Pair, fornita dal prof Viroli durante il corso. 
+\end{itemize}
+ A causa della mia inespertezza sulla sintesi audio dal punto di vista matematico, mi sono ritrovato spesso a consultare vari forum online, in particolare, quello che mi è stato più di aiuto è il forum di JUCE (https://forum.juce.com/) un framework in c++ per la gestione dell'audio.
 \newpage
 
 \subsection{Serafino Pandolfini}
@@ -541,6 +555,10 @@ Feature avanzate del linguaggio:
 	\item \textbf{lambda:} utilizzate per il filtraggio delle tracce, l'incolonnamento delle note, l'individuazione del range della nota premuta, l'assegnazione delle difficoltà alle tracce, all'interno del note player.
 	\item \textbf{stream:} utilizzate per il filtraggio delle tracce, l'incolonnamento delle note, l'individuazione del range della nota premuta, l'assegnazione delle difficoltà alle tracce, all'interno del note player.
 	\item \textbf{optional:} utilizzate per il filtraggio delle tracce, l'incolonnamento delle note, l'individuazione del range della nota premuta, l'assegnazione delle difficoltà alle tracce, all'interno del note player, nell'adapter per il passaggio dati alla grafica.
+\end{itemize}
+ Classi riutilizzate:
+\begin{itemize}
+	\item \textbf{Pair:} Per comodità, ho riutilizzato la classe generica Pair, fornita dal prof Viroli durante il corso. 
 \end{itemize}
 \newpage
 
@@ -556,8 +574,10 @@ librerie utilizzate:
 \begin{itemize}
 	\item \textbf{libgdx:} libreria grafica Libgdx: studio autonomo di tale libreria per realizzare l'interfaccia di gioco.
 \end{itemize}
-Classi riutilizzate: \\ \\
-Utilizzo della classe Pair fornita gentilmente dal professore Viroli.
+ Classi riutilizzate:
+\begin{itemize}
+	\item \textbf{Pair:} Per comodità, ho riutilizzato la classe generica Pair, fornita dal prof Viroli durante il corso. 
+\end{itemize}
 \newpage
 
 \subsection{Laura Leonardi}
@@ -571,8 +591,10 @@ librerie utilizzate:
 \begin{itemize}
 	\item \textbf{javax.sound.midi:} gestione file .mid
 \end{itemize}
-Classi riutilizzate: \\
-Classe generica Pair, fornita dal prof. Viroli.
+ Classi riutilizzate:
+\begin{itemize}
+	\item \textbf{Pair:} Per comodità, ho riutilizzato la classe generica Pair, fornita dal prof Viroli durante il corso. 
+\end{itemize}
 \newpage
 
 \subsection{Alessandro Brasini}
@@ -588,6 +610,11 @@ Librerie utilizzate:
 	in formato JSON.
 	\item \textbf{Libgdx:} libreria grafica utilizzata per la creazione dell'interfaccia grafica.
 \end{itemize}
+ Classi riutilizzate:
+ \begin{itemize}
+ 	\item \textbf{Pair:} Per comodità, ho riutilizzato la classe generica Pair, fornita dal prof Viroli durante il corso. 
+ \end{itemize}
+Per comodità, ho riutilizzato la classe generica Pair, fornita dal prof Viroli durante il corso. 
 A seguito della mia scarsa iniziale conoscenza della libreria LibGDX e Jackson, ho consultato vari siti e forum che mostravano piccole snippet di codice 
 che mostravano come utilizzare, a livello basico, le librerie citate. 
 Siti utilizzati principalmente:

@@ -57,8 +57,6 @@ public class TitleWindow extends AbstractView {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
                 Gdx.app.exit();
-                dispose();
-                System.exit(0);
             }
         });
 

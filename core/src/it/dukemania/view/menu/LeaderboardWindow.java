@@ -85,7 +85,6 @@ public class LeaderboardWindow extends AbstractView {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
                 Gdx.app.exit();
-                System.exit(0);
             }
         });
 
