@@ -57,4 +57,10 @@ public interface SongSelectionWindowController {
      * @return An array containing the columns.
      */
     Integer[] getNumOfCols();
+
+    /**
+     * Returns the path of the midi directory.
+     * @return The midi directory path
+     */
+    String getMidiDirectory();
 }

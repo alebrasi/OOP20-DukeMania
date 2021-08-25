@@ -39,6 +39,12 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     private final StorageFactory storageFactory = new StorageFactoryImpl();
     private final Storage externalStorage = storageFactory.getExternalStorage();
     private final Storage configurationStorage = storageFactory.getConfigurationStorage();
+    private final Storage assetStorage = storageFactory.getAssetStorage();
+    private static final String MIDI_FOLDER_ASSETS = "midi_files";
+    private static final String[] MIDI_FILES = {"amogus_drip.mid", "dawn_of_sorrow_afterconfession.mid",
+                                        "dawn_of_sorrow_subhell.mid", "dawn_of_sorrow_vampirekiller.mid",
+                                        "Evangelion_-_Cruel_Angels_Thesis.mid", "simon_quest_bloody_tears.mid",
+                                        "test_file.mid"};
 
     private SongInfo currentSong;
     private final List<SongInfo> songsConfigurations;
@@ -60,6 +66,20 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
         songsConfigurations = getSongsConfiguration();
         this.data = data;
         this.switchWindowNotifier = notifier;
+        moveMidisToConfigurationFolder();
+    }
+
+    private void moveMidisToConfigurationFolder() {
+        String configurationDirectory = configurationStorage.getBaseDirectoryName();
+        configurationStorage.createDirectoryRecursively(MIDI_FOLDER_ASSETS);
+        for (String midiFile : MIDI_FILES) {
+            String path = MIDI_FOLDER_ASSETS + "/" + midiFile;
+            try {
+                assetStorage.copyTo(path, configurationDirectory + "/" + MIDI_FOLDER_ASSETS + "/" + midiFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -202,6 +222,11 @@ public class SongSelectionWindowControllerImpl implements SongSelectionWindowCon
     @Override
     public final Integer[] getNumOfCols() {
         return Arrays.stream(Columns.values()).map(Columns::getNumericValue).filter(c -> c >= 4).toArray(Integer[]::new);
+    }
+
+    @Override
+    public final String getMidiDirectory() {
+        return configurationStorage.getBaseDirectoryName() + File.separator + MIDI_FOLDER_ASSETS + File.separator;
     }
 
     private List<SongInfo> getSongsConfiguration() {

@@ -30,6 +30,7 @@ import it.dukemania.windowmanager.DukeManiaWindowState;
 import javax.sound.midi.InvalidMidiDataException;
 
 import java.io.IOException;
+import java.nio.file.NotDirectoryException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
@@ -89,6 +90,11 @@ public class SongSelectionWindow extends AbstractView {
         scrollTableTracks.setScrollingDisabled(true, false);
 
         FileDialog fd = new FileDialog("Select song", skin);
+        try {
+            fd.setRootDirectory(controller.getMidiDirectory());
+        } catch (NotDirectoryException e) {
+            e.printStackTrace();
+        }
         fd.setFilter("\\\\*.mid");
         ButtonGroup<CheckBox> playableTracks = new ButtonGroup<>();
 
@@ -159,7 +165,9 @@ public class SongSelectionWindow extends AbstractView {
         btnPlayTrack.addListener(new ClickListener() {
             @Override
             public void clicked(final InputEvent event, final float x, final float y) {
-                controller.setPlayTrack(Integer.parseInt(playableTracks.getChecked().getText().toString()));
+                if (playableTracks.getButtons().size != 0) {
+                    controller.setPlayTrack(Integer.parseInt(playableTracks.getChecked().getText().toString()));
+                }
                 controller.setColumnsNumber(slctNumCols.getSelected());
 
                 try {
