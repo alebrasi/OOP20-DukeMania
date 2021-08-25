@@ -76,11 +76,11 @@ public class StorageFactoryImpl implements StorageFactory {
         @Override
         public boolean createFileIfNotExists(final String path) {
             String tmpSep = "";
-            if (path.contains(".mid") && (File.separator.equals("/"))){
+            if (path.contains(".mid") && (File.separator.equals("/"))) {
                 tmpSep = "/";
             } else {
-                if(!File.separator.equals("/")){
-                    tmpSep = File.separator+File.separator;
+                if (!File.separator.equals("/")) {
+                    tmpSep = File.separator + File.separator;
                 }
             }
             String[] dirs = path.split(tmpSep);
