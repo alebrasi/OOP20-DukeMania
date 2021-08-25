@@ -77,9 +77,9 @@ public class Engine {
      * @return the drum synthesizer added
      */
     public Synth addDrum() {
-        final var asd = new DrumSynth();
-        synthetizers.add(asd);
-        return asd;
+        final var drumSynth = new DrumSynth();
+        synthetizers.add(drumSynth);
+        return drumSynth;
     }
 
     /**
