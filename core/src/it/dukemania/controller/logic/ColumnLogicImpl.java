@@ -21,6 +21,7 @@ public class ColumnLogicImpl implements ColumnLogic {
     private static final int COLUMN_MAX_CAP = 8;
     private static final int COLUMN_MIN_CAP = 4;
     private static final int MAX_HEIGHT = 4;
+    private static final int THREAD_SLEEP_TIME = 5;
     private int columnNumber;
     private List<NoteRange> noteRanges;
     private PlayerAudio player;
@@ -53,7 +54,8 @@ public class ColumnLogicImpl implements ColumnLogic {
         Runnable midiPlayer = () -> {
             while (!player.playNotes()) {
                 try {
-                    Thread.sleep(10);
+                    //Used for not overloading the audio engine
+                    Thread.sleep(THREAD_SLEEP_TIME);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
