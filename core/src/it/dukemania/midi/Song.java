@@ -12,22 +12,22 @@ public class Song {
 
     /**
      * constructor.
-     * @param title
-     * @param duration
-     * @param tracks
-     * @param bPM
+     * @param title the title of the song
+     * @param duration the duration of the song expressed in microseconds
+     * @param tracks the list of the ParsedTrack that compose the song
+     * @param bpm the song BPM (Beat Per Minute)
      */
-    public Song(final String title, final double duration, final List<ParsedTrack> tracks, final double bPM) {
+    public Song(final String title, final double duration, final List<ParsedTrack> tracks, final double bpm) {
         super();
         this.title = title;
         this.duration = duration;
-        this.bpm = bPM;
+        this.bpm = bpm;
         this.tracks = tracks;
     }
 
     /**
-     * this method return the song title based on the MIDI file name.
-     * @return String title
+     * this method return the song title.
+     * @return the title of the song
      */
     public final String getTitle() {
         return title;
@@ -35,7 +35,7 @@ public class Song {
 
     /**
      * this method return the BPM of the song.
-     * @return double bpm
+     * @return the song BPM
      */
     public final double getBPM() {
         return bpm;
@@ -43,7 +43,7 @@ public class Song {
 
     /**
      * this method return the song duration in microseconds.
-     * @return double duration
+     * @return the song duration in microseconds
      */
     public final double getDuration() {
         return duration;
@@ -51,7 +51,7 @@ public class Song {
 
     /**
      * this method return the tracks that compose the song.
-     * @return a list of MidiTracks 
+     * @return a list of the ParsedTrack which compose the song 
      */
     public final List<ParsedTrack> getTracks() {
         return tracks;

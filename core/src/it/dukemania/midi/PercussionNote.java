@@ -9,9 +9,9 @@ public class PercussionNote extends AbstractNote {
 
     /**
      * this is the constructor.
-     * @param duration
-     * @param startTime
-     * @param identifier
+     * @param duration duration of the not in microseconds
+     * @param startTime microsecond at which the song start
+     * @param identifier number that identifies the percussion represented by this note
      */
     public PercussionNote(final Optional<Long> duration, final long startTime, final int identifier) {
         super(duration, startTime, identifier);
@@ -20,12 +20,16 @@ public class PercussionNote extends AbstractNote {
 
     /**
      * this method return the Percussion represented by this PercussionNote.
-     * @return a Percussion Instrument
+     * @return a Percussion representing a percussion instrument
      */
     public final Percussion getInstrument() {
         return instrument;
     }
 
+    /**
+     * this method returns the DrumSample associated to the note.
+     * @return the associated DrumSample
+     */
     @Override
     public final DrumSamples getItem() {
         return instrument.getAssociated();

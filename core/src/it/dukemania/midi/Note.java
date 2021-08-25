@@ -9,10 +9,10 @@ public class Note extends AbstractNote {
     private final double frequency;
 
     /**
-     * this is the constructor.
-     * @param duration
-     * @param startTime
-     * @param identifier
+     * this is a constructor.
+     * @param duration the duration of the note in microseconds
+     * @param startTime the microsecond in which the note starts
+     * @param identifier the MIDI number of the note which identifies its frequency
      */
     public Note(final Optional<Long> duration, final long startTime, final int identifier) {
         super(duration, startTime, identifier);
@@ -22,14 +22,17 @@ public class Note extends AbstractNote {
 
     /**
      * this method return the note frequency.
-     * @return ferquency
+     * @return the note frequency
      */
     public final double getFrequency() {
         return frequency;
     }
 
 
-
+    /**
+     * this method returns an integer representing the note identifier.
+     * @return the note identifier, which identifies the note frequency
+     */
     @Override
     public final Integer getItem() {
         return super.getIdentifier();

@@ -15,11 +15,18 @@ public final class FactoryImpl implements AbstractFactory {
         return instance;
     }
 
+    /**
+     * @return a Note
+     */
     @Override
     public AbstractNote createNote(final Optional<Long> duration, final long startTime, final int identifier) {
         return new Note(duration, startTime, identifier);
     }
 
+    /**
+     * @param instrument the instrument associated with the track
+     * @return a KeyboardTrack
+     */
     @Override
     public ParsedTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
         return new KeyboardTrack(instrument, notes, channel);

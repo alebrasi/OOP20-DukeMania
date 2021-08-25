@@ -11,13 +11,13 @@ public abstract class AbstractNote {
 
     /**
      * this is a constructor.
-     * @param duration
-     * @param startTime2
-     * @param identifier
+     * @param duration the duration of the note in microseconds
+     * @param startTime the microsecond in which the note starts
+     * @param identifier the MIDI number of the note which can be used as its identifier
      */
-    public AbstractNote(final Optional<Long> duration, final long startTime2, final int identifier) {
+    public AbstractNote(final Optional<Long> duration, final long startTime, final int identifier) {
         this.duration = duration;
-        this.startTime = startTime2;
+        this.startTime = startTime;
         this.identifier = identifier;
     }
 

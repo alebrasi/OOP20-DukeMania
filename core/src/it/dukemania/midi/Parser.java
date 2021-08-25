@@ -8,12 +8,12 @@ import javax.sound.midi.InvalidMidiDataException;
 public interface Parser {
 
     /**
-     * this method parse the midi song file given.
-     * @param myMidi
+     * this method parse the song file given.
+     * @param myFile the file to be parsed
      * @return a song parsed
      * @throws InvalidMidiDataException
      * @throws IOException
      */
-    Song parse(File myMidi) throws InvalidMidiDataException, IOException;
+    Song parse(File myFile) throws InvalidMidiDataException, IOException;
 
 }

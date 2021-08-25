@@ -18,7 +18,7 @@ public final class Instrument {
 
     /**
      * this is the constructor.
-     * @param instrument
+     * @param instrument the InstrumentType associated to the Instrument.
      */
     public Instrument(final InstrumentType instrument) {
         this.instrument = instrument;
@@ -28,42 +28,26 @@ public final class Instrument {
         } catch (IOException e2) {
             e2.printStackTrace();
         }
-        try {
-            this.synthetizer = calcSynthetizer();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
-        try {
-            this.name = calcName();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
-        try {
-            this.associatedInstrumentType = calcAssociatedInstrumentType();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.synthetizer = calcSynthetizer();
+        this.name = calcName();
+        this.associatedInstrumentType = calcAssociatedInstrumentType();
     }
 
     /**
      * this method find the instruments which use the same synthetizer as the current one. 
-     * @return a list of instruments
-     * @throws IOException
+     * @return a list of instruments which use the same synthetizer as the current one.
      */
-    private List<InstrumentType> calcAssociatedInstrumentType() throws IOException {
+    private List<InstrumentType> calcAssociatedInstrumentType() {
         return this.list.stream()
                 .filter(s -> s.getSynth().equals(this.synthetizer))
                 .findAny().orElseThrow().getAssociatedInstruments();
     }
 
     /**
-     * this method find the name associated to the synthetizer for this instrument.
+     * this method find the name associated to the synthetizer of this instrument.
      * @return the syntetizer name
-     * @throws IOException
      */
-    private String calcName() throws IOException {
+    private String calcName() {
         return this.list.stream()
                 .filter(s -> s.getSynth().equals(this.synthetizer))
                 .findAny().orElseThrow().getName();
@@ -72,10 +56,9 @@ public final class Instrument {
 
     /**
      * this method find which synthetizer is associated to this instrument.
-     * @return the synthetizer
-     * @throws IOException
+     * @return the synthetizer associated to the instrument
      */
-    private SynthBuilderImpl calcSynthetizer() throws IOException {
+    private SynthBuilderImpl calcSynthetizer() {
         return this.list.stream()
                 .filter(s -> s.getAssociatedInstruments().contains(this.instrument))
                 .map(s -> s.getSynth())
@@ -88,9 +71,8 @@ public final class Instrument {
 
 
     /**
-     * this method returns the name associated to the synthetizer for this instrument.
-     * @return the syntetizer name
-     * @throws IOException
+     * this method returns the name associated to the synthetizer of this instrument.
+     * @return the associated syntetizer name
      */
     public String getName() {
         return name;
@@ -98,8 +80,7 @@ public final class Instrument {
 
     /**
      * this method returns the synthetizer associated to this instrument.
-     * @return the synthetizer
-     * @throws IOException
+     * @return the associated synthetizer
      */
     public SynthBuilderImpl getSynthetizer() {
         return this.synthetizer;
@@ -107,16 +88,15 @@ public final class Instrument {
 
     /**
      * this method return the instruments which use the same synthetizer as the current one. 
-     * @return a list of instruments
-     * @throws IOException
+     * @return a list of related instruments
      */
     public List<InstrumentType> getAssociatesInstrumentType() {
         return this.associatedInstrumentType;
     }
 
     /**
-     * this method return the instrument.
-     * @return an instrument
+     * this method return the enum name of the instrument.
+     * @return an element of the enum InstrumentType
      */
     public Enum<InstrumentType> getInstrument() {
         return this.instrument;

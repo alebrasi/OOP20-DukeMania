@@ -8,8 +8,15 @@ public final class PercussionFactoryImpl implements AbstractFactory {
     private static final int MIN = 35;
     private static final int MAX = 81;
 
+    /**
+     * this is a private constructor.
+     */
     private PercussionFactoryImpl() { }
 
+    /**
+     * this method returns an instance of PercussionFactoryImpl, making sure that only one is istanciated.
+     * @return an instance of PercussionFactoryImpl
+     */
     public static PercussionFactoryImpl getInstance() {
         if (instance == null) {
             instance = new PercussionFactoryImpl();
@@ -17,6 +24,9 @@ public final class PercussionFactoryImpl implements AbstractFactory {
         return instance;
     }
 
+    /**
+     * @param identifier the MIDI number that identifies the Percussion associated to the note.
+     */
     @Override
     public AbstractNote createNote(final Optional<Long> duration, final long startTime, final int identifier) {
         if (identifier >= MIN && identifier <= MAX) {
@@ -26,6 +36,10 @@ public final class PercussionFactoryImpl implements AbstractFactory {
         }
     }
 
+    /**
+     * @param instrument this parameter is not used
+     * @return a PercussionTrack
+     */
     @Override
     public ParsedTrack createTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes,
             final int channel) {

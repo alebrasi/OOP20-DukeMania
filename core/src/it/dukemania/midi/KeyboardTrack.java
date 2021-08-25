@@ -6,15 +6,14 @@ import java.util.stream.Collectors;
 
 
 public class KeyboardTrack extends ParsedTrack {
-
     private Enum<InstrumentType> instrument;
     private final Map<Integer, Long> notesMaxDuration;
 
     /**
      * this is the constructor.
-     * @param instrument
-     * @param notes
-     * @param channel
+     * @param instrument the instrument associated to this track
+     * @param notes the list of note that compose the track
+     * @param channel the MIDI channel associated to this track
      */
     public KeyboardTrack(final Enum<InstrumentType> instrument, final List<AbstractNote> notes, final int channel) {
         super(notes, channel);
@@ -24,7 +23,7 @@ public class KeyboardTrack extends ParsedTrack {
 
     /**
      * this method return the instrument associated to this track.
-     * @return instrument
+     * @return the instrument in which this track is played
      */
     public final Enum<InstrumentType> getInstrument() {
         return instrument;
@@ -32,7 +31,7 @@ public class KeyboardTrack extends ParsedTrack {
 
     /**
      * this method set the instrument associated to this track.
-     * @param inst
+     * @param inst the element of the enum InstrumentType to associate to the track
      */
     public final void setInstrument(final InstrumentType inst) {
         instrument = inst;

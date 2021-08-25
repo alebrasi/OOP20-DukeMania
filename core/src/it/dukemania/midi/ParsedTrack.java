@@ -8,8 +8,8 @@ public abstract class ParsedTrack {
 
     /**
      * constructor.
-     * @param notes
-     * @param channel
+     * @param notes the list of notes which compose the track
+     * @param channel the MIDI channel
      */
     public ParsedTrack(final List<AbstractNote> notes, final int channel) {
         this.notes = notes;
@@ -17,7 +17,7 @@ public abstract class ParsedTrack {
     }
     /**
      * this method return the list of the notes that compose the track.
-     * @return notes
+     * @return the list of notes that compose the track
      */
     public final List<AbstractNote> getNotes() {
         return notes;
@@ -25,7 +25,7 @@ public abstract class ParsedTrack {
 
     /**
      * this method return the channel number (starting from 1).
-     * @return channel
+     * @return the MIDI channel which can be used as identifier for each ParsedTrack in a song
      */
     public final int getChannel() {
         return channel;
@@ -33,7 +33,7 @@ public abstract class ParsedTrack {
 
     /**
      * this method delete a note from the track.
-     * @param note
+     * @param note the not to delete
      */
     public final void deleteNote(final AbstractNote note) {
         this.notes.remove(note);

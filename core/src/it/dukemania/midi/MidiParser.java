@@ -26,6 +26,9 @@ public final class MidiParser implements Parser {
     private static final int MICROSEC_PER_MIN = 60_000_000;
     private static MidiParser instance;
 
+    /**
+     * this is a private constructor.
+     */
     private MidiParser() { }
 
     /**
@@ -39,6 +42,10 @@ public final class MidiParser implements Parser {
         return instance;
     }
 
+    /**
+     * this method parse the MIDI song file given.
+     * @param myMidi the MIDI file to be parsed
+     */
     @Override
     public Song parse(final File myMidi) throws InvalidMidiDataException, IOException  {
         final Sequence sequence = MidiSystem.getSequence(myMidi);

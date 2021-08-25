@@ -29,8 +29,8 @@ class TestMidiParser {
 
     /**
      * this method create a MIDI file.
-     * @param nTracks
-     * @param type
+     * @param nTracks the number of track for the file that we wont to create
+     * @param type the type of the MIDI to create
      * @return a MIDI file
      * @throws InvalidMidiDataException
      * @throws IOException
