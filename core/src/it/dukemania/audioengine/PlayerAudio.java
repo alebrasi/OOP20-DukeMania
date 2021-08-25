@@ -44,14 +44,14 @@ public class PlayerAudio implements Player {
         }));
     }
 
-    private void removeTracks() {
+    private void removeEndedTracks() {
         playableTracks.removeIf(x -> !x.hasNext());
     }
 
     @Override
     public final void playNotes() {
         this.startMillis = this.startMillis == 0 ? Instant.now().toEpochMilli() : this.startMillis;
-        removeTracks();
+        removeEndedTracks();
         playableTracks.forEach(x -> x.update(Instant.now().toEpochMilli() - this.startMillis));
         audioEngine.playBuffer();
     }
