@@ -6,7 +6,7 @@ public final class Settings {
     /**
      * How many samples are played every seconds.
      */
-    public static final float SAMPLE_RATE = 22100;
+    public static final float SAMPLE_RATE = 11000;
     /**
      * The size of each sample.
      */

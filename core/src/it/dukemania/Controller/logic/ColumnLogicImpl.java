@@ -50,6 +50,16 @@ public class ColumnLogicImpl implements ColumnLogic {
     @Override
     public final void initAudio(final Song song) {
         player = new PlayerAudio(song);
+        Runnable midiPlayer = () -> {
+            while (!player.playNotes()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(midiPlayer).start();
     }
 
     @Override
