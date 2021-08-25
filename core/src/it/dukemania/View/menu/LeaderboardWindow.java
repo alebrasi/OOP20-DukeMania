@@ -26,11 +26,15 @@ public class LeaderboardWindow extends AbstractView {
     private static final int LEADERBOARD_HEIGHT = 400;
     private LeaderboardController controller;
     private Texture tableBackgroundTexture;
+    private static int LEADERBOARD_PADDING = 200;
 
     public LeaderboardWindow(final String backgroundPath, final Skin skin) {
         super(backgroundPath, skin);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void create() {
         super.create();
@@ -42,14 +46,16 @@ public class LeaderboardWindow extends AbstractView {
         Table table = new Table(skin);
         Table tblLeaderboard = new Table(skin);
         ScrollPane scrlTblLeaderBoard = new ScrollPane(table);
+        Label lblLeaderBoard = new Label("LEADERBOARD", skin);
         TextButton btnQuit = new TextButton("QUIT", skin);
         TextButton btnPlayAgain = new TextButton("Play another song", skin);
+        TextButton btnPlay = new TextButton("Play again", skin);
 
         scrlTblLeaderBoard.setFadeScrollBars(false);
         scrlTblLeaderBoard.setScrollbarsVisible(true);
 
         controller.getLeaderboard().forEach(t -> {
-            table.add(new Label(t.getX(), skin)).uniformX();
+            table.add(new Label(t.getX() + "------->", skin)).uniformX();
             table.add(new Label(t.getY(), skin)).uniformX();
             table.row();
         });
@@ -58,10 +64,13 @@ public class LeaderboardWindow extends AbstractView {
         NinePatchDrawable drawablePatch = new NinePatchDrawable(patch);
         patch.setColor(new Color(1, 1, 1, TABLE_BACKGROUND_OPACITY));
 
-        tblLeaderboard.add(scrlTblLeaderBoard).height(LEADERBOARD_HEIGHT).colspan(2).expand().fillX()
+        tblLeaderboard.add(lblLeaderBoard).colspan(3).expand().center();
+        tblLeaderboard.row();
+        tblLeaderboard.add(scrlTblLeaderBoard).height(LEADERBOARD_HEIGHT).colspan(3).expand().fillX()
                                                                         .padBottom(PADDING).padTop(PADDING);
         tblLeaderboard.row();
         tblLeaderboard.add(btnQuit).padRight(PADDING).padLeft(PADDING);
+        tblLeaderboard.add(btnPlay);
         tblLeaderboard.add(btnPlayAgain).padRight(PADDING).padLeft(PADDING);
         tblLeaderboard.setBackground(drawablePatch);
 
@@ -80,9 +89,16 @@ public class LeaderboardWindow extends AbstractView {
             }
         });
 
+        btnPlay.addListener(new ClickListener() {
+           @Override
+            public void clicked(final InputEvent event, final float x, final float y) {
+               switchWindowNotifier.switchWindow(DukeManiaWindowState.PLAY, data);
+           }
+        });
+
         Container<Table> mainMenuContainer = new Container<>();
         mainMenuContainer.setActor(tblLeaderboard);
-        mainMenuContainer.setPosition(screenWidth / 2, (screenHeight / 2) - 200);
+        mainMenuContainer.setPosition(screenWidth / 2, (screenHeight / 2) - LEADERBOARD_PADDING);
         mainStage.addActor(mainMenuContainer);
         Gdx.input.setInputProcessor(mainStage);
     }
