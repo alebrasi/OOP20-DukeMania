@@ -24,6 +24,7 @@ import javax.sound.midi.Track;
 public final class MidiParser implements Parser {
     private static final int SET_TEMPO = 0X51;
     private static final int MICROSEC_PER_MIN = 60_000_000;
+    private static final int TIME_OFFSET = 3_000_000;
     private static MidiParser instance;
 
     /**
@@ -71,7 +72,7 @@ public final class MidiParser implements Parser {
                                 channelMap.get(channel).getY()));
                     } else {
                         addNote(shortMessage, channelMap.get(channel).getY(), FactoryConfigurator.getFactory(channel),
-                                calcTime(event.getTick(), microsecPerTick));
+                                calcTime(event.getTick(), microsecPerTick) + TIME_OFFSET);
                     }
                 }
             }
