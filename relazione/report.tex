@@ -181,6 +181,7 @@ Per ogni nota premuta dal giocatore viene calcolato un punteggio. Viene prima de
 Per garantire una corretta gestione delle tracce ho deciso di implementare, nella classe PlayerAudio, il pattern observer. Ho scelto questo pattern in quanto, a causa del framerate variabile sui vari dispositivi, risulta comodo avere un singolo metodo per notificare tutte le tracce (gli Observer) di suonare le note il cui tempo di inizio è inferiore o uguale a quello scandito dalla chiamata di Player, l'Observable.
 La lista di observer "playableTracks" viene riempita dal costruttore una volta passata la canzone. Gli observer vengono caricati come istanze anonime di PlayableTrack, interfaccia contenente il metodo per essere notificata dall'Observable e per controllare se un'altra nota puo' essere suonata.
 Ad ogni chiamata del metodo playNotes, verranno rimosse le tracce non più utilizzabili e tutte quelle rimanenti verranno notificate di suonare, se possibile, delle note.
+Infine, per non rendere dipendente l'audio dal metodo di render, questo viene delegato ad u thread, il quale gira in modo asincrono rispetto al gioco e termina una volta suonate tutte le note.
  \\ \\ \\ \\
 \begin{figure}[!htb]
 	\centerline{\includegraphics[scale=0.7]{\pathserafino observer.jpg}}

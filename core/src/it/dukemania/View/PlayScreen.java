@@ -92,7 +92,6 @@ public class PlayScreen implements Window {
     public void dispose() {
         buttonsStage.dispose();
         stage.dispose();
-        batch.dispose();
         backgroundBatch.dispose();
         this.startTime = 0;
     }
@@ -102,8 +101,6 @@ public class PlayScreen implements Window {
         buttons = new ArrayList<>();
         shift = new ComputingShiftImpl();
         finishLine = PlayScreen.BUTTON_DIM;
-
-
     }
 
 
