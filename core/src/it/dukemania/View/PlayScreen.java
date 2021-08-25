@@ -66,7 +66,7 @@ public class PlayScreen implements Window {
     private SpriteBatch backgroundBatch;
 
     private final List<Integer> posXButtons = new ArrayList<>();
-    private final int posySpark;
+    private int posySpark;
     private final int finishLine;
     private int score;
     private long startTime;
@@ -101,7 +101,6 @@ public class PlayScreen implements Window {
         notes = new ArrayList<>();
         buttons = new ArrayList<>();
         shift = new ComputingShiftImpl();
-        posySpark = PlayScreen.BUTTON_DIM - this.shift.getNoteShift();
         finishLine = PlayScreen.BUTTON_DIM;
 
 
@@ -168,7 +167,7 @@ public class PlayScreen implements Window {
             this.buttonsStage.addActor(this.buttons.get(i));
             posXButtons.add((int) this.buttons.get(i).getX());
         }
-
+        this.posySpark = (int) this.buttons.get(0).getHeight() -  this.shift.getSparksHeight() / 2;
 
         this.logic.setColumnNumber(this.numberOfColumns);
         this.logic.contextInit();
@@ -260,6 +259,12 @@ public class PlayScreen implements Window {
                 n.setStartNote(Instant.now().toEpochMilli());
             }
             n.updateNote(deltaTime, this.startTime);
+
+            //draw the score and the scoreboard
+            this.fontScoreboard.draw(batch, Integer.toString(this.score), this.dimensions.getSize().getX() / 2 - fontWidth / 2,
+                    this.dimensions.getSize().getY() - fontHeight * this.shift.getFontAccuracy());
+            this.batch.draw(this.scoreboard, 0, this.dimensions.getSize().getY() - this.shift.getScoreboardHeight(),
+                    this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
 
             //it returns the time when the user starts to press a key
             if (n.getKeyboard().get().isButtonPressed(this.numberOfColumns) && !n.isPressed()) {
