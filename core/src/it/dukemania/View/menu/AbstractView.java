@@ -1,5 +1,6 @@
 package it.dukemania.View.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,17 +17,40 @@ import it.dukemania.windowmanager.Window;
 
 public abstract class AbstractView implements Window {
 
+    /**
+     * The associated SwitchWindowNotifier.
+     */
     protected SwitchWindowNotifier switchWindowNotifier = null;
+    /**
+     * The main stage of the view.
+     */
     protected Stage mainStage;
+    /**
+     * The background stage of the view.
+     */
     protected Stage backgroundStage;
+    /**
+     * The associated camera to the view.
+     */
     protected Camera camera;
+    /**
+     * The associated skin.
+     */
     protected Skin skin;
+    /**
+     * The background image.
+     */
     protected Image backgroundImage;
+    /**
+     * The data received from the WindowManager.
+     */
     protected GameModel data;
 
     private Texture backgroundTexture;
-    private static final int VIEWPORT_WIDTH = 2560;
-    private static final int VIEWPORT_HEIGHT = 1440;
+    //private static final int VIEWPORT_WIDTH = 2560;
+    //private static final int VIEWPORT_HEIGHT = 1440;
+    private static final int VIEWPORT_WIDTH = Gdx.graphics.getWidth() * 4;
+    private static final int VIEWPORT_HEIGHT = Gdx.graphics.getHeight() * 4;
     private final String backgroundPath;
 
     public AbstractView(final String backgroundPath, final Skin skin) {
@@ -41,14 +65,14 @@ public abstract class AbstractView implements Window {
     }
 
     private void setupCamera() {
-        //TODO Change magic numbers
-        //Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-        //Gdx.graphics.setWindowedMode(1920, 1080);
         camera = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         //Centers the camera to the viewport
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void create() {
         backgroundTexture = AssetsManager.getInstance().getTexture(backgroundPath);
@@ -57,6 +81,9 @@ public abstract class AbstractView implements Window {
         backgroundStage.addActor(backgroundImage);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void render() {
         mainStage.act();
@@ -65,12 +92,18 @@ public abstract class AbstractView implements Window {
         mainStage.draw();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void dispose() {
         mainStage.dispose();
         backgroundStage.dispose();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resize(final int width, final int height) {
         mainStage.getViewport().update(width, height);
@@ -79,11 +112,17 @@ public abstract class AbstractView implements Window {
         mainStage.getViewport().apply();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setWindowListener(final SwitchWindowNotifier notifier) {
         this.switchWindowNotifier = notifier;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void receiveData(final GameModel data) {
         this.data = data;
