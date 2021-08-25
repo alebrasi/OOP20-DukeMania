@@ -646,10 +646,21 @@ Dal mio punto di vista il corso di oop si è rivelato impegnativo ma decisamente
 
 \section{Alessandro Brasini}
 \subsection{commenti}
-Tenendo in conto degli ostacoli incontrati nel corso dello sviluppo del progetto per arrivare a conoscere libgdx, mi sento molto soddisfatto del risultato finale ottenuto.
-Sono inoltre riconoscente ai miei compagni di team, i quali hanno mantenuto un approccio serio e professionale, nonostante la nostra comune inesperienza riguardante il lavoro in gruppo.
-Ho imparato l'importanza della fase di ideazione del progetto e l'utilità di suddividere equamente, tra compagni, il carico di lavoro, senza mai sottovalutare l'importanza di un DVCS, il quale si è rivelato fondamentale.
-In conclusione, la cosa che ho imparato di più da questo progetto, è il programmare in una modalità più responsabile e consapevole, in quanto i miei collaboratori riponevano fiducia nel mio lavoro come io nel loro.
+Sono molto soddisfatto di come è stato sviluppato questo progetto che, grazie anche alla competenza e disponibilità dei membri del team, 
+lo sviluppo è risultato molto lineare. Ovviamente delle difficoltà sono comunque emerse a seguito della nostra poca esperienza nel gestire 
+un progetto di tali dimensioni ma questo non ha fatto altro che farci crescere.
+Voglio inoltre rimarcare la competenza dei membri del team che, a differenza mia, si sono cimentati in challenge molto più complesse dal punto
+di vista implementativo e di integrazione tra le varie parti di codice, risolvendole egregiamente.
+Per quanto riguarda il codice da me prodotto lo giudico mediocre, molte cose a livello architetturale potevano essere implementate meglio
+come, ad esempio, il sistema di window-switching dove, la meccanica di notifica tra le varie window, poteva essere implementata meglio: 
+al posto di passare un oggetto implementante WindowState (che fa implementare il metodo getStateValue(), che ritorna un intero associato
+allo stato), si poteva fare in modo che accettasse un enum definito nel momento di creazione del WindowManager.
+Allo stato attuale questo permette quindi di passare un qualsiasi oggetto implementante l'interfaccia definita sopra, rendendo quindi
+il WindowManager possibilmente soggetto a diversi bug comportamentali.
+Una possibile soluzione poteva essere quella di rendere WindowManager generico che faceva estendere solamente enum, come del tipo \\
+\texttt{public interface WindowManager<X extends Enum<?>> \{ \\
+	public void switchWindow(X state, GameModel model);\\
+	\}} \\
 \subsection{difficoltà riscontrate}
 Durante il mio percorso formativo avevo già avuto occasione di programmare ad oggetti, ma è stato solamente dopo questo corso che ho capito la vera utilità di concetti come interfacce e classi astratte. Inoltre sono grato di aver utilizzato java, in quanto ho avuto la possibilità di imparare a programmare in un linguaggio del tutto nuovo, e per la prima volta ricco di sfaccettature e funzioni avanzate.
 Ritengo infine che le uniche problematiche inerenti al corso siano dovute dalla metodologia di lezione a distanza, problemi che purtroppo si sono riversati durante gli appelli d'esame e che mi hanno impedito di beneficiare degli insegnamenti al massimo.

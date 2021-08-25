@@ -61,6 +61,7 @@ public class DukeMania extends ApplicationAdapter {
     public final void dispose() {
         wdm.dispose();
         AssetsManager.getInstance().dispose();
+        System.exit(0);
     }
 
 }
