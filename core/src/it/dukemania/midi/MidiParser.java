@@ -76,11 +76,11 @@ public final class MidiParser implements Parser {
                 }
             }
         }
+        //remove eventual Notes without duration
+        channelMap.forEach((k, v) -> v.getY().removeIf(n -> n.getDuration().isEmpty()));
         channelMap.forEach((k, v) -> myTracks.add(FactoryConfigurator.getFactory(k).createTrack(v.getX(), v.getY(), k)));
-        //rimozione eventuali tracce vuote
+        //remove eventual tracks without notes
         myTracks.removeIf(x -> x.getNotes().size() == 0);
-        //rimozione eventuali note rimaste senza durata
-        myTracks.forEach(t -> t.getNotes().removeIf(n -> n.getDuration().isEmpty()));
         myTracks.sort(Comparator.comparingInt(ParsedTrack::getChannel));
         return new Song(myMidi.getName(), sequence.getMicrosecondLength(), myTracks, bpm);
     }

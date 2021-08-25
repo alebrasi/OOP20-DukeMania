@@ -20,7 +20,7 @@ public abstract class ParsedTrack {
      * @return the list of notes that compose the track
      */
     public final List<AbstractNote> getNotes() {
-        return notes;
+        return this.notes;
     }
 
     /**
@@ -28,7 +28,7 @@ public abstract class ParsedTrack {
      * @return the MIDI channel which can be used as identifier for each ParsedTrack in a song
      */
     public final int getChannel() {
-        return channel;
+        return this.channel;
     }
 
     /**

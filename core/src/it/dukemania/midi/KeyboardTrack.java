@@ -51,8 +51,8 @@ public class KeyboardTrack extends ParsedTrack {
      */
     private Map<Integer, Long> calcMaxDuration() {
         return super.getNotes().stream()
-                                .collect(Collectors.toMap(AbstractNote::getIdentifier,
-                                        n -> n.getDuration().get(), (d1, d2) -> d1 > d2 ? d1 : d2));
+                                    .collect(Collectors.toMap(AbstractNote::getIdentifier,
+                                            n -> n.getDuration().orElse(0L), (d1, d2) -> d1 > d2 ? d1 : d2));
     }
 
 }

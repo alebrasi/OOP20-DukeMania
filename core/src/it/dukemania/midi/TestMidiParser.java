@@ -53,6 +53,7 @@ class TestMidiParser {
             t.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, ch, 41 + ch, 0), 6L));
             t.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, ch, 69 + ch, 7), 4L));
             t.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, ch, 69 + ch, 7), 6L));
+            t.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, ch, 50 + ch, 7), 5L));
         }
         File f = new File("File.mid");
         MidiSystem.write(seq, type, f);
