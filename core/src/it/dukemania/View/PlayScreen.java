@@ -236,9 +236,7 @@ public class PlayScreen implements Window {
                 this.dimensions.getSize().getX(), this.shift.getScoreboardHeight());
 
         //set the style of the buttons
-        for (final TextButton b : this.buttons) {
-            b.setStyle(this.styleUp);
-        }
+        this.buttons.forEach(b -> b.setStyle(styleUp));
 
         final long actualTime = Instant.now().toEpochMilli() - this.startTime;
         //returns the notes that are playing right now

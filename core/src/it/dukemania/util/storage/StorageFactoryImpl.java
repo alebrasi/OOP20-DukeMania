@@ -75,9 +75,8 @@ public class StorageFactoryImpl implements StorageFactory {
 
         @Override
         public boolean createFileIfNotExists(final String path) {
-            String tmpSeparator = FILE_SEPARATOR.equals("/") ? FILE_SEPARATOR : FILE_SEPARATOR + FILE_SEPARATOR;
-            String[] dirs = path.split(tmpSeparator);
-            String tmpPath = Arrays.stream(dirs).limit(dirs.length - 1).collect(Collectors.joining(tmpSeparator));
+            String[] dirs = path.split("/");
+            String tmpPath = Arrays.stream(dirs).limit(dirs.length - 1).collect(Collectors.joining("/"));
             createDirectoryRecursively(tmpPath);
             try {
                 return fileMapping.apply(path).file().getAbsoluteFile().createNewFile();
