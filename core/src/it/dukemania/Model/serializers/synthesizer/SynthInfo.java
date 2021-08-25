@@ -20,14 +20,23 @@ public class SynthInfo {
         this.associatedInstruments = associatedInstruments;
     }
 
+    /**
+     * @return The synthesizer preset name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return The synthesizer builder
+     */
     public SynthBuilderImpl getSynth() {
         return synth;
     }
 
+    /**
+     * @return A list of associated instruments
+     */
     public List<InstrumentType> getAssociatedInstruments() {
         return this.associatedInstruments;
     }

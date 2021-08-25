@@ -1,5 +1,12 @@
 package it.dukemania.Controller.filedialog;
 
 public enum DialogResult {
-    OK, CANCEL
+    /**
+     * Pressed OK button.
+     */
+    OK,
+    /**
+     * Pressed CANCEL button.
+     */
+    CANCEL
 }

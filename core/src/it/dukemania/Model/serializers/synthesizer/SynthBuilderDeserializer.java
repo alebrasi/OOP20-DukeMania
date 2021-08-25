@@ -31,7 +31,7 @@ public class SynthBuilderDeserializer extends StdDeserializer<SynthBuilderImpl> 
     }
 
     @Override
-    public SynthBuilderImpl deserialize(final JsonParser p, final DeserializationContext ctxt) 
+    public final SynthBuilderImpl deserialize(final JsonParser p, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         SynthBuilderImpl synth = new SynthBuilderImpl();
 

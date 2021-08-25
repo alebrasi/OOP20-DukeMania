@@ -54,7 +54,7 @@ public class SongSelectionWindow extends AbstractView {
         super.create();
         tableBackgroundTexture = AssetsManager.getInstance().getTexture("background.png");
         try {
-            controller = new SongSelectionWindowControllerImpl(data);
+            controller = new SongSelectionWindowControllerImpl(switchWindowNotifier, data);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class SongSelectionWindow extends AbstractView {
                 playableTracks.setMaxCheckCount(1);
                 boolean isACorrectMidiFile = true;
                 try {
-                    controller.openSong(filePath);
+                    controller.setSongPath(filePath);
                     btnPlayTrack.setTouchable(Touchable.enabled);
                     btnSaveSongConfigs.setTouchable(Touchable.enabled);
                 } catch (InvalidMidiDataException e) {
@@ -165,7 +165,7 @@ public class SongSelectionWindow extends AbstractView {
                 controller.setColumnsNumber(slctNumCols.getSelected());
 
                 try {
-                    controller.playSong(switchWindowNotifier);
+                    controller.playSong();
                 } catch (InvalidMidiDataException | IOException e) {
                     e.printStackTrace();
                 }

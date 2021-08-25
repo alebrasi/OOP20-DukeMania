@@ -22,7 +22,7 @@ public class TrackSerializer extends StdSerializer<TrackInfo> {
     }
 
     @Override
-    public void serialize(final TrackInfo value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+    public final void serialize(final TrackInfo value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         gen.writeObjectField("trackName", value.getTrackName());
         gen.writeObjectField("channel", value.getChannel());

@@ -22,7 +22,7 @@ public class SongLeaderBoardSerializer extends StdSerializer<SongLeaderBoard> {
     }
 
     @Override
-    public void serialize(final SongLeaderBoard value, final JsonGenerator gen, final SerializerProvider provider)
+    public final void serialize(final SongLeaderBoard value, final JsonGenerator gen, final SerializerProvider provider)
             throws IOException {
         gen.writeStartObject();
         gen.writeObjectField("songHash", value.getSongHash());

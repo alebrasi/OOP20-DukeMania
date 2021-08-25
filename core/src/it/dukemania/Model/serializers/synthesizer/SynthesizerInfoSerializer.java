@@ -21,7 +21,7 @@ public class SynthesizerInfoSerializer extends StdSerializer<SynthInfo> {
     }
 
     @Override
-    public void serialize(final SynthInfo value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+    public final void serialize(final SynthInfo value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         gen.writeObjectField("presetName", value.getName());
         gen.writeObjectField("associatedInstruments", value.getAssociatedInstruments());

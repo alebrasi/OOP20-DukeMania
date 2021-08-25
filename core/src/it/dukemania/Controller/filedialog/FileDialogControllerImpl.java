@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
-//TODO Call it maybe JavaNioFileDialogControllerImpl
 public class FileDialogControllerImpl implements FileDialogController {
 
     private String rootDirectory;
@@ -40,12 +39,12 @@ public class FileDialogControllerImpl implements FileDialogController {
     }
 
     @Override
-    public void setFilter(final String regexFilter) throws PatternSyntaxException {
+    public final void setFilter(final String regexFilter) throws PatternSyntaxException {
         this.regexFilter = Pattern.compile(regexFilter);
     }
 
     @Override
-    public void stepBackFromCurrentDirectory() {
+    public final void stepBackFromCurrentDirectory() {
         Matcher matcher = removeLastDirectoryRegex.matcher(this.currentDirectory
                                                     .substring(0, this.currentDirectory.length() - 1));
         if (matcher.find()) {
@@ -58,7 +57,7 @@ public class FileDialogControllerImpl implements FileDialogController {
     }
 
     @Override
-    public List<FileInfo> getFilesInCurrentDirectory() {
+    public final List<FileInfo> getFilesInCurrentDirectory() {
         try {
             return Files.list(Paths.get(this.currentDirectory))
                     .map(Path::toFile)
@@ -74,17 +73,17 @@ public class FileDialogControllerImpl implements FileDialogController {
     }
 
     @Override
-    public String getDirectorySeparator() {
+    public final String getDirectorySeparator() {
         return this.directorySeparator;
     }
 
     @Override
-    public void returnToRootDirectory() {
+    public final void returnToRootDirectory() {
         this.currentDirectory = this.rootDirectory;
     }
 
     @Override
-    public boolean advanceInDirectory(final String directoryName) {
+    public final boolean advanceInDirectory(final String directoryName) {
         if (Files.isDirectory(Paths.get(this.currentDirectory + directoryName))) {
             this.currentDirectory += directoryName;
             return true;
@@ -98,12 +97,12 @@ public class FileDialogControllerImpl implements FileDialogController {
     }
 
     @Override
-    public void setSelectedFileListener(final FileSelectedListener listener) {
+    public final void setSelectedFileListener(final FileSelectedListener listener) {
         fileSelected = listener;
     }
 
     @Override
-    public void setRootDirectory(final String path) throws NotDirectoryException {
+    public final void setRootDirectory(final String path) throws NotDirectoryException {
         if (Paths.get(path).toFile().isDirectory()) {
             this.rootDirectory = path;
         } else {

@@ -22,7 +22,7 @@ public class SongSerializer extends StdSerializer<SongInfo> {
     }
 
     @Override
-    public void serialize(final SongInfo value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+    public final void serialize(final SongInfo value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         gen.writeObjectField("songName", value.getTitle());
         gen.writeObjectField("fileHash", value.getSongHash());

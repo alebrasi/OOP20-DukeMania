@@ -31,7 +31,7 @@ public class SynthesizerInfoDeserializer extends StdDeserializer<SynthInfo> {
     }
 
     @Override
-    public SynthInfo deserialize(final JsonParser p, final DeserializationContext ctxt) 
+    public final SynthInfo deserialize(final JsonParser p, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);

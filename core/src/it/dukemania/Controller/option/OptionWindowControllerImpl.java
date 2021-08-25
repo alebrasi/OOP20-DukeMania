@@ -11,12 +11,12 @@ public class OptionWindowControllerImpl implements OptionWindowController {
     }
 
     @Override
-    public void setPlayerName(final String name) {
+    public final void setPlayerName(final String name) {
         data.setPlayerName(name);
     }
 
     @Override
-    public String getPlayerName() {
+    public final String getPlayerName() {
         return data.getPlayerName();
     }
 }

@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-//TODO add generic method for reading and writing
 public class ConfigurationsModelImpl implements ConfigurationsModel {
     private final Storage storage;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -26,6 +25,9 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
         this.storage = storage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SongInfo> readSongsConfiguration() throws IOException {
         String json = storage.readFileAsString(SONGS_CONFIGURATION_PATH);
@@ -36,6 +38,9 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
         return mapper.readValue(json, listSongType);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeSongsConfiguration(final List<SongInfo> songs) throws IOException {
         String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(songs);
@@ -43,6 +48,9 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
         storage.writeStringOnFile(SONGS_CONFIGURATION_PATH, json);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SynthInfo> readSynthesizersConfiguration() throws IOException {
         //Copies the synthesizers configurations to the configuration folder if it not exists
@@ -62,6 +70,9 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
         return mapper.readValue(json, listSynthInfoType);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SongLeaderBoard> readLeaderBoards() throws IOException {
         String json = storage.readFileAsString(SONGS_LEADERBOARDS_PATH);
@@ -72,6 +83,9 @@ public class ConfigurationsModelImpl implements ConfigurationsModel {
         return mapper.readValue(json, listSongLeaderBoardType);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeLeaderBoards(final List<SongLeaderBoard> leaderBoards) throws IOException {
         String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(leaderBoards);

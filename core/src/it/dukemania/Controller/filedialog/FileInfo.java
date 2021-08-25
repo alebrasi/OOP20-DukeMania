@@ -10,10 +10,16 @@ public class FileInfo {
         this.type = type;
     }
 
+    /**
+     * @return The file name
+     */
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * @return The file type
+     */
     public FileType getType() {
         return type;
     }

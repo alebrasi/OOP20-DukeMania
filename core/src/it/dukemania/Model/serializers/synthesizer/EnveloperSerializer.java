@@ -23,7 +23,7 @@ public class EnveloperSerializer extends StdSerializer<Enveloper> {
     }
 
     @Override
-    public void serialize(final Enveloper value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+    public final void serialize(final Enveloper value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         //gen.writeObjectField("attackMS", value.getAtk());
         //gen.writeObjectField("attackVolume", value.getAtkVol());

@@ -19,14 +19,14 @@ public class LeaderboardControllerImpl implements LeaderboardController {
 
     private final Storage storage = new StorageFactoryImpl().getConfigurationStorage();
     private final ConfigurationsModel model = new ConfigurationsModelImpl(storage);
-    private GameModel data;
+    private final GameModel data;
 
     public LeaderboardControllerImpl(final GameModel data) {
         this.data = data;
     }
 
     @Override
-    public List<Pair<String, String>> getLeaderboard() {
+    public final List<Pair<String, String>> getLeaderboard() {
         String songHash = data.getSongHash();
         SongLeaderBoard scores = new SongLeaderBoard(songHash, new HashMap<>());
         List<SongLeaderBoard> leaderBoards = new ArrayList<>();

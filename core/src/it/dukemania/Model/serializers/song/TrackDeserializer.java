@@ -27,7 +27,7 @@ public class TrackDeserializer extends StdDeserializer<TrackInfo> {
     }
 
     @Override
-    public TrackInfo deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+    public final TrackInfo deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
 

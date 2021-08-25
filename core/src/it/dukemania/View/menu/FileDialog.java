@@ -10,7 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import it.dukemania.Controller.filedialog.*;
+import it.dukemania.Controller.filedialog.DialogResult;
+import it.dukemania.Controller.filedialog.FileDialogController;
+import it.dukemania.Controller.filedialog.FileDialogControllerImpl;
+import it.dukemania.Controller.filedialog.FileDialogResultListener;
+import it.dukemania.Controller.filedialog.FileType;
 
 import java.nio.file.NotDirectoryException;
 
@@ -113,6 +117,9 @@ public class FileDialog extends Dialog {
                 });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Dialog show(final Stage stage) {
         controller.returnToRootDirectory();
@@ -120,14 +127,23 @@ public class FileDialog extends Dialog {
         return super.show(stage);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setResultListener(final FileDialogResultListener result) {
         this.result = result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setFilter(final String regex) {
         controller.setFilter(regex);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setRootDirectory(final String directory) throws NotDirectoryException {
         controller.setRootDirectory(directory);
     }

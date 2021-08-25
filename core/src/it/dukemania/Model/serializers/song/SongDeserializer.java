@@ -29,7 +29,7 @@ public class SongDeserializer extends StdDeserializer<SongInfo> {
     }
 
     @Override
-    public SongInfo deserialize(final JsonParser p, final DeserializationContext ctxt) 
+    public final SongInfo deserialize(final JsonParser p, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);

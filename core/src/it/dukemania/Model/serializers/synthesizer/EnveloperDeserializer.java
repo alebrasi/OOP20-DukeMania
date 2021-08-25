@@ -26,7 +26,7 @@ public class EnveloperDeserializer extends StdDeserializer<Enveloper> {
     }
 
     @Override
-    public Enveloper deserialize(final JsonParser p, final DeserializationContext ctxt) 
+    public final Enveloper deserialize(final JsonParser p, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);

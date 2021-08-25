@@ -29,7 +29,7 @@ public class SongLeaderBoardDeserializer extends StdDeserializer<SongLeaderBoard
     }
 
     @Override
-    public SongLeaderBoard deserialize(final JsonParser p, final DeserializationContext ctxt) 
+    public final SongLeaderBoard deserialize(final JsonParser p, final DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
 
         ObjectCodec codec = p.getCodec();

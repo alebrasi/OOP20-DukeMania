@@ -16,15 +16,26 @@ public class SongLeaderBoard {
         this.usersScore = usersScore;
     }
 
+    /**
+     * @return The hash of the song
+     */
     public String getSongHash() {
         return this.songHash;
     }
 
+    /**
+     * Sets the score of a user.
+     * @param playerName The player name
+     * @param score The player's score
+     */
     public void setUserScore(final String playerName, final Integer score) {
         usersScore.computeIfPresent(playerName, (p, s) -> s < score ? score : s);
         usersScore.computeIfAbsent(playerName, s -> score);
     }
 
+    /**
+     * @return A map of the users' score
+     */
     public Map<String, Integer> getUsersScore() {
         return Map.copyOf(usersScore);
     }
